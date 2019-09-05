@@ -6,7 +6,7 @@ router.get('/', function(req, res, next) {
 
   if (validationService.isValidDistance(req.query.distance)) {
     res.json({
-      length: 100,
+      length: Number(req.query.distance) * 2,
       distance: Number(req.query.distance)
     });
   } else {
