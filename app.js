@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var linkerLength = require('./routes/linkerLength');
+var sendPythonData = require('./routes/sendPythonData');
 
 var app = express();
 
@@ -45,6 +46,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/linkerLength', linkerLength);
+app.use('/sendPythonData', sendPythonData);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
