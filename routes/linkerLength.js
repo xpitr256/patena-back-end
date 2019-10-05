@@ -3,11 +3,18 @@ let router = express.Router();
 let validationService = require('../services/validationService.js');
 
 function getlength(r){
-  var L = 1;
+  var L = 0.0001;
+  var Lmax = 1;
+  var LRange=1000;
   var b = 3.8;
   var lc = b*L;
   var lp = 3;
-  var lenght;
+  var p;
+  var pmax;
+
+  pmax=0;
+  while (L<LRange){
+  lc = b*L;
   var a =(-3*(r**2)/(4*lp*lc));
   var t1 =(5*lp)/(4*lc);
   var t2 =(2*r**2)/(lc**2);
@@ -20,9 +27,16 @@ function getlength(r){
   var b=1-t1+t2-t3-t4-t5+t6-t7+t8;
   var exp=a*b;
 
-  lenght=Math.pow((3/4*Math.PI*lc*lp),3/2)* Math.pow(Math.E,exp);
 
-  return lenght;
+    p=Math.pow((3/4*Math.PI*lc*lp),3/2)* Math.pow(Math.E,exp);
+    if (p>pmax){
+      pmax=p;
+      Lmax=L;
+    }
+    L=L+0.0001;
+  }
+    console.log(pmax);
+    return Lmax;
 
 }
 
