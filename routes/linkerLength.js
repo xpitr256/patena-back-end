@@ -44,7 +44,7 @@ router.get('/', function(req, res, next) {
 
   if (validationService.isValidDistance(req.query.distance)) {
     res.json({
-      length: Number(getlength(Number(req.query.distance))),
+      length: getlength(Number(req.query.distance)).toFixed(2),
       distance: Number(req.query.distance)
     });
   } else {
