@@ -10,7 +10,7 @@ function isPositiveNumber(value){
 function ValidateEmail(inputText)
 {
   var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  if(inputText.value.match(mailformat))
+  if(mailformat.test(String(inputText).toLowerCase()))
   {
      return true;
   }
