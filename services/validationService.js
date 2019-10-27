@@ -10,6 +10,11 @@ function isPositiveNumber(value){
 function ValidateEmail(inputText)
 {
   var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+  if (isEmpty(inputText)){
+    return false;
+  }
+
   if(mailformat.test(String(inputText).toLowerCase()))
   {
      return true;
@@ -18,6 +23,48 @@ function ValidateEmail(inputText)
   {
     return false;
   }
+}
+
+function isValidMail (mail) {
+
+  if (isEmpty(mail)){
+    return false;
+  }
+
+  if (!mail) {
+    return false;
+  }
+
+  if (!ValidateEmail(mail)) {
+    return false;
+  }
+
+  return true;
+}
+
+function exceedFiftyCaracters (message){
+
+  if (message.trim().length>50){
+    return true;
+  }
+  return false;
+}
+
+function isEmpty(input){
+
+  if(!input){
+    return true;
+  }
+
+  if (input.length === 0){
+    return true;
+  }
+
+  if (input.trim().length === 0){
+    return true;
+  }
+
+  return  false;
 }
 
 module.exports = {
@@ -35,16 +82,8 @@ module.exports = {
     return true;
   },
 
-  isValidMail : function (mail) {
-
-    if (!mail) {
-      return false;
-    }
-
-    if (!ValidateEmail(mail)) {
-      return false;
-    }
-
-    return true;
+  isValidDataContact : function (email, name, message){
+    return isValidMail(email) && !isEmpty(name) && exceedFiftyCaracters(message);
   }
+
 };
