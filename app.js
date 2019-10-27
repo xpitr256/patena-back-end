@@ -7,7 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var linkerLength = require('./routes/linkerLength');
 var sendPythonData = require('./routes/sendPythonData');
-var sendMail = require('./routes/sendMail');
+var contact = require('./routes/contact');
 
 var app = express();
 
@@ -48,7 +48,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/linkerLength', linkerLength);
 app.use('/sendPythonData', sendPythonData);
-app.use('/sendMail', sendMail);
+
+
+app.route("/contact")
+    .post(contact.postContact);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
