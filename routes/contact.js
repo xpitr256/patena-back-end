@@ -1,5 +1,3 @@
-let express = require('express');
-let router = express.Router();
 let validationService = require('../services/validationService.js');
 let mailService = require('../services/mailService.js');
 

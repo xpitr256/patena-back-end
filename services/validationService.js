@@ -1,3 +1,5 @@
+var extensionValid = ["txt","fasta"];
+
 function isValidOrderNumber(orderNumber) {
   var pattern =/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
   var res =pattern.test(orderNumber);
@@ -79,6 +81,15 @@ function hasThirtySixCaracters(orderNumber) {
   return false;
 }
 
+function getExtension(filename) {
+  return filename.split('.').pop();
+}
+
+function isExtensionValid(fileName){
+     var ext= getExtension(fileName);
+  return extensionValid.includes(ext);
+}
+
 module.exports = {
 
   isValidDistance : function (distance) {
@@ -100,6 +111,10 @@ module.exports = {
 
   isValidOrderNumber : function (orderNumber){
     return isValidOrderNumber(orderNumber) && !isEmpty(orderNumber) && hasThirtySixCaracters(orderNumber);
+  },
+
+  isValidForAnalize : function (email,fileName){
+    return isValidMail(email) && !isEmpty(email) &&!isEmpty(fileName) && isExtensionValid(fileName)
   }
 
 };

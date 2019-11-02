@@ -124,4 +124,39 @@ describe('Validation service test ', () => {
 
 
     });
+
+    describe('Analize validation ', () => {
+
+        it('Given an email and an file name .fasta correct it should return true', () => {
+            assert.isTrue(service. isValidForAnalize ("nicolascoco85@gmail.com","archivo.fasta"));
+        });
+
+        it('Given an email and an file name .txt correct it should return true', () => {
+            assert.isTrue(service. isValidForAnalize ("nicolascoco85@gmail.com","archivo.txt"));
+        });
+
+        it('Given an email and an file name empty it should return false', () => {
+            assert.isFalse(service. isValidForAnalize ("",""));
+        });
+
+        it('Given an email OK and an file name empty it should return false', () => {
+            assert.isFalse(service. isValidForAnalize ("nicolascoco85@gmail.com",""));
+        });
+
+        it('Given an email and an file name .fast correct it should return false', () => {
+            assert.isFalse(service. isValidForAnalize ("nicolascoco85@gmail.com","archivo.fast"));
+        });
+
+        it('Given an email and an file name .fastaa correct it should return false', () => {
+            assert.isFalse(service. isValidForAnalize ("nicolascoco85@gmail.com","archivo.fastaa"));
+        });
+
+        it('Given an email and an file name .fasta it should return false', () => {
+            assert.isFalse(service. isValidForAnalize ("","archivo.fasta"));
+        });
+
+        it('Given an email empty and an file name empty it should return false', () => {
+            assert.isFalse(service. isValidForAnalize ("nicolascoco85@gmail.com",""));
+        });
+    });
 });
