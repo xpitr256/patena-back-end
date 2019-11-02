@@ -1,3 +1,8 @@
+function isValidOrderNumber(orderNumber) {
+  var pattern =/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
+  var res =pattern.test(orderNumber);
+  return res;
+}
 
 function isInt(value) {
   return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value));
@@ -67,6 +72,13 @@ function isEmpty(input){
   return  false;
 }
 
+function hasThirtySixCaracters(orderNumber) {
+  if (orderNumber.trim().length==36){
+    return true;
+  }
+  return false;
+}
+
 module.exports = {
 
   isValidDistance : function (distance) {
@@ -84,6 +96,10 @@ module.exports = {
 
   isValidDataContact : function (email, name, message){
     return isValidMail(email) && !isEmpty(name) && exceedFiftyCaracters(message);
+  },
+
+  isValidOrderNumber : function (orderNumber){
+    return isValidOrderNumber(orderNumber) && !isEmpty(orderNumber) && hasThirtySixCaracters(orderNumber);
   }
 
 };

@@ -98,5 +98,30 @@ describe('Validation service test ', () => {
 
     });
 
+    describe('Results order number form validation ', () => {
 
+        it('Given an order number correct it should return true', () => {
+            assert.isTrue(service. isValidOrderNumber ("2b0220d3-aec5-4fc3-8560-670fc6f0be68"));
+        });
+
+        it('Given an order number with 35 characters it should return false', () => {
+            assert.isFalse(service. isValidOrderNumber ("2b0220d3-aec5-4fc3-8560-670fc6f0be6"));
+        });
+
+        it('Given an order number with characters no hexadecimal it should return false', () => {
+            assert.isFalse(service. isValidOrderNumber ("2b0220z3-aec5-4fc3-8560-670fc6f0be6"));
+        });
+
+        it('Given an order number empty it should return false', () => {
+            assert.isFalse(service. isValidOrderNumber (""));
+        });
+
+        it('Given an order number with spaces it should return false', () => {
+            assert.isFalse(service. isValidOrderNumber ("2b0220d -ae 5-4fc3-8560-670fc6f0be6"));
+        });
+
+
+
+
+    });
 });

@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var linkerLength = require('./routes/linkerLength');
 var sendPythonData = require('./routes/sendPythonData');
 var contact = require('./routes/contact');
+var results = require('./routes/results');
 
 var app = express();
 
@@ -48,6 +49,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/linkerLength', linkerLength);
 app.use('/sendPythonData', sendPythonData);
+app.use('/results', results);
 
 
 app.route("/contact")
