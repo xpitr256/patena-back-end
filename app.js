@@ -10,6 +10,7 @@ var sendPythonData = require('./routes/sendPythonData');
 var contact = require('./routes/contact');
 var results = require('./routes/results');
 var analize = require('./routes/analize');
+var upload = require("express-fileupload");
 
 var app = express();
 
@@ -51,6 +52,7 @@ app.use('/', indexRouter);
 app.use('/linkerLength', linkerLength);
 app.use('/sendPythonData', sendPythonData);
 app.use('/results', results);
+app.use(upload());
 
 
 app.route("/contact")

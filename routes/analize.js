@@ -1,10 +1,12 @@
 let validationService = require('../services/validationService.js');
 let analizeService = require ('../services/analizeService');
 
+
 function postAnalize(req, res) {
-    if ( validationService.isValidForAnalize(req.body.email, req.body.fileName)) {
+    if ( validationService.isValidForAnalize(req.body.email, req.files)) {
         try {
-            let orderNumber = analizeService.sendOrderNumber(req.body.email, req.body.fileName);
+            console.log(req.files)
+            let orderNumber = analizeService.sendOrderNumber(req.body.email, req.files.name);
             res.json({
                 message: "Analize OK:" + orderNumber.toString()
             });

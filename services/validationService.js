@@ -81,6 +81,13 @@ function hasThirtySixCaracters(orderNumber) {
   return false;
 }
 
+function isFileValid(file){
+   let filename = file.files.name;
+
+  return(isExtensionValid(filename))
+
+}
+
 function getExtension(filename) {
   return filename.split('.').pop();
 }
@@ -88,6 +95,10 @@ function getExtension(filename) {
 function isExtensionValid(fileName){
      var ext= getExtension(fileName);
   return extensionValid.includes(ext);
+}
+
+function isEmptyData(data){
+  return isPositiveNumber(data);
 }
 
 module.exports = {
@@ -113,8 +124,10 @@ module.exports = {
     return isValidOrderNumber(orderNumber) && !isEmpty(orderNumber) && hasThirtySixCaracters(orderNumber);
   },
 
-  isValidForAnalize : function (email,fileName){
-    return isValidMail(email) && !isEmpty(email) &&!isEmpty(fileName) && isExtensionValid(fileName)
+  isValidForAnalize : function (email,file){
+    let fileName = file.files.name;
+    let size =  file.files.size;
+    return isValidMail(email) && !isEmpty(email) &&!isEmpty(fileName) && isFileValid(file) && isEmptyData(size);
   }
 
 };
