@@ -8,7 +8,7 @@ function postAnalize(req, res) {
             console.log(req.files)
             let orderNumber = analizeService.sendOrderNumber(req.body.email, req.files.name);
             res.json({
-                message: "Analize OK:" + orderNumber.toString()
+                message: req.files.files.name+" --> OK:" + orderNumber.toString() + "Enviado a: " + req.body.email.toString()
             });
 
         } catch (err) {
