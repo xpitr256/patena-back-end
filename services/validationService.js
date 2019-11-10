@@ -81,10 +81,9 @@ function hasThirtySixCaracters(orderNumber) {
   return false;
 }
 
-function isFileValid(file){
-   let filename = file.files.name;
+function isFileValid(filename){
 
-  return(isExtensionValid(filename))
+   return(isExtensionValid(filename))
 
 }
 
@@ -125,9 +124,9 @@ module.exports = {
   },
 
   isValidForAnalize : function (email,file){
-    let fileName = file.files.name;
-    let size =  file.files.size;
-    return isValidMail(email) && !isEmpty(email) &&!isEmpty(fileName) && isFileValid(file) && isEmptyData(size);
+    let fileName = file.name;
+    let size =  file.size;
+    return isValidMail(email) && !isEmpty(email) &&!isEmpty(fileName) && isFileValid(fileName) && isEmptyData(size);
   }
 
 };

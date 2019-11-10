@@ -4,7 +4,7 @@ let analizeService = require ('../services/analizeService');
 
 function postAnalize(req, res) {
     if (req.files){
-        if ( validationService.isValidForAnalize(req.body.email, req.files)) {
+        if ( validationService.isValidForAnalize(req.body.email, req.files.files)) {
             try {
                 console.log(req.files)
                 let orderNumber = analizeService.sendOrderNumber(req.body.email, req.files.name);
