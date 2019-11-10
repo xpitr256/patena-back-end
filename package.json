@@ -21,7 +21,8 @@
     "express-fileupload": "latest"
   },
   "devDependencies": {
-    "mocha": "^6.1.4",
-    "chai": "^4.2.0"
+    "chai": "^4.2.0",
+    "chai-files": "^1.4.0",
+    "mocha": "^6.1.4"
   }
 }

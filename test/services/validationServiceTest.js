@@ -1,7 +1,15 @@
 let chai = require("chai");
 let assert = chai.assert;
-
 let service = require('../../services/validationService.js');
+
+function getFile(nameWithextension, size){
+    let file = new Object();
+    file.name=nameWithextension;
+    file.size=size;
+    return file;
+}
+
+
 
 describe('Validation service test ', () => {
 
@@ -128,15 +136,15 @@ describe('Validation service test ', () => {
     describe('Analize validation ', () => {
 
         it('Given an email and an file name .fasta correct it should return true', () => {
-            assert.isTrue(service. isValidForAnalize ("nicolascoco85@gmail.com","archivo.fasta"));
+            assert.isTrue(service. isValidForAnalize ("nicolascoco85@gmail.com", getFile('archivo.fasta',255)));
         });
 
         it('Given an email and an file name .txt correct it should return true', () => {
-            assert.isTrue(service. isValidForAnalize ("nicolascoco85@gmail.com","archivo.txt"));
+            assert.isTrue(service. isValidForAnalize ("nicolascoco85@gmail.com",getFile('archivo.txt',255)));
         });
 
         it('Given an email and an file name empty it should return false', () => {
-            assert.isFalse(service. isValidForAnalize ("",""));
+            assert.isFalse(service. isValidForAnalize ("",getFile("",255)));
         });
 
         it('Given an email OK and an file name empty it should return false', () => {
