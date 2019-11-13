@@ -1,9 +1,7 @@
-var extensionValid = ["txt","fasta"];
 
 function isValidOrderNumber(orderNumber) {
-  var pattern =/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
-  var res =pattern.test(orderNumber);
-  return res;
+  const pattern =/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
+  return pattern.test(orderNumber);
 }
 
 function isInt(value) {
@@ -11,25 +9,12 @@ function isInt(value) {
 }
 
 function isPositiveNumber(value){
-  return ( isInt(value) &&  value > 0 ) ? true :false;
+  return  !!(isInt(value) && value > 0);
 }
 
-function ValidateEmail(inputText)
-{
-  var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
-  if (isEmpty(inputText)){
-    return false;
-  }
-
-  if(mailformat.test(String(inputText).toLowerCase()))
-  {
-     return true;
-  }
-  else
-  {
-    return false;
-  }
+function validateEmail(inputText) {
+  const mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  return mailFormat.test(String(inputText).toLowerCase());
 }
 
 function isValidMail (mail) {
@@ -38,23 +23,11 @@ function isValidMail (mail) {
     return false;
   }
 
-  if (!mail) {
-    return false;
-  }
-
-  if (!ValidateEmail(mail)) {
-    return false;
-  }
-
-  return true;
+  return validateEmail(mail);
 }
 
-function exceedFiftyCaracters (message){
-
-  if (message.trim().length>50){
-    return true;
-  }
-  return false;
+function exceedsFiftyCharacters (message){
+  return message.trim().length > 50;
 }
 
 function isEmpty(input){
@@ -63,41 +36,31 @@ function isEmpty(input){
     return true;
   }
 
-  if (input.length === 0){
-    return true;
-  }
-
-  if (input.trim().length === 0){
-    return true;
-  }
-
-  return  false;
+  return input.trim().length === 0;
 }
 
-function hasThirtySixCaracters(orderNumber) {
-  if (orderNumber.trim().length==36){
-    return true;
-  }
-  return false;
+function hasThirtySixCharacters(orderNumber) {
+  return orderNumber.trim().length === 36;
 }
 
-function isFileValid(filename){
+function isValidFile(file) {
+  if (isEmpty(file.name)) {
+    return false;
+  }
 
-   return(isExtensionValid(filename))
+  if (!isPositiveNumber(file.size)) {
+    return false;
+  }
 
+   return isValidExtension(file.name)
 }
 
 function getExtension(filename) {
   return filename.split('.').pop();
 }
 
-function isExtensionValid(fileName){
-     var ext= getExtension(fileName);
-  return extensionValid.includes(ext);
-}
-
-function isEmptyData(data){
-  return isPositiveNumber(data);
+function isValidExtension(fileName) {
+  return ["txt","fasta"].includes(getExtension(fileName));
 }
 
 module.exports = {
@@ -108,25 +71,18 @@ module.exports = {
       return false;
     }
 
-    if (!isPositiveNumber(distance)) {
-      return false;
-    }
-
-    return true;
+    return isPositiveNumber(distance);
   },
 
-  isValidDataContact : function (email, name, message){
-    return isValidMail(email) && !isEmpty(name) && exceedFiftyCaracters(message);
+  isValidContactData : function (email, name, message){
+    return isValidMail(email) && !isEmpty(name) && exceedsFiftyCharacters(message);
   },
 
   isValidOrderNumber : function (orderNumber){
-    return isValidOrderNumber(orderNumber) && !isEmpty(orderNumber) && hasThirtySixCaracters(orderNumber);
+    return isValidOrderNumber(orderNumber) && hasThirtySixCharacters(orderNumber);
   },
 
-  isValidForAnalize : function (email,file){
-    let fileName = file.name;
-    let size =  file.size;
-    return isValidMail(email) && !isEmpty(email) &&!isEmpty(fileName) && isFileValid(fileName) && isEmptyData(size);
+  isValidAnalyzeData : function (email, file) {
+    return isValidMail(email) && isValidFile(file);
   }
-
 };

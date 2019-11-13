@@ -45,63 +45,63 @@ describe('Validation service test ', () => {
     describe('Contact form validation ', () => {
 
         it('Given an empty email it should return false', () => {
-            assert.isFalse(service.  isValidDataContact ('','bot','hello'));
+            assert.isFalse(service.  isValidContactData ('','bot','hello'));
         });
 
         it('Given  empty email and name it should return false', () => {
-            assert.isFalse(service.  isValidDataContact ('','','hello'));
+            assert.isFalse(service.  isValidContactData ('','','hello'));
         });
 
         it('Given empty all fields it should return false', () => {
-            assert.isFalse(service.  isValidDataContact ('','',''));
+            assert.isFalse(service.  isValidContactData ('','',''));
         });
 
         it('Given  empty message and mail, name valid  it should return false', () => {
-            assert.isFalse(service.  isValidDataContact ('','name',''));
+            assert.isFalse(service.  isValidContactData ('','name',''));
         });
 
         it('Given empty name and mail, message less than 50 caracters  it should return false', () => {
-            assert.isFalse(service.  isValidDataContact ('','','hola como estas? quiero que ande el patena de una vez por todas. cuando puede estar listo...desde ya muchas gracias'));
+            assert.isFalse(service.  isValidContactData ('','','hola como estas? quiero que ande el patena de una vez por todas. cuando puede estar listo...desde ya muchas gracias'));
         });
 
         it('Given an mail, name with 15 caracteres and message less than 50 caracters  it should return false', () => {
-            assert.isFalse(service.  isValidDataContact ('','Nicolas Alberto','hola como estas? quiero que ande el patena de una vez por todas. cuando puede estar listo...desde ya muchas gracias'));
+            assert.isFalse(service.  isValidContactData ('','Nicolas Alberto','hola como estas? quiero que ande el patena de una vez por todas. cuando puede estar listo...desde ya muchas gracias'));
         });
 
         it('Given an empty name it should return false', () => {
-            assert.isFalse(service.  isValidDataContact ('example@example.com','','hello'));
+            assert.isFalse(service.  isValidContactData ('example@example.com','','hello'));
         });
 
         it('Given an empty message it should return false', () => {
-            assert.isFalse(service.  isValidDataContact ('example@example.com','bot',''));
+            assert.isFalse(service.  isValidContactData ('example@example.com','bot',''));
         });
 
         it('Given an  email without @ it should return false', () => {
-            assert.isFalse(service.  isValidDataContact ('exampleexample.com','bot','hello'));
+            assert.isFalse(service.  isValidContactData ('exampleexample.com','bot','hello'));
         });
 
         it('Given an  email with two @ it should return false', () => {
-            assert.isFalse(service.  isValidDataContact ('example@@example.com','bot','hello'));
+            assert.isFalse(service.  isValidContactData ('example@@example.com','bot','hello'));
         });
 
         it('Given an  email without domain it should return false', () => {
-            assert.isFalse(service.  isValidDataContact ('example@','bot','hello'));
+            assert.isFalse(service.  isValidContactData ('example@','bot','hello'));
         });
 
         it('Given an email with space  it should return false', () => {
-            assert.isFalse(service.  isValidDataContact ('example@ example.com.ar','bot','hello'));
+            assert.isFalse(service.  isValidContactData ('example@ example.com.ar','bot','hello'));
         });
 
         it('Given an email with final point  it should return false', () => {
-            assert.isFalse(service.  isValidDataContact ('example@example.com.','bot','hello'));
+            assert.isFalse(service.  isValidContactData ('example@example.com.','bot','hello'));
         });
 
         it('Given an  message that exceed 50 caracters it should return true', () => {
-            assert.isTrue(service.  isValidDataContact ('nicolascoco@yahoo.com.ar','nicolas','hola como estas? quiero que ande el patena de una vez por todas. cuando puede estar listo...desde ya muchas gracias'));
+            assert.isTrue(service.  isValidContactData ('nicolascoco@yahoo.com.ar','nicolas','hola como estas? quiero que ande el patena de una vez por todas. cuando puede estar listo...desde ya muchas gracias'));
         });
 
         it('Given an  message that not exceed 50 caracters it should return false', () => {
-            assert.isFalse(service.  isValidDataContact ('example@example.com','bot','hello'));
+            assert.isFalse(service.  isValidContactData ('example@example.com','bot','hello'));
         });
 
     });

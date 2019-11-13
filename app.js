@@ -58,8 +58,8 @@ app.use(upload());
 app.route("/contact")
     .post(contact.postContact);
 
-app.route("/analize")
-    .post(analize.postAnalize);
+app.route("/analyze")
+    .post(analize.postAnalyze);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

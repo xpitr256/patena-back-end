@@ -2,30 +2,27 @@ let validationService = require('../services/validationService.js');
 let analizeService = require ('../services/analizeService');
 
 
-function postAnalize(req, res) {
-    if (req.files){
-        if ( validationService.isValidForAnalize(req.body.email, req.files.files)) {
+function postAnalyze(req, res) {
+    if (req.files) {
+        if ( validationService.isValidAnalyzeData(req.body.email, req.files.files)) {
             try {
-                console.log(req.files)
                 let orderNumber = analizeService.sendOrderNumber(req.body.email, req.files.name);
                 res.json({
                     message: req.files.files.name+" --> OK:" + orderNumber.toString() + "Enviado a: " + req.body.email.toString()
                 });
-
             } catch (err) {
                 res.status(400).send(err);
             }
         } else {
             res.status(400).send({
-                message:'Invalid analize information'
+                message:'Invalid analyze information'
             });
         }
-    }else{
+    } else {
         res.status(400).send({ message: 'No files uploaded'});
     }
-
 }
 
 module.exports = {
-    postAnalize: postAnalize
+    postAnalyze: postAnalyze
 };
