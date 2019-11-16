@@ -10,7 +10,6 @@ function getFile(nameWithextension, size){
 }
 
 
-
 describe('Validation service test ', () => {
 
     describe('Linker length calculation ', () => {
@@ -166,5 +165,13 @@ describe('Validation service test ', () => {
         it('Given an email empty and an file name empty it should return false', () => {
             assert.isFalse(service. isValidForAnalize ("nicolascoco85@gmail.com",""));
         });
+    });
+
+    describe('Design validation ', () => {
+
+        it('Given an email and an file name .fasta correct it should return true', () => {
+            assert.isTrue(service. isValidInicialSequenceAndFlanking("nicolascoco85@gmail.com","ABC","ABC","ABC"));
+        });
+
     });
 });

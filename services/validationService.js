@@ -1,3 +1,49 @@
+const aminoAcids = [
+  "A",
+  "R",
+  "N",
+  "D",
+  "B",
+  "C",
+  "E",
+  "Q",
+  "Z",
+  "G",
+  "H",
+  "I",
+  "L",
+  "K",
+  "M",
+  "F",
+  "P",
+  "S",
+  "T",
+  "W",
+  "Y",
+  "V"
+];
+
+/**
+ * Returns true | false according to fasta validations
+ */
+function isValidFasta(fastaContent) {
+  if (!fastaContent) {
+    return false;
+  }
+  const lines = fastaContent.split("\n");
+  const linesWithoutComments = lines.filter(line => !line.startsWith(">"));
+  const allContent = linesWithoutComments.join("").trim();
+  if (!allContent) {
+    return false;
+  }
+  for (const aminoAcid of allContent) {
+    if (!aminoAcids.includes(aminoAcid)) {
+      return false;
+    }
+  }
+
+  return true;
+}
 
 function isValidOrderNumber(orderNumber) {
   const pattern =/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
@@ -84,5 +130,21 @@ module.exports = {
 
   isValidAnalyzeData : function (email, file) {
     return isValidMail(email) && isValidFile(file);
+  },
+
+  isValidDesignNothing: function (email, distance) {
+    return isValidMail(email) && isValidDistance(distance);
+  },
+
+  isValidInitialSequence : function (email, initialSequence) {
+    return isValidMail(email) && isValidFasta(initialSequence);
+  },
+
+  isValidSequencesFlanking : function (email, flankingSequence1, flankingSequence2) {
+    return isValidMail(email) && isValidFasta(flankingSequence1) && isValidFasta(flankingSequence2);
+  },
+
+  isValidInitialSequenceAndFlanking : function (email, flankingSequence1, flankingSequence2, initialSequence) {
+    return isValidMail(email) && isValidFasta(flankingSequence1) && isValidFasta(flankingSequence2) && isValidFasta(initialSequence);
   }
 };

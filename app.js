@@ -10,6 +10,7 @@ var sendPythonData = require('./routes/sendPythonData');
 var contact = require('./routes/contact');
 var results = require('./routes/results');
 var analize = require('./routes/analize');
+var design = require ('./routes/design')
 var upload = require("express-fileupload");
 
 var app = express();
@@ -60,6 +61,9 @@ app.route("/contact")
 
 app.route("/analyze")
     .post(analize.postAnalyze);
+
+app.route("/design")
+    .post(design.postDesign);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
