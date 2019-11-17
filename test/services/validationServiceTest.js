@@ -135,43 +135,37 @@ describe('Validation service test ', () => {
     describe('Analize validation ', () => {
 
         it('Given an email and an file name .fasta correct it should return true', () => {
-            assert.isTrue(service. isValidForAnalize ("nicolascoco85@gmail.com", getFile('archivo.fasta',255)));
+            assert.isTrue(service. isValidAnalyzeData("nicolascoco85@gmail.com", getFile('archivo.fasta',255)));
         });
 
         it('Given an email and an file name .txt correct it should return true', () => {
-            assert.isTrue(service. isValidForAnalize ("nicolascoco85@gmail.com",getFile('archivo.txt',255)));
+            assert.isTrue(service. isValidAnalyzeData ("nicolascoco85@gmail.com",getFile('archivo.txt',255)));
         });
 
         it('Given an email and an file name empty it should return false', () => {
-            assert.isFalse(service. isValidForAnalize ("",getFile("",255)));
+            assert.isFalse(service. isValidAnalyzeData ("",getFile("",255)));
         });
 
         it('Given an email OK and an file name empty it should return false', () => {
-            assert.isFalse(service. isValidForAnalize ("nicolascoco85@gmail.com",""));
+            assert.isFalse(service. isValidAnalyzeData ("nicolascoco85@gmail.com",""));
         });
 
         it('Given an email and an file name .fast correct it should return false', () => {
-            assert.isFalse(service. isValidForAnalize ("nicolascoco85@gmail.com","archivo.fast"));
+            assert.isFalse(service. isValidAnalyzeData ("nicolascoco85@gmail.com","archivo.fast"));
         });
 
         it('Given an email and an file name .fastaa correct it should return false', () => {
-            assert.isFalse(service. isValidForAnalize ("nicolascoco85@gmail.com","archivo.fastaa"));
+            assert.isFalse(service. isValidAnalyzeData("nicolascoco85@gmail.com","archivo.fastaa"));
         });
 
         it('Given an email and an file name .fasta it should return false', () => {
-            assert.isFalse(service. isValidForAnalize ("","archivo.fasta"));
+            assert.isFalse(service. isValidAnalyzeData ("","archivo.fasta"));
         });
 
         it('Given an email empty and an file name empty it should return false', () => {
-            assert.isFalse(service. isValidForAnalize ("nicolascoco85@gmail.com",""));
+            assert.isFalse(service. isValidAnalyzeData ("nicolascoco85@gmail.com",""));
         });
     });
 
-    describe('Design validation ', () => {
 
-        it('Given an email and an file name .fasta correct it should return true', () => {
-            assert.isTrue(service. isValidInicialSequenceAndFlanking("nicolascoco85@gmail.com","ABC","ABC","ABC"));
-        });
-
-    });
 });
