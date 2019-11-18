@@ -6,7 +6,7 @@ function postAnalyze(req, res) {
     if (req.body.fastaContent) {
         if ( validationService.isValidAnalyzeData(req.body)) {
             try {
-                let orderNumber = analizeService.sendOrderNumber(req.body.email, req.files.name);
+                let orderNumber = analizeService.sendOrderNumber(req.body.email, req.body.fastaContent);
                 res.json({
                     message: req.files.files.name+" --> OK:" + orderNumber.toString() + "Enviado a: " + req.body.email.toString()
                 });

@@ -7,7 +7,7 @@ function uuidv4() {
 
 module.exports = {
 
-    sendOrderNumber : function(email, fileName) {
+    sendOrderNumber : function(email, fastaContent) {
         // here save field DB and send to process file with patena
         return uuidv4();
     }
