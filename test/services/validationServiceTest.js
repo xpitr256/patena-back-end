@@ -2,13 +2,13 @@ let chai = require("chai");
 let assert = chai.assert;
 let service = require('../../services/validationService.js');
 
-function getFile(nameWithextension, size){
-    let file = new Object();
-    file.name=nameWithextension;
-    file.size=size;
-    return file;
-}
+function getBody(email, fastaContent){
+    let body = new Object();
+    body.email=email;
+    body.fastaContent= fastaContent;
 
+    return body;
+}
 
 describe('Validation service test ', () => {
 
@@ -134,36 +134,36 @@ describe('Validation service test ', () => {
 
     describe('Analize validation ', () => {
 
-        it('Given an email and an file name .fasta correct it should return true', () => {
-            assert.isTrue(service. isValidAnalyzeData("nicolascoco85@gmail.com", getFile('archivo.fasta',255)));
+        it('Given an email and content correct it should return true', () => {
+            assert.isTrue(service. isValidAnalyzeData(getBody("nicolascoco85@gmail.com", "ABC")));
         });
 
-        it('Given an email and an file name .txt correct it should return true', () => {
-            assert.isTrue(service. isValidAnalyzeData ("nicolascoco85@gmail.com",getFile('archivo.txt',255)));
+        it('Given an email and content correct it should return true', () => {
+            assert.isTrue(service. isValidAnalyzeData (getBody("nicolascoco85@gmail.com","ABC")));
         });
 
-        it('Given an email and an file name empty it should return false', () => {
-            assert.isFalse(service. isValidAnalyzeData ("",getFile("",255)));
+        it('Given an email and content empty it should return false', () => {
+            assert.isFalse(service. isValidAnalyzeData ( getBody("","")));
         });
 
-        it('Given an email OK and an file name empty it should return false', () => {
-            assert.isFalse(service. isValidAnalyzeData ("nicolascoco85@gmail.com",""));
+        it('Given an email OK and content empty it should return false', () => {
+            assert.isFalse(service. isValidAnalyzeData (getBody("nicolascoco85@gmail.com","")));
         });
 
-        it('Given an email and an file name .fast correct it should return false', () => {
-            assert.isFalse(service. isValidAnalyzeData ("nicolascoco85@gmail.com","archivo.fast"));
+        it('Given an email and content amino incorrect it should return false', () => {
+            assert.isFalse(service. isValidAnalyzeData (getBody("nicolascoco85@gmail.com","AXC")));
         });
 
-        it('Given an email and an file name .fastaa correct it should return false', () => {
-            assert.isFalse(service. isValidAnalyzeData("nicolascoco85@gmail.com","archivo.fastaa"));
+        it('Given an email and content with space  it should return false', () => {
+            assert.isFalse(service. isValidAnalyzeData(getBody("nicolascoco85@gmail.com","A B C")));
         });
 
-        it('Given an email and an file name .fasta it should return false', () => {
-            assert.isFalse(service. isValidAnalyzeData ("","archivo.fasta"));
+        it('Given an email and content with double caracter initial it should return false', () => {
+            assert.isFalse(service. isValidAnalyzeData (getBody("",">>ABC")));
         });
 
-        it('Given an email empty and an file name empty it should return false', () => {
-            assert.isFalse(service. isValidAnalyzeData ("nicolascoco85@gmail.com",""));
+        it('Given an email and content with double caracter initial it should return false', () => {
+            assert.isFalse(service. isValidAnalyzeData (getBody("nicolascoco85@gmail.com",">>ABC")));
         });
     });
 

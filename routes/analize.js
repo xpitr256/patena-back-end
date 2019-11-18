@@ -3,8 +3,8 @@ let analizeService = require ('../services/analizeService');
 
 
 function postAnalyze(req, res) {
-    if (req.files) {
-        if ( validationService.isValidAnalyzeData(req.body.email, req.files.files)) {
+    if (req.body.fastaContent) {
+        if ( validationService.isValidAnalyzeData(req.body)) {
             try {
                 let orderNumber = analizeService.sendOrderNumber(req.body.email, req.files.name);
                 res.json({

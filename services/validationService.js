@@ -128,23 +128,7 @@ module.exports = {
     return isValidOrderNumber(orderNumber) && hasThirtySixCharacters(orderNumber);
   },
 
-  isValidAnalyzeData : function (email, file) {
-    return isValidMail(email) && isValidFile(file);
-  },
-
-  isValidDesignNothing: function (email, distance) {
-    return isValidMail(email) && isValidDistance(distance);
-  },
-
-  isValidInitialSequence : function (email, initialSequence) {
-    return isValidMail(email) && isValidFasta(initialSequence);
-  },
-
-  isValidSequencesFlanking : function (email, flankingSequence1, flankingSequence2) {
-    return isValidMail(email) && isValidFasta(flankingSequence1) && isValidFasta(flankingSequence2);
-  },
-
-  isValidInitialSequenceAndFlanking : function (email, flankingSequence1, flankingSequence2, initialSequence) {
-    return isValidMail(email) && isValidFasta(flankingSequence1) && isValidFasta(flankingSequence2) && isValidFasta(initialSequence);
+  isValidAnalyzeData : function (body) {
+    return isValidMail(body.email) && isValidFasta(body.fastaContent);
   }
 };
