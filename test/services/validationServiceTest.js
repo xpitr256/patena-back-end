@@ -10,6 +10,17 @@ function getBody(email, fastaContent){
     return body;
 }
 
+function getBody(designType,email,flankingSequence1,flankingSequence2, initialSequence, distance ){
+    let body = new Object();
+    body.designType=designType;
+    body.email=email;
+    body.flankingSequence1= flankingSequence1;
+    body.flankingSequence2= flankingSequence2;
+    body.initialSequence= initialSequence;
+    body.distance=distance;
+    return body;
+}
+
 describe('Validation service test ', () => {
 
     describe('Linker length calculation ', () => {
@@ -165,6 +176,15 @@ describe('Validation service test ', () => {
         it('Given an email and content with double caracter initial it should return false', () => {
             assert.isFalse(service. isValidAnalyzeData (getBody("nicolascoco85@gmail.com",">>ABC")));
         });
+    });
+
+    describe('Design validation ', () => {
+
+        it('Given an email and content correct it should return true', () => {
+            assert.isTrue(service.isValidDesigneData(getBody("design1","ncoco@cys.com.ar","ABC","ABC","AABC",40)));
+        });
+
+
     });
 
 

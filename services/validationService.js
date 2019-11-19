@@ -1,3 +1,7 @@
+let design1 = require('../services/validationServiceDesignNothing.js');
+let design2 = require('../services/validationServiceDesignInitialSequence.js');
+let design3 = require('../services/validationServiceDesignSequencesFlanking.js');
+let design4 = require('../services/validationServiceDesignInitialSequenceAndFlanking');
 const aminoAcids = [
   "A",
   "R",
@@ -109,6 +113,16 @@ function isValidExtension(fileName) {
   return ["txt","fasta"].includes(getExtension(fileName));
 }
 
+function isValid (body){
+    let MapDesign = new Map();
+
+    MapDesign.set('design1',design1.validate(body));
+    MapDesign.set('design2',design2.validate(body));
+    MapDesign.set('design3',design3.validate(body));
+    MapDesign.set('design4',design4.validate(body));
+    return  MapDesign.get(body.designType);
+}
+
 module.exports = {
 
   isValidDistance : function (distance) {
@@ -130,5 +144,9 @@ module.exports = {
 
   isValidAnalyzeData : function (body) {
     return isValidMail(body.email) && isValidFasta(body.fastaContent);
+  },
+
+  isValidDesigneData : function (body) {
+    return isValid(body);
   }
 };
