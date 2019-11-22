@@ -333,7 +333,6 @@ describe('Validation service test ', () => {
             assert.isFalse(service.isValidDesigneData(getBody("design3","","","","",)));
         });
 
-
         it('Given an email correct,positive distance and empty flanking sequential2  and flanking sequential1 correct it should return false', () => {
 
             assert.isFalse(service.isValidDesigneData(getBody("design3","ncoco@cys.com.ar","ABC","","",40)));
@@ -392,6 +391,44 @@ describe('Validation service test ', () => {
 
     });
 
+    describe ('Result validation', () =>{
 
+        it('Given order number format correct, it should return true', () => {
+
+            assert.isTrue(service.isValidOrderNumber("02a79e96-ed72-445c-bf92-0cb324fea5db"));
+        });
+
+        it('Given order number contains spaces, it should return false', () => {
+
+            assert.isFalse(service.isValidOrderNumber("02a79 e96-ed72-445c-bf92-0cb324 fea5db"));
+        });
+
+        it('Given order number with length less than allowed, it should return false', () => {
+
+            assert.isFalse(service.isValidOrderNumber("02a79e96-ed72-445c-bf92-"));
+        });
+
+        it('Given order number no middle dash , it should return false', () => {
+
+            assert.isFalse(service.isValidOrderNumber("02a79e96ed72445cbf920cb324fea5db"));
+        });
+
+        it('Given order number longer than allowed , it should return false', () => {
+
+            assert.isFalse(service.isValidOrderNumber("02a79e96-ed72-445c-bf92-0cb324fea5db-258479"));
+        });
+
+        it('Given order number with special characters , it should return false', () => {
+
+            assert.isFalse(service.isValidOrderNumber("02*79e96-ed72-445c-bf92-0cb324fe!5db"));
+        });
+
+        it('Given  empty order number , it should return false', () => {
+
+            assert.isFalse(service.isValidOrderNumber(""));
+        });
+
+
+    });
 
 });
