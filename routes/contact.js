@@ -1,10 +1,8 @@
-let express = require('express');
-let router = express.Router();
 let validationService = require('../services/validationService.js');
 let mailService = require('../services/mailService.js');
 
 async function postContact(req, res) {
-    if ( validationService.isValidDataContact(req.body.email, req.body.name, req.body.message)) {
+    if ( validationService.isValidContactData(req.body.email, req.body.name, req.body.message)) {
         try {
             await mailService.sendContactMail(req.body.email, req.body.name, req.body.message);
             res.json({

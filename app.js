@@ -9,6 +9,9 @@ var linkerLength = require('./routes/linkerLength');
 var sendPythonData = require('./routes/sendPythonData');
 var contact = require('./routes/contact');
 var results = require('./routes/results');
+var analize = require('./routes/analize');
+var design = require ('./routes/design')
+var upload = require("express-fileupload");
 
 var app = express();
 
@@ -50,10 +53,17 @@ app.use('/', indexRouter);
 app.use('/linkerLength', linkerLength);
 app.use('/sendPythonData', sendPythonData);
 app.use('/results', results);
+app.use(upload());
 
 
 app.route("/contact")
     .post(contact.postContact);
+
+app.route("/analyze")
+    .post(analize.postAnalyze);
+
+app.route("/design")
+    .post(design.postDesign);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

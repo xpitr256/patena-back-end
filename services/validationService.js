@@ -1,7 +1,57 @@
+let design1 = require('../services/validationServiceDesignNothing.js');
+let design2 = require('../services/validationServiceDesignInitialSequence.js');
+let design3 = require('../services/validationServiceDesignSequencesFlanking.js');
+let design4 = require('../services/validationServiceDesignInitialSequenceAndFlanking');
+const aminoAcids = [
+  "A",
+  "R",
+  "N",
+  "D",
+  "B",
+  "C",
+  "E",
+  "Q",
+  "Z",
+  "G",
+  "H",
+  "I",
+  "L",
+  "K",
+  "M",
+  "F",
+  "P",
+  "S",
+  "T",
+  "W",
+  "Y",
+  "V"
+];
+
+/**
+ * Returns true | false according to fasta validations
+ */
+function isValidFasta(fastaContent) {
+  if (!fastaContent) {
+    return false;
+  }
+  const lines = fastaContent.split("\n");
+  const linesWithoutComments = lines.filter(line => !line.startsWith(">"));
+  const allContent = linesWithoutComments.join("").trim();
+  if (!allContent) {
+    return false;
+  }
+  for (const aminoAcid of allContent) {
+    if (!aminoAcids.includes(aminoAcid)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 function isValidOrderNumber(orderNumber) {
-  var pattern =/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
-  var res =pattern.test(orderNumber);
-  return res;
+  const pattern =/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
+  return pattern.test(orderNumber);
 }
 
 function isInt(value) {
@@ -9,25 +59,12 @@ function isInt(value) {
 }
 
 function isPositiveNumber(value){
-  return ( isInt(value) &&  value > 0 ) ? true :false;
+  return  !!(isInt(value) && value > 0);
 }
 
-function ValidateEmail(inputText)
-{
-  var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
-  if (isEmpty(inputText)){
-    return false;
-  }
-
-  if(mailformat.test(String(inputText).toLowerCase()))
-  {
-     return true;
-  }
-  else
-  {
-    return false;
-  }
+function validateEmail(inputText) {
+  const mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  return mailFormat.test(String(inputText).toLowerCase());
 }
 
 function isValidMail (mail) {
@@ -36,23 +73,11 @@ function isValidMail (mail) {
     return false;
   }
 
-  if (!mail) {
-    return false;
-  }
-
-  if (!ValidateEmail(mail)) {
-    return false;
-  }
-
-  return true;
+  return validateEmail(mail);
 }
 
-function exceedFiftyCaracters (message){
-
-  if (message.trim().length>50){
-    return true;
-  }
-  return false;
+function exceedsFiftyCharacters (message){
+  return message.trim().length > 50;
 }
 
 function isEmpty(input){
@@ -61,22 +86,41 @@ function isEmpty(input){
     return true;
   }
 
-  if (input.length === 0){
-    return true;
-  }
-
-  if (input.trim().length === 0){
-    return true;
-  }
-
-  return  false;
+  return input.trim().length === 0;
 }
 
-function hasThirtySixCaracters(orderNumber) {
-  if (orderNumber.trim().length==36){
-    return true;
+function hasThirtySixCharacters(orderNumber) {
+  return orderNumber.trim().length === 36;
+}
+
+function isValidFile(file) {
+  if (isEmpty(file.name)) {
+    return false;
   }
-  return false;
+
+  if (!isPositiveNumber(file.size)) {
+    return false;
+  }
+
+   return isValidExtension(file.name)
+}
+
+function getExtension(filename) {
+  return filename.split('.').pop();
+}
+
+function isValidExtension(fileName) {
+  return ["txt","fasta"].includes(getExtension(fileName));
+}
+
+function isValid (body){
+    let MapDesign = new Map();
+
+    MapDesign.set('design1',design1.validate(body));
+    MapDesign.set('design2',design2.validate(body));
+    MapDesign.set('design3',design3.validate(body));
+    MapDesign.set('design4',design4.validate(body));
+    return  MapDesign.get(body.designType);
 }
 
 module.exports = {
@@ -87,19 +131,22 @@ module.exports = {
       return false;
     }
 
-    if (!isPositiveNumber(distance)) {
-      return false;
-    }
-
-    return true;
+    return isPositiveNumber(distance);
   },
 
-  isValidDataContact : function (email, name, message){
-    return isValidMail(email) && !isEmpty(name) && exceedFiftyCaracters(message);
+  isValidContactData : function (email, name, message){
+    return isValidMail(email) && !isEmpty(name) && exceedsFiftyCharacters(message);
   },
 
   isValidOrderNumber : function (orderNumber){
-    return isValidOrderNumber(orderNumber) && !isEmpty(orderNumber) && hasThirtySixCaracters(orderNumber);
-  }
+    return isValidOrderNumber(orderNumber) && hasThirtySixCharacters(orderNumber);
+  },
 
+  isValidAnalyzeData : function (body) {
+    return isValidMail(body.email) && isValidFasta(body.fastaContent);
+  },
+
+  isValidDesignData : function (body) {
+    return isValid(body);
+  }
 };

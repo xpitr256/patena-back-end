@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
         try {
             res.json({
                 orderNumber: resultService.downloadResult(req.query.orderNumber),
-                messege: "Order number OK"
+                message: "Order number OK"
             });
 
         } catch (err) {
