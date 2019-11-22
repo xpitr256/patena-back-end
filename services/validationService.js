@@ -146,7 +146,7 @@ module.exports = {
     return isValidMail(body.email) && isValidFasta(body.fastaContent);
   },
 
-  isValidDesigneData : function (body) {
+  isValidDesignData : function (body) {
     return isValid(body);
   }
 };

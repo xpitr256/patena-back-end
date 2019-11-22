@@ -65,9 +65,18 @@ function isEmpty(input){
 
   return input.trim().length === 0;
 }
+
+function isInt(value) {
+  return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value));
+}
+
+function isPositiveNumber(value){
+  return  !!(isInt(value) && value > 0);
+}
+
 module.exports = {
 
   validate: function (body) {
-    return isValidMail(body.email) && isValidFasta(body.flankingSequence1) && isValidFasta(body.flankingSequence2) && isValidFasta(body.initialSequence);
+    return isValidMail(body.email) && isValidFasta(body.flankingSequence1) && isValidFasta(body.flankingSequence2) && isValidFasta(body.initialSequence) && isPositiveNumber(body.distance);
   }
 };
