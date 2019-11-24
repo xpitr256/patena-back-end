@@ -2,6 +2,7 @@ let design1 = require('../services/validationServiceDesignNothing.js');
 let design2 = require('../services/validationServiceDesignInitialSequence.js');
 let design3 = require('../services/validationServiceDesignSequencesFlanking.js');
 let design4 = require('../services/validationServiceDesignInitialSequenceAndFlanking');
+
 const aminoAcids = [
   "A",
   "R",
@@ -26,6 +27,7 @@ const aminoAcids = [
   "Y",
   "V"
 ];
+
 
 /**
  * Returns true | false according to fasta validations
@@ -123,6 +125,32 @@ function isValid (body){
     return  MapDesign.get(body.designType);
 }
 
+function areValidFrequencies(frequencies){
+  let result=0
+  
+  for (let amino in frequencies){
+       result+= parseFloat(frequencies[amino].value);
+    }
+  return result.toFixed(3)==10.000
+}
+
+function isValidNetCharge (netCharge){
+  return isPositiveNumber(netCharge);
+}
+
+function areValidAlgorithms(algorithms){
+
+  let anyActived = algorithms.some(function (item) {return  item.active==true;});
+  return anyActived;
+}
+
+function isValidCustomConfig(body){
+
+  return areValidFrequencies(body.config.frequencies) &&
+      isValidNetCharge(body.config.netCharge) &&
+      areValidAlgorithms(body.config.algorithms);
+}
+
 module.exports = {
 
   isValidDistance : function (distance) {
@@ -148,5 +176,18 @@ module.exports = {
 
   isValidDesignData : function (body) {
     return isValid(body);
+  },
+
+  isValidFrequencies : function (frequencies) {
+      return areValidFrequencies(frequencies);
+  },
+
+  isValidAlgorithms : function (algorithms) {
+    return areValidAlgorithms(algorithms);
+  },
+
+  isValidNetCharge: function (netCharge){
+    return isValidNetCharge(netCharge);
   }
+
 };
