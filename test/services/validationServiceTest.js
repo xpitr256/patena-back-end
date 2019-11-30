@@ -2,7 +2,7 @@ let chai = require("chai");
 let assert = chai.assert;
 let service = require('../../services/validationService.js');
 
-const frequencies= [
+const SumOfFrequenciesToEquals10000= [
     { name: "A", value: 0.825 },
     { name: "R", value: 0.553 },
     { name: "N", value: 0.406 },
@@ -24,7 +24,51 @@ const frequencies= [
     { name: "Y", value: 0.292, uvSilent: true },
     { name: "V", value: 0.734 }
 ];
-const algorithms= [
+const SumOfFrequenciesLessThan10000= [
+    { name: "A", value: 0.725 },
+    { name: "R", value: 0.553 },
+    { name: "N", value: 0.406 },
+    { name: "D", value: 0.545 },
+    { name: "C", value: 0.137 },
+    { name: "E", value: 0.393 },
+    { name: "Q", value: 0.675 },
+    { name: "G", value: 0.707 },
+    { name: "H", value: 0.227 },
+    { name: "I", value: 0.596 },
+    { name: "L", value: 0.966 },
+    { name: "K", value: 0.548},
+    { name: "M", value: 0.242 },
+    { name: "F", value: 0.386, uvSilent: true },
+    { name: "P", value: 0.47 },
+    { name: "S", value: 0.656 },
+    { name: "T", value: 0.534 },
+    { name: "W", value: 0.108, uvSilent: true },
+    { name: "Y", value: 0.292, uvSilent: true },
+    { name: "V", value: 0.734 }
+];
+const SumOfFrequenciesGreaterThan10000= [
+    { name: "A", value: 0.925 },
+    { name: "R", value: 0.553 },
+    { name: "N", value: 0.406 },
+    { name: "D", value: 0.545 },
+    { name: "C", value: 0.137 },
+    { name: "E", value: 0.393 },
+    { name: "Q", value: 0.675 },
+    { name: "G", value: 0.707 },
+    { name: "H", value: 0.227 },
+    { name: "I", value: 0.596 },
+    { name: "L", value: 0.966 },
+    { name: "K", value: 0.548},
+    { name: "M", value: 0.242 },
+    { name: "F", value: 0.386, uvSilent: true },
+    { name: "P", value: 0.47 },
+    { name: "S", value: 0.656 },
+    { name: "T", value: 0.534 },
+    { name: "W", value: 0.108, uvSilent: true },
+    { name: "Y", value: 0.292, uvSilent: true },
+    { name: "V", value: 0.734 }
+];
+const algorithmsAnyActived= [
     { name: "BLAST", active: false },
     { name: "TANGO", active: false },
     { name: "ELM", active: false },
@@ -35,6 +79,32 @@ const algorithms= [
     { name: "TMHMM", active: false },
     { name: "PASTA", active: false },
     { name: "Waltz", active: true },
+    { name: "Amyloid pattern", active: false }
+];
+const algorithmsAllActived= [
+    { name: "BLAST", active: true },
+    { name: "TANGO", active: true },
+    { name: "ELM", active: true },
+    { name: "IUPred", active: true },
+    { name: "ANCHOR", active: true },
+    { name: "Prosite", active: true },
+    { name: "Limbo", active: true },
+    { name: "TMHMM", active: true },
+    { name: "PASTA", active: true },
+    { name: "Waltz", active: true },
+    { name: "Amyloid pattern", active: true }
+];
+const algorithmsAllDesactived= [
+    { name: "BLAST", active: false },
+    { name: "TANGO", active: false },
+    { name: "ELM", active: false },
+    { name: "IUPred", active: false },
+    { name: "ANCHOR", active: false },
+    { name: "Prosite", active: false },
+    { name: "Limbo", active: false },
+    { name: "TMHMM", active: false },
+    { name: "PASTA", active: false },
+    { name: "Waltz", active: false },
     { name: "Amyloid pattern", active: false }
 ];
 
@@ -628,15 +698,35 @@ describe('Validation service test ', () => {
     describe('Set Config Patena validation', () => {
 
 
-        it("Given  sum of frequencies equal 10.000 , it should return true", () => {
+        it("Given  sum of frequencies equals 10.000 , it should return true", () => {
 
-            assert.isTrue(service.isValidFrequencies(frequencies));
+            assert.isTrue(service.isValidFrequencies(SumOfFrequenciesToEquals10000));
+        });
+
+        it("Given  sum of frequencies less than 10.000 , it should return false", () => {
+
+            assert.isFalse(service.isValidFrequencies(SumOfFrequenciesLessThan10000));
+        });
+
+        it("Given  sum of frequencies greater than 10.000 , it should return false", () => {
+
+            assert.isFalse(service.isValidFrequencies(SumOfFrequenciesGreaterThan10000));
         });
 
 
         it("Given  any algorithms actived , it should return true", () => {
 
-            assert.isTrue(service.isValidAlgorithms(algorithms));
+            assert.isTrue(service.isValidAlgorithms(algorithmsAnyActived));
+        });
+
+        it("Given  all algorithms actived , it should return true", () => {
+
+            assert.isTrue(service.isValidAlgorithms(algorithmsAllActived));
+        });
+
+        it("Given  all algorithms desactived , it should return false", () => {
+
+            assert.isFalse(service.isValidAlgorithms(algorithmsAllDesactived));
         });
 
         it("Given  net charge is four , it should return true", () => {

@@ -1,3 +1,4 @@
+
 const aminoAcids = [
   "A",
   "R",
@@ -76,7 +77,7 @@ function isPositiveNumber(value){
 
 module.exports = {
 
-  validate: function (body) {
+  validate: function (body,isValidSetConfig) {
     return isValidMail(body.email) && isValidFasta(body.flankingSequence1) && isValidFasta(body.flankingSequence2) && isValidFasta(body.initialSequence) && isPositiveNumber(body.distance);
   }
 };

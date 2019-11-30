@@ -7,10 +7,11 @@ let design4 = require('../services/validationServiceDesignInitialSequenceAndFlan
 
 function getMapDesign(req){
     let MapDesign = new Map();
-        MapDesign.set('design1',design1.validate(req.body));
-        MapDesign.set('design2',design2.validate(req.body));
-        MapDesign.set('design3',design3.validate(req.body));
-        MapDesign.set('design4',design4.validate(req.body));
+    let isValidCustomConfig = validationService.isValidCustomConfig(req.body);
+        MapDesign.set('design1',design1.validate(req.body, isValidCustomConfig));
+        MapDesign.set('design2',design2.validate(req.body, isValidCustomConfig));
+        MapDesign.set('design3',design3.validate(req.body, isValidCustomConfig));
+        MapDesign.set('design4',design4.validate(req.body, isValidCustomConfig));
     return MapDesign;
 }
 

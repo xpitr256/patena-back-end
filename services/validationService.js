@@ -146,9 +146,11 @@ function areValidAlgorithms(algorithms){
 
 function isValidCustomConfig(body){
 
-  return areValidFrequencies(body.config.frequencies) &&
+  if (body.config)
+    return areValidFrequencies(body.config.frequencies) &&
       isValidNetCharge(body.config.netCharge) &&
       areValidAlgorithms(body.config.algorithms);
+  return true;// retorno true asumiendo configuracion default para patena
 }
 
 module.exports = {
@@ -175,7 +177,7 @@ module.exports = {
   },
 
   isValidDesignData : function (body) {
-    return isValid(body);
+    return isValid(body) && isValidCustomConfig(body);
   },
 
   isValidFrequencies : function (frequencies) {
@@ -188,6 +190,10 @@ module.exports = {
 
   isValidNetCharge: function (netCharge){
     return isValidNetCharge(netCharge);
+  },
+
+  isValidCustomConfig : function (body) {
+    return isValidCustomConfig(body) ;
   }
 
 };
