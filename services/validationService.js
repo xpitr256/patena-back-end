@@ -76,7 +76,10 @@ function isValidMail (mail) {
   return validateEmail(mail);
 }
 
-function exceedsFiftyCharacters (message){
+function exceedsFiftyCharacters (message) {
+  if(!message) {
+    return false;
+  }
   return message.trim().length > 50;
 }
 
