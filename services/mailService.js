@@ -6,7 +6,7 @@ module.exports = {
     sendContactMail : function(email, name, message) {
         return new Promise((resolve, reject) => {
             const emailBody = {
-                to: 'ncoco@fi.uba.ar',
+                to: 'pablomassuh@gmail.com',
                 from: email,
                 subject: 'Message from Patena, enviado por ' + name.toString(),
                 text: 'Email Contact from Patena',
