@@ -39,6 +39,9 @@ let handleCorsHeaders = function (req, res, next) {
 
 app.use(handleCorsHeaders);
 
+app.use(express.json());
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');

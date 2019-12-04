@@ -135,7 +135,7 @@ function areValidFrequencies(frequencies){
 }
 
 function isValidNetCharge (netCharge){
-  return isPositiveNumber(netCharge);
+  return isPositiveNumber(netCharge); //TODO netCharge can be null or undefined also due to it is a not mandatory field.
 }
 
 function areValidAlgorithms(algorithms){
@@ -146,11 +146,13 @@ function areValidAlgorithms(algorithms){
 
 function isValidCustomConfig(body){
 
-  if (body.config)
+  if (body.config){
     return areValidFrequencies(body.config.frequencies) &&
-      isValidNetCharge(body.config.netCharge) &&
-      areValidAlgorithms(body.config.algorithms);
-  return true;// retorno true asumiendo configuracion default para patena
+        isValidNetCharge(body.config.netCharge) &&
+        areValidAlgorithms(body.config.algorithms);
+  }
+
+  return true; // if no config then we use default Patena's settings.
 }
 
 module.exports = {
