@@ -134,8 +134,14 @@ function areValidFrequencies(frequencies){
   return result.toFixed(3)==10.000
 }
 
-function isValidNetCharge (netCharge){
-  return isPositiveNumber(netCharge); //TODO netCharge can be null or undefined also due to it is a not mandatory field.
+function isLessThat(netCharge, length) {
+  return netCharge<=length;
+}
+
+function isValidNetCharge (netCharge = undefined, initialSequence= undefined){
+  if (netCharge == undefined || initialSequence == undefined){ return true};
+
+  return isPositiveNumber(netCharge) && isLessThat(netCharge,initialSequence.length);
 }
 
 function areValidAlgorithms(algorithms){
@@ -148,7 +154,7 @@ function isValidCustomConfig(body){
 
   if (body.config){
     return areValidFrequencies(body.config.frequencies) &&
-        isValidNetCharge(body.config.netCharge) &&
+        isValidNetCharge(body.config.netCharge, body.initialSequence) &&
         areValidAlgorithms(body.config.algorithms);
   }
 

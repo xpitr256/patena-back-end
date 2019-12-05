@@ -36,8 +36,8 @@ module.exports = {
 
     return isPositiveNumber(distance);
   },
-  validate: function (body,isValidSetConfig) {
-    return isValidMail(body.email) && isPositiveNumber(body.distance) && isValidSetConfig;
+  validate: function (body) {
+    return isValidMail(body.email) && isPositiveNumber(body.distance) ;
   }
 
 };
