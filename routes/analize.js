@@ -3,12 +3,13 @@ let analizeService = require ('../services/analizeService');
 
 
 function postAnalyze(req, res) {
-    if (req.body.fastaContent) {
+    if (req.body.sequence) {
+
         if ( validationService.isValidAnalyzeData(req.body)) {
             try {
-                let orderNumber = analizeService.sendOrderNumber(req.body.email, req.body.fastaContent);
+                let orderNumber = analizeService.sendOrderNumber(req.body.email, req.body.sequence);
                 res.json({
-                    message: req.files.files.name+" --> OK:" + orderNumber.toString() + "Enviado a: " + req.body.email.toString()
+                    orderNumber: orderNumber.toString()
                 });
             } catch (err) {
                 res.status(400).send(err);

@@ -5,7 +5,7 @@ let service = require('../../services/validationService.js');
 function getBodyAnalize(email, fastaContent){
     let body = new Object();
     body.email=email;
-    body.fastaContent= fastaContent;
+    body.sequence= { name:"archivo.fasta",value:fastaContent};
 
     return body;
 }
@@ -118,6 +118,7 @@ describe('Validation service test ', () => {
 
 
     describe('Analize validation ', () => {
+
 
         it('Given  email and content correct it should return true', () => {
             assert.isTrue(service. isValidAnalyzeData(getBodyAnalize("nicolascoco85@gmail.com", "ABC")));

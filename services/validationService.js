@@ -30,11 +30,11 @@ const aminoAcids = [
 /**
  * Returns true | false according to fasta validations
  */
-function isValidFasta(fastaContent) {
-  if (!fastaContent) {
+function isValidFasta(sequence) {
+  if (!sequence) {
     return false;
   }
-  const lines = fastaContent.split("\n");
+  const lines = sequence.value.toString().split("\n");
   const linesWithoutComments = lines.filter(line => !line.startsWith(">"));
   const allContent = linesWithoutComments.join("").trim();
   if (!allContent) {
@@ -143,7 +143,7 @@ module.exports = {
   },
 
   isValidAnalyzeData : function (body) {
-    return isValidMail(body.email) && isValidFasta(body.fastaContent);
+    return isValidMail(body.email) && isValidFasta(body.sequence);
   },
 
   isValidDesignData : function (body) {
