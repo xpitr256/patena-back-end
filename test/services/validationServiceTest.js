@@ -14,9 +14,9 @@ function getBody(designType,email,flankingSequence1,flankingSequence2, initialSe
     let body = new Object();
     body.designType=designType;
     body.email=email;
-    body.flankingSequence1= flankingSequence1;
-    body.flankingSequence2= flankingSequence2;
-    body.initialSequence= initialSequence;
+    body.flankingSequence1= { name:"archivo.fasta",value:flankingSequence1};
+    body.flankingSequence2= { name:"archivo.fasta",value:flankingSequence2};
+    body.initialSequence= { name:"archivo.fasta",value:initialSequence};
     body.distance=distance;
     return body;
 }
