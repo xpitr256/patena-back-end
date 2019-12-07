@@ -78,6 +78,6 @@ function isPositiveNumber(value){
 module.exports = {
 
   validate: function (body) {
-    return isValidMail(body.email) && isValidFasta(body.flankingSequence1) && isValidFasta(body.flankingSequence2) && isValidFasta(body.initialSequence) && isPositiveNumber(body.distance);
+    return isValidMail(body.email) && isValidFasta(body.flankingSequence1) && isValidFasta(body.flankingSequence2) && isValidFasta(body.initialSequence);
   }
 };

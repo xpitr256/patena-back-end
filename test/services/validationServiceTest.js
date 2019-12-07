@@ -509,16 +509,6 @@ describe('Validation service test ', () => {
             assert.isFalse(service.isValidDesignData(getBody(4, "ncoco@cys.com.ar", "", "", "", 30)));
         });
 
-        it('Given  email, empty distance ,the rest of the parameters required completed  it should return false', () => {
-
-            assert.isFalse(service.isValidDesignData(getBody(4, "ncoco@cys.com.ar", "ABC", "ABC", "ABC",)));
-        });
-
-        it('Given  email, negative distance ,the rest of the parameters required completed  it should return false', () => {
-
-            assert.isFalse(service.isValidDesignData(getBody(4, "ncoco@cys.com.ar", "ABC", "ABC", "ABC", -40)));
-        });
-
         it('Given  email incorrect, empty the rest of the parameters required it should return false', () => {
 
             assert.isFalse(service.isValidDesignData(getBody(4, "ncoccys.com.ar", "", "", "", "")));
