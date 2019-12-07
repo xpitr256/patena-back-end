@@ -3,7 +3,7 @@ let router = express.Router();
 let validationService = require('../services/validationService.js');
 
 function getlength(r){
-  var L = 0.0001;
+  var L = 0.1;
   var Lmax = 1;
   var LRange=1000;
   var b = 3.8;

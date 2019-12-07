@@ -24,7 +24,7 @@ function postDesign(req, res) {
             try {
                 let orderNumber = designService.sendOrderNumber(req.body.email);
                 res.json({
-                    message: req.body.designType +" --> OK:" + orderNumber.toString() + "Enviado a: " + req.body.email.toString()
+                    orderNumber: orderNumber.toString()
                 });
             } catch (err) {
                 res.status(400).send(err);
