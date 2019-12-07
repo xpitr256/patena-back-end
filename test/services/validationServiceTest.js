@@ -263,42 +263,42 @@ describe('Validation service test ', () => {
         //Data required: distance, email, set configurations patena
         it('Given  email correct and distance equals 40 it should return true', () => {
             //Data required: distance, email, set configurations patena
-            assert.isTrue(service.isValidDesignData(getBody("design1", "ncoco@cys.com.ar", "", "", "", 40)));
+            assert.isTrue(service.isValidDesignData(getBody(1, "ncoco@cys.com.ar", "", "", "", 40)));
         });
 
         it('Given empty field email and distance equals 40 it should return false', () => {
             //Data required: distance, email, set configurations patena
-            assert.isFalse(service.isValidDesignData(getBody("design1", "", "", "", "", 40)));
+            assert.isFalse(service.isValidDesignData(getBody(1, "", "", "", "", 40)));
         });
 
         it('Given  email incorrect and distance equals 40 it should return false', () => {
             //Data required: distance, email, set configurations patena
-            assert.isFalse(service.isValidDesignData(getBody("design1", "ncoccys.com.ar", "", "", "", 40)));
+            assert.isFalse(service.isValidDesignData(getBody(1, "ncoccys.com.ar", "", "", "", 40)));
         });
 
         it('Given  email incorrect and negative distance it should return false', () => {
             //Data required: distance, email, set configurations patena
-            assert.isFalse(service.isValidDesignData(getBody("design1", "ncoccys.com.ar", "", "", "", -40)));
+            assert.isFalse(service.isValidDesignData(getBody(1, "ncoccys.com.ar", "", "", "", -40)));
         });
 
         it('Given  email incorrect and zero distance it should return false', () => {
             //Data required: distance, email, set configurations Patena(frequency,  charge, algorithms)
-            assert.isFalse(service.isValidDesignData(getBody("design1", "ncoccys.com.ar", "", "", "", 0)));
+            assert.isFalse(service.isValidDesignData(getBody(1, "ncoccys.com.ar", "", "", "", 0)));
         });
 
         it('Given  email incorrect and empty field distance it should return false', () => {
             //Data required: distance, email, set configurations patena
-            assert.isFalse(service.isValidDesignData(getBody("design1", "ncoccys.com.ar", "", "", "",)));
+            assert.isFalse(service.isValidDesignData(getBody(1, "ncoccys.com.ar", "", "", "",)));
         });
 
         it('Given  email correct and decimal data for field distance it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design1", "ncoco@cys.com.ar", "", "", "", 40.5)));
+            assert.isFalse(service.isValidDesignData(getBody(1, "ncoco@cys.com.ar", "", "", "", 40.5)));
         });
 
         it('Given  email incorrect and decimal data for field distance it should return false', () => {
             //Data required: distance, email, set configurations patena
-            assert.isFalse(service.isValidDesignData(getBody("design1", "@cys.com.ar", "", "", "", 40.5)));
+            assert.isFalse(service.isValidDesignData(getBody(1, "@cys.com.ar", "", "", "", 40.5)));
         });
 
     });
@@ -307,7 +307,7 @@ describe('Validation service test ', () => {
         //Data required: initial sequential, email, set configurations patena
         it('Given  email correct and inicial sequential correct it should return true', () => {
 
-            assert.isTrue(service.isValidDesignData(getBody("design2", "ncoco@cys.com.ar", "", "", "MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEGLVSVKVSDDF\n" +
+            assert.isTrue(service.isValidDesignData(getBody(2, "ncoco@cys.com.ar", "", "", "MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEGLVSVKVSDDF\n" +
                 "TIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHKIPQFASRKQLSDAILKEAEE\n" +
                 "KIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTLMGQFYVMDDKKTVEQVIAEKEKEFGGKIKI\n" +
                 "VEFICFEVGEGLEKKTEDFAAEVAAQL",)));
@@ -315,53 +315,53 @@ describe('Validation service test ', () => {
 
         it('Given empty field email and empty inicial sequential  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design2", "", "", "", "",)));
+            assert.isFalse(service.isValidDesignData(getBody(2, "", "", "", "",)));
         });
 
         it('Given  email incorrect and empty inicial sequential  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design2", "ncoccys.com.ar", "", "", "",)));
+            assert.isFalse(service.isValidDesignData(getBody(2, "ncoccys.com.ar", "", "", "",)));
         });
 
         it('Given  email incorrect and inicial sequential with caracter incorrect it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design2", "ncoccys.com.ar", "", "", "XABC",)));
+            assert.isFalse(service.isValidDesignData(getBody(2, "ncoccys.com.ar", "", "", "XABC",)));
         });
 
         it('Given empty field email and inicial sequential with caracter  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design2", "", "", "", "XABC",)));
+            assert.isFalse(service.isValidDesignData(getBody(2, "", "", "", "XABC",)));
         });
 
 
         it('Given  email correct  and empty inicial sequential  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design2", "ncoco@cys.com.ar", "", "", "",)));
+            assert.isFalse(service.isValidDesignData(getBody(2, "ncoco@cys.com.ar", "", "", "",)));
         });
 
         it('Given  email correct  and inicial sequential with caracter incorrect it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design2", "ncoco@cys.com.ar", "", "", "XABC",)));
+            assert.isFalse(service.isValidDesignData(getBody(2, "ncoco@cys.com.ar", "", "", "XABC",)));
         });
 
         it('Given empty field email and empty inicial sequential  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design2", "", "", "", "",)));
+            assert.isFalse(service.isValidDesignData(getBody(2, "", "", "", "",)));
         });
 
         it('Given  email incorrect and empty inicial sequential  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design2", "ncoccys.com.ar", "", "", "",)));
+            assert.isFalse(service.isValidDesignData(getBody(2, "ncoccys.com.ar", "", "", "",)));
         });
 
         it('Given  email incorrect and inicial sequential valid it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design2", "ncoccys.com.ar", "", "", "ABC",)));
+            assert.isFalse(service.isValidDesignData(getBody(2, "ncoccys.com.ar", "", "", "ABC",)));
         });
 
         it('Given empty field email and inicial sequential valid  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design2", "", "", "", "ABC",)));
+            assert.isFalse(service.isValidDesignData(getBody(2, "", "", "", "ABC",)));
         });
 
 
@@ -371,102 +371,102 @@ describe('Validation service test ', () => {
         //Data required: flankingSequence1, flankingSequence2, distance, email, set configurations patena
         it('Given  email correct, positive distance and flanking sequential corrects it should return true', () => {
 
-            assert.isTrue(service.isValidDesignData(getBody("design3", "ncoco@cys.com.ar", "ABC", "ABC", "", 30)));
+            assert.isTrue(service.isValidDesignData(getBody(3, "ncoco@cys.com.ar", "ABC", "ABC", "", 30)));
         });
 
         it('Given empty field email, negative distance ,empty flanking sequential  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "", "", "", "", -30)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "", "", "", "", -30)));
         });
 
         it('Given empty field email, empty distance ,empty flanking sequential  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "", "", "", "",)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "", "", "", "",)));
         });
 
         it('Given  email incorrect, empty distance and empty flanking sequential it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "ncoccys.com.ar", "", "", "",)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "ncoccys.com.ar", "", "", "",)));
         });
 
         it('Given  email incorrect,negative distance and empty flanking sequential  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "ncoccys.com.ar", "", "", "", -30)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "ncoccys.com.ar", "", "", "", -30)));
         });
 
         it('Given  email incorrect, empty distance and flanking sequential with caracter incorrect it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "ncoccys.com.ar", "AXBC", "AXBC", "",)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "ncoccys.com.ar", "AXBC", "AXBC", "",)));
         });
 
         it('Given  email incorrect, negative distance and flanking sequential with caracter incorrect it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "ncoccys.com.ar", "AXBC", "AXBC", "", -25)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "ncoccys.com.ar", "AXBC", "AXBC", "", -25)));
         });
 
         it('Given  email incorrect, positive distance and flanking sequential with caracter incorrect it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "ncoccys.com.ar", "AXBC", "AXBC", "", 25)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "ncoccys.com.ar", "AXBC", "AXBC", "", 25)));
         });
 
         it('Given empty field email and inicial sequential with caracter  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "", "", "", "",)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "", "", "", "",)));
         });
 
         it('Given  email correct,positive distance and empty flanking sequential2  and flanking sequential1 correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "ncoco@cys.com.ar", "ABC", "", "", 40)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "ncoco@cys.com.ar", "ABC", "", "", 40)));
         });
 
         it('Given  email correct,positive distance and empty flanking sequential1  and flanking sequential2 correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "ncoco@cys.com.ar", "", "ABC", "", 40)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "ncoco@cys.com.ar", "", "ABC", "", 40)));
         });
 
         it('Given  email correct,negative distance and empty flanking sequential2  and flanking sequential1 correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "ncoco@cys.com.ar", "ABC", "", "", -40)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "ncoco@cys.com.ar", "ABC", "", "", -40)));
         });
 
         it('Given  email correct,negative distance and empty flanking sequential1  and flanking sequential2 correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "ncoco@cys.com.ar", "", "ABC", "", -40)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "ncoco@cys.com.ar", "", "ABC", "", -40)));
         });
 
         it('Given  email correct ,positive distance , flanking sequential2 wrong and flanking sequential1 correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "ncoco@cys.com.ar", "ABC", "XACB", "", 40)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "ncoco@cys.com.ar", "ABC", "XACB", "", 40)));
         });
 
         it('Given  email correct , positive distance , flanking sequential1 wrong and flanking sequential1 correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "ncoco@cys.com.ar", "XABC", "ACB", "", 40)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "ncoco@cys.com.ar", "XABC", "ACB", "", 40)));
         });
 
         it('Given  email correct ,  negative distance, flanking sequential2 wrong and flanking sequential1 correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "ncoco@cys.com.ar", "ABC", "XACB", "", -40)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "ncoco@cys.com.ar", "ABC", "XACB", "", -40)));
         });
 
         it('Given  email correct , negative distance, flanking sequential1 wrong and flanking sequential1 correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "ncoco@cys.com.ar", "XABC", "ACB", "", -40)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "ncoco@cys.com.ar", "XABC", "ACB", "", -40)));
         });
 
         it('Given empty field email and flanking sequential  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "", "", "", "", 40)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "", "", "", "", 40)));
         });
 
         it('Given  email incorrect , flanking sequential and distance valid   it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "ncoccys.com.ar", "ABC", "ABC", "", 40)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "ncoccys.com.ar", "ABC", "ABC", "", 40)));
         });
 
         it('Given empty field email, flanking sequential and distance valid  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design3", "", "ABC", "ABC", "", 40)));
+            assert.isFalse(service.isValidDesignData(getBody(3, "", "ABC", "ABC", "", 40)));
         });
 
 
@@ -476,182 +476,182 @@ describe('Validation service test ', () => {
         //Data required: flankingSequence1, flankingSequence2, initial sequential, distance, email, set configurations patena
         it('Given  email correct, positive distance, initial sequential and flanking sequential corrects it should return true', () => {
 
-            assert.isTrue(service.isValidDesignData(getBody("design4", "ncoco@cys.com.ar", "ABC", "ABC", "ABC", 30)));
+            assert.isTrue(service.isValidDesignData(getBody(4, "ncoco@cys.com.ar", "ABC", "ABC", "ABC", 30)));
         });
 
         it('Given empty field email, negative distance ,empty the rest of the parameters required  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "", "", "", "", -30)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "", "", "", "", -30)));
         });
 
         it('Given empty field email, positive distance ,empty the rest of the parameters required  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "", "", "", "", 30)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "", "", "", "", 30)));
         });
 
         it('Given empty field email, empty distance ,the rest of the parameters required completed  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "", "ABC", "ABC", "ACB", "")));
+            assert.isFalse(service.isValidDesignData(getBody(4, "", "ABC", "ABC", "ACB", "")));
         });
 
         it('Given empty field email, negative distance ,the rest of the parameters required completed  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "", "ABC", "ABC", "ACB", "-40")));
+            assert.isFalse(service.isValidDesignData(getBody(4, "", "ABC", "ABC", "ACB", "-40")));
         });
 
         it('Given email, negative distance ,empty the rest of the parameters required  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoco@cys.com.ar", "", "", "", -30)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoco@cys.com.ar", "", "", "", -30)));
         });
 
         it('Given  email, positive distance ,empty the rest of the parameters required  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoco@cys.com.ar", "", "", "", 30)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoco@cys.com.ar", "", "", "", 30)));
         });
 
         it('Given  email, empty distance ,the rest of the parameters required completed  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoco@cys.com.ar", "ABC", "ABC", "ABC",)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoco@cys.com.ar", "ABC", "ABC", "ABC",)));
         });
 
         it('Given  email, negative distance ,the rest of the parameters required completed  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoco@cys.com.ar", "ABC", "ABC", "ABC", -40)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoco@cys.com.ar", "ABC", "ABC", "ABC", -40)));
         });
 
         it('Given  email incorrect, empty the rest of the parameters required it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoccys.com.ar", "", "", "", "")));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoccys.com.ar", "", "", "", "")));
         });
 
         it('Given  email incorrect, empty the rest of the parameters required completed  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoccys.com.ar", "ABC", "ABC", "ABC", "45")));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoccys.com.ar", "ABC", "ABC", "ABC", "45")));
         });
 
         it('Give email incorrect, negative distance, empty the rest of the parameters required completed  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoccys.com.ar", "ABC", "ABC", "ABC", "-45")));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoccys.com.ar", "ABC", "ABC", "ABC", "-45")));
         });
 
         it('Given email incorrect,negative distance and empty flanking sequential  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoccys.com.ar", "", "", "", -30)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoccys.com.ar", "", "", "", -30)));
         });
 
         it('Given email incorrect,negative distance, empty initial sequential and  the rest of the parameters completed it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoccys.com.ar", "ABC", "ABC", "", 30)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoccys.com.ar", "ABC", "ABC", "", 30)));
         });
 
         it('Given email incorrect,positive distance, empty initial sequential and the rest of the parameters completed it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoccys.com.ar", "ABC", "ABC", "", 30)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoccys.com.ar", "ABC", "ABC", "", 30)));
         });
 
         it('Given  email incorrect, empty initial sequential and the rest of the parameters requeried completed it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoccys.com.ar", "ABC", "ABC", "", 30)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoccys.com.ar", "ABC", "ABC", "", 30)));
         });
 
         it('Given email incorrect, empty distance, flanking sequential with caracter incorrect and initial sequential correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoccys.com.ar", "AXBC", "AXBC", "ABF",)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoccys.com.ar", "AXBC", "AXBC", "ABF",)));
         });
 
         it('Given email incorrect, empty distance, flanking sequential 1 with caracter incorrect and the rest parameters correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoccys.com.ar", "AXBC", "ABC", "ABF",)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoccys.com.ar", "AXBC", "ABC", "ABF",)));
         });
 
         it('Given email incorrect, empty distance, flanking sequential 2 with caracter incorrect and the rest parameters correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoccys.com.ar", "AXBC", "ABC", "ABF",)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoccys.com.ar", "AXBC", "ABC", "ABF",)));
         });
 
         it('Given email incorrect, negative distance and flanking sequential with caracter incorrect and the rest parameters correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoccys.com.ar", "ABC", "AXBC", "ABC", -25)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoccys.com.ar", "ABC", "AXBC", "ABC", -25)));
         });
 
         it('Given email incorrect, positive distance and flanking sequential1 with caracter incorrect and the rest parameters correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoccys.com.ar", "ABC", "AXBC", "ABC", 25)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoccys.com.ar", "ABC", "AXBC", "ABC", 25)));
         });
 
         it('Given email incorrect, positive distance and flanking sequential1 with caracter incorrect and the rest parameters correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoccys.com.ar", "AXBC", "AXBC", "", 25)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoccys.com.ar", "AXBC", "AXBC", "", 25)));
         });
 
         it('Given email incorrect, positive distance, initial sequential with caracter incorrect and the rest parameters correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoccys.com.ar", "ABC", "ABC", "AXBC", 25)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoccys.com.ar", "ABC", "ABC", "AXBC", 25)));
         });
 
         it('Given empty field email and inicial sequential with caracter  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "", "", "", "",)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "", "", "", "",)));
         });
 
         it('Given email correct,positive distance and empty flanking sequential2  and flanking sequential1 correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoco@cys.com.ar", "ABC", "", "", 40)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoco@cys.com.ar", "ABC", "", "", 40)));
         });
 
         it('Given email correct,positive distance and empty flanking sequential1  and flanking sequential2 correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoco@cys.com.ar", "", "ABC", "", 40)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoco@cys.com.ar", "", "ABC", "", 40)));
         });
 
         it('Given email correct,negative distance and empty flanking sequential2  and flanking sequential1 correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoco@cys.com.ar", "ABC", "", "", -40)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoco@cys.com.ar", "ABC", "", "", -40)));
         });
 
         it('Given email correct,negative distance and empty flanking sequential1  and flanking sequential2 correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoco@cys.com.ar", "", "ABC", "", -40)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoco@cys.com.ar", "", "ABC", "", -40)));
         });
 
         it('Given email correct ,positive distance , flanking sequential2 wrong and flanking sequential1 correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoco@cys.com.ar", "ABC", "XACB", "", 40)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoco@cys.com.ar", "ABC", "XACB", "", 40)));
         });
 
         it('Given email correct , positive distance , flanking sequential1 wrong and flanking sequential1 correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoco@cys.com.ar", "XABC", "ACB", "", 40)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoco@cys.com.ar", "XABC", "ACB", "", 40)));
         });
 
         it('Given email correct ,  negative distance, flanking sequential2 wrong and flanking sequential1 correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoco@cys.com.ar", "ABC", "XACB", "", -40)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoco@cys.com.ar", "ABC", "XACB", "", -40)));
         });
 
         it('Given email correct , negative distance, flanking sequential1 wrong and flanking sequential1 correct it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoco@cys.com.ar", "XABC", "ACB", "", -40)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoco@cys.com.ar", "XABC", "ACB", "", -40)));
         });
 
         it('Given  positive distance and empty the rest  parameters  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "", "", "", "", 40)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "", "", "", "", 40)));
         });
 
         it('Given  negative distance and empty the rest  parameters  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "", "", "", "", -40)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "", "", "", "", -40)));
         });
 
         it('Given empty  all  parameters  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "", "", "", "",)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "", "", "", "",)));
         });
 
         it('Given email incorrect and the rest parameters required correct  it should return false', () => {
 
-            assert.isFalse(service.isValidDesignData(getBody("design4", "ncoccys.com.ar", "ABC", "ABC", "ABC", 40)));
+            assert.isFalse(service.isValidDesignData(getBody(4, "ncoccys.com.ar", "ABC", "ABC", "ABC", 40)));
         });
 
     });

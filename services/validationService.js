@@ -121,10 +121,10 @@ function isValidExtension(fileName) {
 function isValid (body){
     let MapDesign = new Map();
 
-    MapDesign.set('design1',design1.validate(body));
-    MapDesign.set('design2',design2.validate(body));
-    MapDesign.set('design3',design3.validate(body));
-    MapDesign.set('design4',design4.validate(body));
+    MapDesign.set(1,design1.validate(body));
+    MapDesign.set(2,design2.validate(body));
+    MapDesign.set(3,design3.validate(body));
+    MapDesign.set(4,design4.validate(body));
     return  MapDesign.get(body.designType);
 }
 
@@ -142,9 +142,9 @@ function isLessThat(netCharge, length) {
 }
 
 function isValidNetCharge (netCharge = undefined, initialSequence= undefined){
-  if (netCharge == undefined || initialSequence == undefined){ return true};
+  if (netCharge == undefined || initialSequence == undefined || initialSequence.value == undefined ){ return true};
 
-  return isPositiveNumber(netCharge) && isLessThat(netCharge,initialSequence.length);
+  return isPositiveNumber(netCharge) && isLessThat(netCharge,initialSequence.value.length);
 }
 
 function areValidAlgorithms(algorithms){
@@ -162,6 +162,10 @@ function isValidCustomConfig(body){
   }
 
   return true; // if no config then we use default Patena's settings.
+}
+
+function isConfigDefault(body){
+  return body.config==undefined;
 }
 
 module.exports = {
@@ -203,8 +207,8 @@ module.exports = {
     return isValidNetCharge(netCharge);
   },
 
-  isValidCustomConfig : function (body) {
-    return isValidCustomConfig(body) ;
+  existAnyValidConfig: function(body){
+    return isValidCustomConfig(body) || isConfigDefault(body);
   }
 
 };

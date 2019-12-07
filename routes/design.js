@@ -7,20 +7,20 @@ let design4 = require('../services/validationServiceDesignInitialSequenceAndFlan
 
 function getMapDesign(req){
     let MapDesign = new Map();
-    let isValidCustomConfig = validationService.isValidCustomConfig(req.body);
-        MapDesign.set('design1',design1.validate(req.body, isValidCustomConfig));
-        MapDesign.set('design2',design2.validate(req.body, isValidCustomConfig));
-        MapDesign.set('design3',design3.validate(req.body, isValidCustomConfig));
-        MapDesign.set('design4',design4.validate(req.body, isValidCustomConfig));
+        MapDesign.set(1,design1.validate(req.body));
+        MapDesign.set(2,design2.validate(req.body));
+        MapDesign.set(3,design3.validate(req.body));
+        MapDesign.set(4,design4.validate(req.body));
     return MapDesign;
 }
 
 
 function postDesign(req, res) {
     let MapDesign = getMapDesign(req)
+    let isValidConfig = validationService.existAnyValidConfig(req.body);
 
     if (req.body) {
-        if ( MapDesign.get(req.body.designType)) {
+        if ( MapDesign.get(req.body.designType) && isValidConfig) {
             try {
                 let orderNumber = designService.sendOrderNumber(req.body.email);
                 res.json({
