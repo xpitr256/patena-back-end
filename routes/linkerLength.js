@@ -3,9 +3,9 @@ let router = express.Router();
 let validationService = require('../services/validationService.js');
 
 function getlength(r){
-  var L = 0.1;
+  var L = 1;
   var Lmax = 1;
-  var LRange=1000;
+  var LRange=100;
   var b = 3.8;
   var lc = b*L;
   var lp = 3;
@@ -152,7 +152,7 @@ router.get('/', function(req, res, next) {
 
   if (validationService.isValidDistance(req.query.distance)) {
     res.json({
-      length: getLengthByMap(Number(req.query.distance)).toFixed(2),
+      length: getLengthByMap(Number(req.query.distance)).toFixed(),
       distance: Number(req.query.distance)
     });
   } else {

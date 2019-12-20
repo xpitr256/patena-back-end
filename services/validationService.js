@@ -64,6 +64,11 @@ function isPositiveNumber(value){
   return  !!(isInt(value) && value > 0);
 }
 
+function isPositiveDecimal(value){
+  const pattern = /^[0-9]{1,2}(?:.[0-9]{1})?$/;
+  return pattern.test(value);
+}
+
 function validateEmail(inputText) {
   const mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   return mailFormat.test(String(inputText).toLowerCase());
@@ -176,7 +181,7 @@ module.exports = {
       return false;
     }
 
-    return isPositiveNumber(distance);
+    return isPositiveDecimal(distance);
   },
 
   isValidContactData : function (email, name, message){

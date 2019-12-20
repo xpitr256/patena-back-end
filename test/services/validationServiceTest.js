@@ -148,8 +148,8 @@ describe('Validation service test ', () => {
             assert.isFalse(service.isValidDistance(zero));
         });
 
-        it('Given a zero distance as string it should return false', () => {
-            assert.isFalse(service.isValidDistance('0'));
+        it('Given a zero distance with two decimals it should return false', () => {
+            assert.isFalse(service.isValidDistance(5.06));
         });
 
         it('Given a positive distance it should return true', () => {
