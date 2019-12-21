@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "test": "mocha --recursive",
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "generateLength": "node ./jobs/generateLength.js"
   },
   "dependencies": {
     "@sendgrid/mail": "^6.4.0",
@@ -23,7 +24,8 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "chai-files": "^1.4.0",
-    "mocha": "^6.1.4"
+    "mocha": "^6.2.2"
   }
 }

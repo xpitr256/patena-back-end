@@ -32,7 +32,7 @@ function calculateLength(r){
         }
         L=L+0.0001;
     }
-    console.log(pmax);
+    console.log(r.toFixed(1)+"\t\t\t"+Lmax.toFixed());
     return Lmax;
 
 }
@@ -45,7 +45,7 @@ async function generateLength(){
 
         try {
             distanceLength = new DistanceLength({
-                distance: r,
+                distance: r.toString(),
                 length: calculateLength(r)
             });
             await distanceLength.save();
@@ -59,7 +59,7 @@ async function generateLength(){
 
 async function getLength(distance){
     return await DistanceLength.find({
-        distance: distance
+        distance: distance.toString()
     }, "-_id -__v -distance");
 }
 

@@ -1,10 +1,9 @@
-import {Decimal128} from "mongoose";
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 
 var DistanceLengthSchema = new Schema({
-    distance: Decimal128,
+    distance: String,
     length: Number
 });
 
