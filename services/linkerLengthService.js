@@ -1,4 +1,6 @@
 const DistanceLength = require ('../model/schema/DistanceLength');
+const mongoose = require('mongoose');
+const config = require('../config/config');
 function calculateLength(r){
     var L = 1;
     var Lmax = 1;
@@ -38,10 +40,10 @@ function calculateLength(r){
 }
 
 async function generateLength(){
-    let r=1
+    let r= 1.0;
     let delta=0.1
     let rmax=100
-    while (r<rmax){
+    while (r<=rmax){
 
         try {
             distanceLength = new DistanceLength({
@@ -54,13 +56,17 @@ async function generateLength(){
             return e;
         }
         r=r+delta;
+        r= Math.round(r*10)/10;
     }
 }
 
 async function getLength(distance){
-    return await DistanceLength.find({
+
+    let result = await( DistanceLength.find({
         distance: distance.toString()
-    }, "-_id -__v -distance");
+    }, "-_id -__v "));
+
+    return result;
 }
 
 
@@ -70,6 +76,13 @@ module.exports = {
         return await generateLength();
     },
     getLength : async function (distance){
-        return  await getLength(distance);
+        let result =  await getLength(distance);
+
+        if (result){
+            let valor = Math.round(Number(result[0]['length']));
+            return valor;
+        }
+
+        return 0;
     }
 };

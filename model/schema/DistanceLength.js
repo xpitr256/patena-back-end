@@ -7,4 +7,4 @@ var DistanceLengthSchema = new Schema({
     length: Number
 });
 
-module.exports = mongoose.model('Length', DistanceLengthSchema);
+module.exports = mongoose.model('DistanceLength', DistanceLengthSchema);
