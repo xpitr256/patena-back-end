@@ -9,7 +9,7 @@ describe('Consult Length', function () {
     connectionBBDD.conectarDB();
     describe('Consulting BBDD Distance-Length', function () {
 
-        it('Ask for the number 1.0 and I hope you return an answer ', async () => {
+        it('Ask for the number 1.3 and I hope you return an answer ', async () => {
             const result = await service.getLength(1.3);
             expect(result).to.be.an('Number');
         });
@@ -25,7 +25,7 @@ describe('Consult Length', function () {
             expect(result).to.equal(3);
         });
 
-        it('Ask for the number 1.1 and I hope you return the value positive', async () => {
+        it('Ask for the number 6.5 and I hope you return the value positive', async () => {
             const result = await service.getLength(6.5);
             assert.isBelow(0,result);
         });
