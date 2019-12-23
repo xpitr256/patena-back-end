@@ -1,13 +1,17 @@
 const mongoose = require('mongoose');
 const config = require('../config/config.js');
 
-function conectarDB() {
-    mongoose.connect(config.MONGODB_URI, config.MONGODB_CONFIG)
+async function conectarDB() {
+    await mongoose.connect(config.MONGODB_URI, config.MONGODB_CONFIG).then(() => {
+        console.log('MongoDB conectada!')
+    }).catch(err => {
+        console.log(err);
+    })
 
 }
 
 module.exports = {
-    conectarDB: function() {
-        conectarDB();
+    conectarDB: async function() {
+        await conectarDB();
     }
 };

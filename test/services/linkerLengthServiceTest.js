@@ -14,6 +14,11 @@ describe('Consult Length', function () {
             expect(result).to.be.an('Number');
         });
 
+        it('Ask for the number 80 and I hope you return an answer ', async () => {
+            const result = await service.getLength(80);
+            expect(result).to.be.an('Number');
+        });
+
         it('Ask for the number 1 and I hope you return the value 1.0', async () => {
             const result = await service.getLength(1);
             expect(result).to.equal(1.0);

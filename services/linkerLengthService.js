@@ -1,6 +1,5 @@
 const DistanceLength = require ('../model/schema/DistanceLength');
-const mongoose = require('mongoose');
-const config = require('../config/config');
+
 function calculateLength(r){
     var L = 1;
     var Lmax = 1;
