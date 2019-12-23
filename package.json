@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "test": "mocha --recursive",
-    "start": "node ./bin/www"
+    "test": "mocha --recursive --timeout 15000 --reporter list",
+    "start": "node ./bin/www",
+    "generateLength": "node ./jobs/generateLength.js"
   },
   "dependencies": {
     "@sendgrid/mail": "^6.4.0",
@@ -12,17 +13,20 @@
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "^4.16.4",
+    "express-fileupload": "latest",
     "http-errors": "~1.6.3",
+    "mongoose": "latest",
     "morgan": "~1.9.1",
     "multer": "^1.4.2",
+    "node-fetch": "^2.6.0",
     "node-powershell": "^4.0.0",
     "pug": "^2.0.4",
-    "python-shell": "^1.0.8",
-    "express-fileupload": "latest"
+    "python-shell": "^1.0.8"
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "chai-files": "^1.4.0",
-    "mocha": "^6.1.4"
+    "mocha": "^6.2.2"
   }
 }

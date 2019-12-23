@@ -27,6 +27,11 @@ function isEmpty(input){
 
   return input.trim().length === 0;
 }
+
+function isPositiveDecimal(value){
+  const pattern = /^[0-9]{1,2}(?:.[0-9]{1})?$/;
+  return pattern.test(value);
+}
 module.exports = {
   isValidDistance : function (distance) {
 
@@ -37,7 +42,7 @@ module.exports = {
     return isPositiveNumber(distance);
   },
   validate: function (body) {
-    return isValidMail(body.email) && isPositiveNumber(body.distance) ;
+    return isValidMail(body.email) && isPositiveDecimal(body.distance) ;
   }
 
 };
