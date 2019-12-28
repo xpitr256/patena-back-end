@@ -139,7 +139,7 @@ function areValidFrequencies(frequencies){
   for (let amino in frequencies){
        result+= parseFloat(frequencies[amino].value);
     }
-  return result.toFixed(3)==10.000
+  return result.toFixed(1)==100.0
 }
 
 function isLessThat(netCharge, length) {
