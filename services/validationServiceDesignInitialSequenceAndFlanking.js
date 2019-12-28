@@ -74,6 +74,9 @@ function isInt(value) {
 module.exports = {
 
   validate: function (body) {
-    return isValidMail(body.email) && isValidFasta(body.flankingSequence1) && isValidFasta(body.flankingSequence2) && isValidFasta(body.initialSequence);
+    if (body.email){
+      return isValidMail(body.email) && isValidFasta(body.flankingSequence1) && isValidFasta(body.flankingSequence2) && isValidFasta(body.initialSequence);
+    }
+    return isValidFasta(body.flankingSequence1) && isValidFasta(body.flankingSequence2) && isValidFasta(body.initialSequence);
   }
 };

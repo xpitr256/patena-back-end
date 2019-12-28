@@ -67,6 +67,9 @@ function isEmpty(input){
 }
 module.exports = {
   validate : function (body) {
-    return isValidMail(body.email) && isValidFasta(body.flankingSequence1) && isValidFasta(body.flankingSequence2);
+    if (body.email){
+      return isValidMail(body.email) && isValidFasta(body.flankingSequence1) && isValidFasta(body.flankingSequence2);
+    }
+    return  isValidFasta(body.flankingSequence1) && isValidFasta(body.flankingSequence2);
   }
 };

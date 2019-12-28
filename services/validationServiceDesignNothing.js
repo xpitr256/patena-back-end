@@ -42,7 +42,10 @@ module.exports = {
     return isPositiveNumber(distance);
   },
   validate: function (body) {
-    return isValidMail(body.email) && isPositiveDecimal(body.distance) ;
+    if (body.email){
+      return isValidMail(body.email) && isPositiveDecimal(body.distance) ;
+    }
+    return isPositiveDecimal(body.distance) ;
   }
 
 };

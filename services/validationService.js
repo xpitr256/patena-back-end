@@ -193,7 +193,10 @@ module.exports = {
   },
 
   isValidAnalyzeData : function (body) {
-    return isValidMail(body.email) && isValidFasta(body.sequence);
+    if(body.email){
+      return isValidMail(body.email) && isValidFasta(body.sequence);
+    }
+    return isValidFasta(body.sequence);
   },
 
   isValidDesignData : function (body) {
