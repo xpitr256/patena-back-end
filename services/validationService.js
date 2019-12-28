@@ -149,7 +149,7 @@ function isLessThat(netCharge, length) {
 function isValidNetCharge (netCharge = undefined, initialSequence= undefined){
   if (netCharge == undefined || initialSequence == undefined || initialSequence.value == undefined ){ return true};
 
-  return isPositiveNumber(netCharge) && isLessThat(netCharge,initialSequence.value.length);
+  return isInt(netCharge) && isLessThat(netCharge,initialSequence.value.length);
 }
 
 function areValidAlgorithms(algorithms){
