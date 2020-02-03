@@ -10,7 +10,7 @@ String.prototype.replaceAll = function(search, replacement) {
     return target.split(search).join(replacement);
 };
 
-PythonShell.run('./test.py', options, function (err, results) {
+PythonShell.run('test.py', options, function (err, results) {
     if (err) throw err;
     // results is an array consisting of messages collected during execution
 
