@@ -11,11 +11,15 @@ String.prototype.replaceAll = function(search, replacement) {
 };
 
 PythonShell.run('./routes/test.py', options, function (err, results) {
-    if (err) throw err;
+    if (err){
+        console.error(err);
+        throw err;
+    }
     // results is an array consisting of messages collected during execution
 
-    let jsonString = results[0].replaceAll("'","\"")
+    let jsonString = results[0].replaceAll("'","\"");
     let data = JSON.parse(jsonString);
+    console.log("GETTING Back from python:");
     console.log(data);
 });
 
