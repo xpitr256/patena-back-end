@@ -2,12 +2,12 @@ let validationService = require('../services/validationService.js');
 let analizeService = require ('../services/analizeService');
 
 
-function postAnalyze(req, res) {
+async function postAnalyze(req, res) {
     if (req.body.sequence) {
 
         if ( validationService.isValidAnalyzeData(req.body)) {
             try {
-                let orderNumber = analizeService.sendOrderNumber(req.body.email, req.body.sequence);
+                let orderNumber = await analizeService.sendOrderNumber(req.body.email, req.body.sequence);
                 res.json({
                     orderNumber: orderNumber.toString()
                 });
