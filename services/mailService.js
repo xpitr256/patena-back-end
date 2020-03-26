@@ -222,7 +222,7 @@ module.exports = {
     sendContactMail : function(email, name, message) {
         return new Promise((resolve, reject) => {
 
-            const htmlContent = fs.readFileSync("./emailTemplates/workInProgress.html","utf-8");
+            const htmlContent = fs.readFileSync("./services/emailTemplates/workInProgress.html","utf-8");
 
             const emailBody = {
                 to: 'pablomassuh@gmail.com',
