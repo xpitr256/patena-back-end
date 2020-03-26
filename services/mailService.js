@@ -1,9 +1,10 @@
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const fs = require('fs'); //Filesystem
 
 module.exports = {
 
-    sendContactMail : function(email, name, message) {
+    sendContactMail2 : function(email, name, message) {
         return new Promise((resolve, reject) => {
             const emailBody = {
                 to: 'pablomassuh@gmail.com',
@@ -215,5 +216,29 @@ module.exports = {
                 }
             });
         })
+    },
+
+
+    sendContactMail : function(email, name, message) {
+        return new Promise((resolve, reject) => {
+
+            const htmlContent = fs.readFileSync("./emailTemplates/workInProgress.html","utf-8");
+
+            const emailBody = {
+                to: 'pablomassuh@gmail.com',
+                from: email,
+                subject: 'PATENA - Nuevo Diseño de Linker',
+                html: htmlContent
+            };
+
+            sgMail.send(emailBody, function(err, json) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        })
     }
+
 };
