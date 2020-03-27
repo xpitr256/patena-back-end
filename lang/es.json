@@ -1,0 +1,28 @@
+{
+  "mailService": {
+    "firm": {
+      "laboratory": "Laboratorio de Fisiología de Proteínas",
+      "department": "Departamento de Química Biológica - IQUIBICEN",
+      "school": "Facultad de Ciencias Exactas y Naturales",
+      "university": "Universidad de Buenos Aires - Argentina"
+    },
+    "workInProgress": {
+      "subject": {
+        "design": "PATENA - Nuevo Diseño de Linker",
+        "analysis": "PATENA - Nuevo Analisis de  Linker"
+      },
+      "workType": {
+        "design": "",
+        "analysis": "Análisis de Linker"
+      },
+      "title": {
+        "design": "Diseño de Linker en proceso",
+        "analysis": "Análisis de Linker en proceso"
+      },
+      "mr": "Estimado/a:",
+      "description": "We had successfully received your data and your request is in progress. Your assigned order number is:",
+      "availableMessage": "You will received an email when your request is done",
+      "thanksMessage": "Gracias por utilizar PATENA!"
+    }
+  }
+}

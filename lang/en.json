@@ -1,0 +1,24 @@
+{
+  "mailService": {
+    "firm": {
+      "laboratory": "Protein Physiology Laboratory",
+      "department": "Department of Biological Chemistry - IQUIBICEN",
+      "school": "School of Exact and Natural Sciences",
+      "university": "Buenos Aires' University - Argentina"
+    },
+    "workInProgress": {
+      "subject": {
+        "design": "PATENA - New Linker Design job",
+        "analysis": "PATENA - New Linker Analysis job"
+      },
+      "title": {
+        "design": "Linker Design in progress",
+        "analysis": "Linker Analysis in progress"
+      },
+      "mr": "Mr/Ms:",
+      "description": "We had successfully received your data and your request is in progress. Your assigned order number is:",
+      "availableMessage": "You will received an email when your request is done.",
+      "thanksMessage": "Thanks for using PATENA!"
+    }
+  }
+}

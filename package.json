@@ -21,7 +21,8 @@
     "node-fetch": "^2.6.0",
     "node-powershell": "^4.0.0",
     "pug": "^2.0.4",
-    "python-shell": "^1.0.8"
+    "python-shell": "^1.0.8",
+    "mustache": "^4.0.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
