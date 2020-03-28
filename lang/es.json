@@ -6,23 +6,31 @@
       "school": "Facultad de Ciencias Exactas y Naturales",
       "university": "Universidad de Buenos Aires - Argentina"
     },
+    "mr": "Estimado/a:",
+    "thanksMessage": "Gracias por utilizar PATENA!",
     "workInProgress": {
       "subject": {
         "design": "PATENA - Nuevo Diseño de Linker",
         "analysis": "PATENA - Nuevo Analisis de  Linker"
       },
-      "workType": {
-        "design": "",
-        "analysis": "Análisis de Linker"
-      },
       "title": {
         "design": "Diseño de Linker en proceso",
         "analysis": "Análisis de Linker en proceso"
       },
-      "mr": "Estimado/a:",
-      "description": "We had successfully received your data and your request is in progress. Your assigned order number is:",
-      "availableMessage": "You will received an email when your request is done",
-      "thanksMessage": "Gracias por utilizar PATENA!"
+      "description": "Hemos recibido correctamente sus datos y su solicitud se encuentra en proceso. Su número de orden asignado es:",
+      "availableMessage": "Recibirá un email cuando su solicitud esté lista."
+    },
+    "workSuccess": {
+      "subject": {
+        "design": "PATENA - Diseño de Linker terminado!",
+        "analysis": "PATENA - Análisis de Linker terminado!"
+      },
+      "title": {
+        "design": "El diseño del Linker está listo",
+        "analysis": "El análisis del Linker está listo"
+      },
+      "description": "Su pedido está disponible. Por favor clickee el siguiente botón para acceder a los resultados.",
+      "linkMessage": "o sino puede verlos en el siguiente link: "
     }
   }
 }

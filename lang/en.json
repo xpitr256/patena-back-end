@@ -6,6 +6,8 @@
       "school": "School of Exact and Natural Sciences",
       "university": "Buenos Aires' University - Argentina"
     },
+    "mr": "Mr/Ms:",
+    "thanksMessage": "Thanks for using PATENA!",
     "workInProgress": {
       "subject": {
         "design": "PATENA - New Linker Design job",
@@ -15,10 +17,20 @@
         "design": "Linker Design in progress",
         "analysis": "Linker Analysis in progress"
       },
-      "mr": "Mr/Ms:",
       "description": "We had successfully received your data and your request is in progress. Your assigned order number is:",
-      "availableMessage": "You will received an email when your request is done.",
-      "thanksMessage": "Thanks for using PATENA!"
+      "availableMessage": "You will received an email when your request is done."
+    },
+    "workSuccess": {
+      "subject": {
+        "design": "PATENA - Linker Design job finished!",
+        "analysis": "PATENA - Linker Analysis job finished!"
+      },
+      "title": {
+        "design": "Linker Design has finished",
+        "analysis": "Linker Analysis has finished"
+      },
+      "description": "Your request is complete now. Please click the following button to see your results.",
+      "linkMessage": "or you can just go to the following link: "
     }
   }
 }
