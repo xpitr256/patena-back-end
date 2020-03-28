@@ -48,9 +48,10 @@ function getWorkSuccessMailData(language, workType, workId) {
     mailData.subject = workType === 'design' ? translations.mailService.workSuccess.subject.design : translations.mailService.workSuccess.subject.analysis;
     mailData.title = workType === 'design' ? translations.mailService.workSuccess.title.design : translations.mailService.workSuccess.title.analysis;
     mailData.description = translations.mailService.workSuccess.description;
-
+    mailData.seeResults = translations.mailService.workSuccess.seeResults;
     const resultsLink = config.FRONT_END_BASE_URL + '/results?orderNumber=' + workId;
-    mailData.linkMessage = translations.mailService.workInProgress.linkMessage + '<a href="' + resultsLink + '" target="_blank">' + resultsLink + '</a>';
+    mailData.resultsUrl = resultsLink;
+    mailData.linkMessage = translations.mailService.workSuccess.linkMessage + '<a href="' + resultsLink + '" target="_blank">' + resultsLink + '</a>';
 
     return mailData;
 }

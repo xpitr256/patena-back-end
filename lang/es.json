@@ -29,6 +29,7 @@
         "design": "El diseño del Linker está listo",
         "analysis": "El análisis del Linker está listo"
       },
+      "seeResults": "Ver resultados",
       "description": "Su pedido está disponible. Por favor clickee el siguiente botón para acceder a los resultados.",
       "linkMessage": "o sino puede verlos en el siguiente link: "
     }

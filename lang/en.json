@@ -29,6 +29,7 @@
         "design": "Linker Design has finished",
         "analysis": "Linker Analysis has finished"
       },
+      "seeResults": "See results",
       "description": "Your request is complete now. Please click the following button to see your results.",
       "linkMessage": "or you can just go to the following link: "
     }
