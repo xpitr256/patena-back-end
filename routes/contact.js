@@ -1,16 +1,22 @@
-let validationService = require('../services/validationService.js');
-let mailService = require('../services/mailService.js');
+const validationService = require('../services/validationService.js');
+const mailService = require('../services/mailService.js');
+const DOMPurify = require('isomorphic-dompurify');
 
 async function postContact(req, res) {
-    if ( validationService.isValidContactData(req.body.email, req.body.name, req.body.message)) {
+
+    const email = DOMPurify.sanitize(req.body.email);
+    const name = DOMPurify.sanitize(req.body.name);
+    const message = DOMPurify.sanitize(req.body.message);
+
+    if ( validationService.isValidContactData(email, name , message)) {
         try {
-            await mailService.sendContactMail(req.body.email, req.body.name, req.body.message);
+            await mailService.sendContactMail(email, name, message);
             res.json({
                 message: "Contact form sent ok!"
             });
 
         } catch (err) {
-            res.status(400).send(err);
+            res.status(500).send(err);
         }
     } else {
         res.status(400).send({
