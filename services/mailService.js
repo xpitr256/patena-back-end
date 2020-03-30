@@ -69,18 +69,42 @@ function getWorkErrorMailData(language, workType, workId) {
     return mailData;
 }
 
+function geContactMailData(language, name, message) {
+    const translations = translationService.getTranslationsIn(language);
+    let mailData = getCommonMailInformation(translations);
+    mailData.subject = translations.mailService.contact.subject;
+    mailData.title = translations.mailService.contact.title;
+    mailData.from = name;
+    mailData.question = message;
+
+    return mailData;
+}
+
 module.exports = {
 
     sendContactMail : async function(email, name, message) {
 
-        let promises = [];
-        const workId = uuidv4();
+        return new Promise((resolve, reject) => {
 
-        promises.push(module.exports.sendWorkInProgressMail(email,"es","analysis", workId));
-        promises.push(module.exports.sendWorkSuccessMail(email,"es","analysis", workId));
-        promises.push(module.exports.sendWorkErrorMail(email,"es","analysis", workId));
+            const htmlTemplate = fs.readFileSync("./services/emailTemplates/contactMessage.html","utf-8");
+            const data = geContactMailData("en", name, message);
+            const htmlContent = mustache.render(htmlTemplate, data);
 
-        await Promise.all(promises);
+            const emailBody = {
+                to: config.CONTACT_MAIL,
+                from: email,
+                subject: data.subject,
+                html: htmlContent
+            };
+
+            sgMail.send(emailBody, function(err, json) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        })
     },
 
     sendWorkInProgressMail : function(email, language, workType, workId) {
@@ -106,6 +130,7 @@ module.exports = {
             });
         })
     },
+
     sendWorkSuccessMail : function(email, language, workType, workId) {
         return new Promise((resolve, reject) => {
 
@@ -129,6 +154,7 @@ module.exports = {
             });
         })
     },
+
     sendWorkErrorMail : function(email, language, workType, workId) {
         return new Promise((resolve, reject) => {
 

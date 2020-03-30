@@ -44,6 +44,10 @@
       },
       "description": "We are sorry to inform you that we couldn't process your request number:",
       "tryAgain": "Please we encourage you to try it again and if the problem persists do not hesitate to contact us."
+    },
+    "contact": {
+      "subject": "PATENA - New message",
+      "title": "New message from a user"
     }
   }
 }

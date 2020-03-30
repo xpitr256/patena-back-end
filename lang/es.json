@@ -44,6 +44,10 @@
       },
       "description": "Lamentamos comunicarle que no hemos podido procesar su número de orden:",
       "tryAgain": "Lo invitamos a intentarlo nuevamente y si el pproblema persiste no dude en conctactarse con nosotros."
+    },
+    "contact": {
+      "subject": "PATENA - Nuevo mensaje",
+      "title": "Nuevo mensaje de un usuario"
     }
   }
 }
