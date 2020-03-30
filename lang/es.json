@@ -32,6 +32,18 @@
       "seeResults": "Ver resultados",
       "description": "Su pedido está disponible. Por favor clickee el siguiente botón para acceder a los resultados.",
       "linkMessage": "o sino puede verlos en el siguiente link: "
+    },
+    "workError": {
+      "subject": {
+        "design": "PATENA - Error en diseño de Linker",
+        "analysis": "PATENA - Error en análisis de Linker"
+      },
+      "title": {
+        "design": "El diseño del linker ha sido cancelado",
+        "analysis": "El análisis del linker ha sido cancelado"
+      },
+      "description": "Lamentamos comunicarle que no hemos podido procesar su número de orden:",
+      "tryAgain": "Lo invitamos a intentarlo nuevamente y si el pproblema persiste no dude en conctactarse con nosotros."
     }
   }
 }

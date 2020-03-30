@@ -32,6 +32,18 @@
       "seeResults": "See results",
       "description": "Your request is complete now. Please click the following button to see your results.",
       "linkMessage": "or you can just go to the following link: "
+    },
+    "workError": {
+      "subject": {
+        "design": "PATENA - Linker Design error",
+        "analysis": "PATENA - Linker Analysis error"
+      },
+      "title": {
+        "design": "Linker Design has been canceled",
+        "analysis": "Linker Analysis has been canceled"
+      },
+      "description": "We are sorry to inform you that we couldn't process your request number:",
+      "tryAgain": "Please we encourage you to try it again and if the problem persists do not hesitate to contact us."
     }
   }
 }

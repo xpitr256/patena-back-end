@@ -56,10 +56,23 @@ function getWorkSuccessMailData(language, workType, workId) {
     return mailData;
 }
 
+function getWorkErrorMailData(language, workType, workId) {
+    const translations = translationService.getTranslationsIn(language);
+    let mailData = getCommonMailInformation(translations);
+
+    mailData.subject = workType === 'design' ? translations.mailService.workError.subject.design : translations.mailService.workError.subject.analysis;
+    mailData.title = workType === 'design' ? translations.mailService.workError.title.design : translations.mailService.workError.title.analysis;
+    mailData.description = translations.mailService.workError.description;
+    mailData.orderNumber = workId;
+    mailData.tryAgain = translations.mailService.workError.tryAgain;
+
+    return mailData;
+}
+
 module.exports = {
 
     sendContactMail : function(email, name, message) {
-        return module.exports.sendWorkSuccessMail(email,"en","design", uuidv4())
+        return module.exports.sendWorkErrorMail(email,"en","design", uuidv4())
     },
 
     sendWorkInProgressMail : function(email, language, workType, workId) {
@@ -90,6 +103,29 @@ module.exports = {
 
             const htmlTemplate = fs.readFileSync("./services/emailTemplates/workSuccess.html","utf-8");
             const data = getWorkSuccessMailData(language, workType, workId);
+            const htmlContent = mustache.render(htmlTemplate, data);
+
+            const emailBody = {
+                to: email,
+                from: "no-reply@patena.herokuapp.com",
+                subject: data.subject,
+                html: htmlContent
+            };
+
+            sgMail.send(emailBody, function(err, json) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        })
+    },
+    sendWorkErrorMail : function(email, language, workType, workId) {
+        return new Promise((resolve, reject) => {
+
+            const htmlTemplate = fs.readFileSync("./services/emailTemplates/workError.html","utf-8");
+            const data = getWorkErrorMailData(language, workType, workId);
             const htmlContent = mustache.render(htmlTemplate, data);
 
             const emailBody = {
