@@ -71,8 +71,16 @@ function getWorkErrorMailData(language, workType, workId) {
 
 module.exports = {
 
-    sendContactMail : function(email, name, message) {
-        return module.exports.sendWorkErrorMail(email,"en","design", uuidv4())
+    sendContactMail : async function(email, name, message) {
+
+        let promises = [];
+        const workId = uuidv4();
+
+        promises.push(module.exports.sendWorkInProgressMail(email,"es","analysis", workId));
+        promises.push(module.exports.sendWorkSuccessMail(email,"es","analysis", workId));
+        promises.push(module.exports.sendWorkErrorMail(email,"es","analysis", workId));
+
+        await Promise.all(promises);
     },
 
     sendWorkInProgressMail : function(email, language, workType, workId) {
