@@ -192,11 +192,11 @@ module.exports = {
     return isValidOrderNumber(orderNumber) && hasThirtySixCharacters(orderNumber);
   },
 
-  isValidAnalyzeData : function (body) {
-    if(body.email){
-      return isValidMail(body.email) && isValidFasta(body.sequence);
+  isValidAnalyzeData : function (email, sequence) {
+    if (email) {
+      return isValidMail(email) && isValidFasta(sequence);
     }
-    return isValidFasta(body.sequence);
+    return isValidFasta(sequence);
   },
 
   isValidDesignData : function (body) {

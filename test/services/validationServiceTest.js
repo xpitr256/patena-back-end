@@ -108,12 +108,11 @@ const algorithmsAllDesactived= [
     { name: "Amyloid pattern", active: false }
 ];
 
-function getBodyAnalize(email, fastaContent){
-    let body = new Object();
-    body.email=email;
-    body.sequence= { name:"archivo.fasta",value:fastaContent};
-
-    return body;
+function getSequence(fastaContent) {
+    return  {
+        name:"archivo.fasta",
+        value:fastaContent
+    };
 }
 
 function getBody(designType,email,flankingSequence1,flankingSequence2, initialSequence, distance ){
@@ -227,31 +226,31 @@ describe('Validation service test ', () => {
 
 
         it('Given  email and content correct it should return true', () => {
-            assert.isTrue(service.isValidAnalyzeData(getBodyAnalize("nicolascoco85@gmail.com", "ABC")));
+            assert.isTrue(service.isValidAnalyzeData("nicolascoco85@gmail.com", getSequence( "ABC")));
         });
 
         it('Given  email and content empty it should return false', () => {
-            assert.isFalse(service.isValidAnalyzeData(getBodyAnalize("", "")));
+            assert.isFalse(service.isValidAnalyzeData("",getSequence( "")));
         });
 
         it('Given  email OK and content empty it should return false', () => {
-            assert.isFalse(service.isValidAnalyzeData(getBodyAnalize("nicolascoco85@gmail.com", "")));
+            assert.isFalse(service.isValidAnalyzeData("nicolascoco85@gmail.com", getSequence("")));
         });
 
         it('Given  email and content amino incorrect it should return false', () => {
-            assert.isFalse(service.isValidAnalyzeData(getBodyAnalize("nicolascoco85@gmail.com", "AXC")));
+            assert.isFalse(service.isValidAnalyzeData("nicolascoco85@gmail.com", getSequence( "AXC")));
         });
 
         it('Given  email and content with space  it should return false', () => {
-            assert.isFalse(service.isValidAnalyzeData(getBodyAnalize("nicolascoco85@gmail.com", "A B C")));
+            assert.isFalse(service.isValidAnalyzeData("nicolascoco85@gmail.com", getSequence("A B C")));
         });
 
         it('Given  email and content with double caracter initial it should return false', () => {
-            assert.isFalse(service.isValidAnalyzeData(getBodyAnalize("", ">>ABC")));
+            assert.isFalse(service.isValidAnalyzeData("",getSequence( ">>ABC")));
         });
 
         it('Given  email and content with double caracter initial it should return false', () => {
-            assert.isFalse(service.isValidAnalyzeData(getBodyAnalize("nicolascoco85@gmail.com", ">>ABC")));
+            assert.isFalse(service.isValidAnalyzeData("nicolascoco85@gmail.com", getSequence( ">>ABC")));
         });
     });
 
