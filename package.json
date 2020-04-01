@@ -25,7 +25,8 @@
     "pug": "^2.0.4",
     "python-shell": "^1.0.8",
     "minimist": "^1.2.5",
-    "acorn": "5.7.4"
+    "acorn": "5.7.4",
+    "kind-of": "^6.0.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",
