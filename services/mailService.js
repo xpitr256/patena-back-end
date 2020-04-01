@@ -85,6 +85,8 @@ module.exports = {
 
     sendContactMail : async function(email, name, message) {
 
+        return module.exports.sendWorkErrorMail(email,"es",'design',uuidv4());
+/*
         return new Promise((resolve, reject) => {
 
             const htmlTemplate = fs.readFileSync("./services/emailTemplates/contactMessage.html","utf-8");
@@ -106,6 +108,8 @@ module.exports = {
                 }
             });
         })
+
+        */
     },
 
     sendWorkInProgressMail : function(email, language, workType, workId) {
