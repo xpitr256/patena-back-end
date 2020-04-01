@@ -85,7 +85,7 @@ module.exports = {
 
     sendContactMail : async function(email, name, message) {
 
-        return module.exports.sendWorkErrorMail(email,"es",'design',uuidv4());
+        return module.exports.sendWorkErrorMail(email,"en",'design',uuidv4());
 /*
         return new Promise((resolve, reject) => {
 
