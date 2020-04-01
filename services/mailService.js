@@ -64,7 +64,8 @@ function getWorkErrorMailData(language, workType, workId) {
     mailData.title = workType === 'design' ? translations.mailService.workError.title.design : translations.mailService.workError.title.analysis;
     mailData.description = translations.mailService.workError.description;
     mailData.orderNumber = workId;
-    mailData.tryAgain = translations.mailService.workError.tryAgain;
+    const contactUsLink = config.FRONT_END_BASE_URL + '/contact';
+    mailData.tryAgain = translations.mailService.workError.tryAgain + ' <a href="' + contactUsLink + '" target="_blank">' + translations.mailService.workError.contactUs + '</a>';
 
     return mailData;
 }
