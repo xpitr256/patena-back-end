@@ -8,27 +8,29 @@
     "generateLength": "node ./jobs/generateLength.js"
   },
   "dependencies": {
-    "@sendgrid/mail": "^6.4.0",
+    "@sendgrid/mail": "^6.5.5",
     "body-parser": "^1.19.0",
-    "cookie-parser": "~1.4.4",
+    "cookie-parser": "^1.4.5",
     "debug": "~2.6.9",
-    "express": "^4.16.4",
+    "express": "^4.17.1",
     "express-fileupload": "latest",
     "http-errors": "~1.6.3",
-    "mongoose": "latest",
+    "isomorphic-dompurify": "^0.1.0",
+    "mongoose": "^5.9.7",
     "morgan": "~1.9.1",
     "multer": "^1.4.2",
+    "mustache": "^4.0.1",
     "node-fetch": "^2.6.0",
     "node-powershell": "^4.0.0",
     "pug": "^2.0.4",
     "python-shell": "^1.0.8",
-    "mustache": "^4.0.1",
-    "isomorphic-dompurify": "^0.1.0"
+    "minimist": "^1.2.5",
+    "acorn": "5.7.4"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chai-files": "^1.4.0",
-    "mocha": "^6.2.2"
+    "mocha": "^6.2.3"
   }
 }
