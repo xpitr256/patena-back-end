@@ -1,20 +1,19 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-
-var TaskSchema = new Schema({
-    idTask: String,
-    idState: {type: Number, default: 1},//1-pending execution    2- in action     3-completed successfully  4-cancelled
+let TaskSchema = new Schema({
+    taskId: String,
+    stateId: {type: Number, default: 1}, // 1-pending execution 2- in action 3-completed successfully 4-cancelled
     messageError: {type: String, default: ''},
-    idType: Number, // 1-analize, 2-disign
-    creationDateTask: Date,
-    numberOfAttemps: {type: Number, default: 0},
+    typeId: Number, // 1-analyze, 2-design
+    creationDateTask: {type:Date, default:Date.now()},
+    attempts: {type: Number, default: 0},
     lastExecutionDate: {type:Date, default:null},
-    sequenceInput: {type: String, default: ''},
     sequenceOutput: {type: String, default: ''},
-    email:{type: String, default: ''},
     emailSent: {type: Boolean, default: false},
-    sentEmailDate:{type:Date, default:null}
+    sentEmailDate:{type:Date, default:null},
+    body: {type:Object, default:null},
+    language : {type:String, default:'en'}
 });
 
 module.exports = mongoose.model('TaskSchema', TaskSchema);

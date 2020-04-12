@@ -1,14 +1,15 @@
-function uuidv4() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-}
+const taskService = require ('../services/taskService');
+const utilsService = require ('../services/utilsService');
 
 module.exports = {
-
-    sendOrderNumber : function(email) {
-        // here save field DB and send to process file with patena
-        return uuidv4();
+    sendOrderNumber: async function(data) {
+        const id = utilsService.uuidv4();
+        await taskService.save(id, data, taskService.TYPE_DESIGN);
+        return id;
+    },
+    createDesign: async function (data) {
+        const id = utilsService.uuidv4();
+        await taskService.save(id, data, taskService.TYPE_DESIGN);
+        return id;
     }
 };

@@ -1,5 +1,5 @@
-const validationService = require('../services/validationService.js');
-const analizeService = require ('../services/analizeService');
+const validationService = require('../services/validation/validationService.js');
+const analyzeService = require ('../services/analyzeService');
 const DOMPurify = require('isomorphic-dompurify');
 
 async function postAnalyze(req, res) {
@@ -14,9 +14,10 @@ async function postAnalyze(req, res) {
         };
         const email = DOMPurify.sanitize(req.body.email);
 
-        if ( validationService.isValidAnalyzeData(email, sequence)) {
+        if (validationService.isValidAnalyzeData(email, sequence)) {
             try {
-                let orderNumber = await analizeService.sendOrderNumber(email, sequence);
+                //TODO call analyzeService.createAnalysis(email, sequence)
+                let orderNumber = await analyzeService.sendOrderNumber(email, sequence);
                 res.json({
                     orderNumber: orderNumber.toString()
                 });

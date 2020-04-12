@@ -1,15 +1,18 @@
-const Task = require ('../model/schema/Task');
+const Task = require('../model/schema/Task');
+const TYPE_ANALYSIS = 1;
+const TYPE_DESIGN = 2;
 
-async function save(id,sequence,idType,email){
+module.exports = {
+    TYPE_ANALYSIS,
+    TYPE_DESIGN,
+    save: async function (id, body, typeId) {
+        let task;
         try {
             task = new Task({
-                idTask: id,
-                idType:idType,
-                idState:1,
-                creationDateTask: Date.now(),
-                sequenceInput: sequence.value,
-                email:email,
-                emailSent: false,
+                taskId: id,
+                typeId: typeId,
+                body: body,
+                language: body.language
 
             });
             await task.save();
@@ -17,11 +20,8 @@ async function save(id,sequence,idType,email){
             console.error(e);
             return e;
         }
-}
-
-module.exports = {
-
-    save: async function (id,sequence,idType,email) {
-        return await save(id,sequence,idType,email);
+    },
+    getTask: async function (taskId) {
+        return await Task.find({taskId: taskId});
     }
 }

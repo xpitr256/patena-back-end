@@ -6,10 +6,9 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var linkerLength = require('./routes/linkerLength');
-var sendPythonData = require('./routes/sendPythonData');
 var contact = require('./routes/contact');
 var results = require('./routes/results');
-var analize = require('./routes/analize');
+var analize = require('./routes/analyze');
 var design = require ('./routes/design')
 var upload = require("express-fileupload");
 
@@ -54,7 +53,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/linkerLength', linkerLength);
-app.use('/sendPythonData', sendPythonData);
 app.use('/results', results);
 app.use(upload());
 

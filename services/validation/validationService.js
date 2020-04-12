@@ -1,7 +1,7 @@
-let design1 = require('../services/validationServiceDesignNothing.js');
-let design2 = require('../services/validationServiceDesignInitialSequence.js');
-let design3 = require('../services/validationServiceDesignSequencesFlanking.js');
-let design4 = require('../services/validationServiceDesignInitialSequenceAndFlanking');
+let design1 = require('./validationServiceDesignNothing.js');
+let design2 = require('./validationServiceDesignInitialSequence.js');
+let design3 = require('./validationServiceDesignSequencesFlanking.js');
+let design4 = require('./validationServiceDesignInitialSequenceAndFlanking');
 
 const aminoAcids = [
   "A",
@@ -170,7 +170,7 @@ function isValidCustomConfig(body){
 }
 
 function isConfigDefault(body){
-  return body.config==undefined;
+  return body.config === undefined;
 }
 
 module.exports = {
@@ -217,6 +217,11 @@ module.exports = {
 
   existAnyValidConfig: function(body){
     return isValidCustomConfig(body) || isConfigDefault(body);
+  },
+
+  isValidDesign: function (body) {
+    //TODO check everything here, design data + config one.
+    return true;
   }
 
 };

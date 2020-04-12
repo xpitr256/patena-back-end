@@ -1,15 +1,15 @@
 let express = require('express');
 let router = express.Router();
-let validationService = require('../services/validationService.js');
+let validationService = require('../services/validation/validationService.js');
 let lengthService = require('../services/linkerLengthService');
 
 
 router.get('/', async function(req, res, next) {
 
   if (validationService.isValidDistance(req.query.distance)) {
-    const longitud =await lengthService.getLength(req.query.distance);
+    const length = await lengthService.getLength(req.query.distance);
     res.json({
-      length: longitud ,
+      length: length ,
       distance: Number(req.query.distance)
     });
   } else {

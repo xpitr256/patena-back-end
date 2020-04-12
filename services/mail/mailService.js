@@ -1,9 +1,9 @@
 const sgMail = require('@sendgrid/mail');
-const config =require('../config/config');
+const config =require('../../config/config');
 sgMail.setApiKey(config.SENDGRID_API_KEY);
 const fs = require('fs');
 const mustache   = require('mustache');
-const translationService = require('./translationService');
+const translationService = require('../translationService');
 
 function getCommonMailInformation(translations) {
     return {
@@ -76,7 +76,7 @@ module.exports = {
     sendContactMail : async function(email, name, message) {
         return new Promise((resolve, reject) => {
 
-            const htmlTemplate = fs.readFileSync("./services/emailTemplates/contactMessage.html","utf-8");
+            const htmlTemplate = fs.readFileSync("./services/mail/templates/contactMessage.html","utf-8");
             const data = geContactMailData("en", name, message);
             const htmlContent = mustache.render(htmlTemplate, data);
 
@@ -100,7 +100,7 @@ module.exports = {
     sendWorkInProgressMail : function(email, language, workType, workId) {
         return new Promise((resolve, reject) => {
 
-            const htmlTemplate = fs.readFileSync("./services/emailTemplates/workInProgress.html","utf-8");
+            const htmlTemplate = fs.readFileSync("./services/mail/templates/workInProgress.html","utf-8");
             const data = getWorkInProgressMailData(language, workType, workId);
             const htmlContent = mustache.render(htmlTemplate, data);
 
@@ -124,7 +124,7 @@ module.exports = {
     sendWorkSuccessMail : function(email, language, workType, workId) {
         return new Promise((resolve, reject) => {
 
-            const htmlTemplate = fs.readFileSync("./services/emailTemplates/workSuccess.html","utf-8");
+            const htmlTemplate = fs.readFileSync("./services/mail/templates/workSuccess.html","utf-8");
             const data = getWorkSuccessMailData(language, workType, workId);
             const htmlContent = mustache.render(htmlTemplate, data);
 
@@ -148,7 +148,7 @@ module.exports = {
     sendWorkErrorMail : function(email, language, workType, workId) {
         return new Promise((resolve, reject) => {
 
-            const htmlTemplate = fs.readFileSync("./services/emailTemplates/workError.html","utf-8");
+            const htmlTemplate = fs.readFileSync("./services/mail/templates/workError.html","utf-8");
             const data = getWorkErrorMailData(language, workType, workId);
             const htmlContent = mustache.render(htmlTemplate, data);
 

@@ -1,5 +1,5 @@
-const validationService = require('../services/validationService.js');
-const mailService = require('../services/mailService.js');
+const validationService = require('../services/validation/validationService.js');
+const mailService = require('../services/mail/mailService.js');
 const DOMPurify = require('isomorphic-dompurify');
 
 async function postContact(req, res) {

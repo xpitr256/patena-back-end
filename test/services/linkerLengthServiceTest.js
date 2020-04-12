@@ -2,11 +2,11 @@ const expect = require('chai').expect;
 let service = require('../../services/linkerLengthService');
 let chai = require("chai");
 let assert = chai.assert;
-let connectionBBDD = require('../../model/baseDeDatos');
+let connectionBBDD = require('../../model/database');
 
 
 describe('Consult Length', function () {
-    connectionBBDD.conectarDB();
+    connectionBBDD.connect();
     describe('Consulting BBDD Distance-Length', function () {
 
         it('Ask for the number 1.3 and I hope you return an answer ', async () => {

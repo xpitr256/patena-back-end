@@ -38,27 +38,6 @@ function calculateLength(r){
 
 }
 
-async function generateLength(){
-    let r= 1.0;
-    let delta=0.1
-    let rmax=100
-    while (r<=rmax){
-
-        try {
-            distanceLength = new DistanceLength({
-                distance: r.toString(),
-                length: calculateLength(r)
-            });
-            await distanceLength.save();
-        } catch (e) {
-            console.error(e);
-            return e;
-        }
-        r=r+delta;
-        r= Math.round(r*10)/10;
-    }
-}
-
 async function getLength(distance){
 
     let result = await( DistanceLength.find({
@@ -70,18 +49,30 @@ async function getLength(distance){
 
 
 module.exports = {
-
     generateLength : async function() {
-        return await generateLength();
+        let r = 1.0;
+        let delta = 0.1
+        let rmax = 100
+        while (r <= rmax) {
+            try {
+                distanceLength = new DistanceLength({
+                    distance: r.toString(),
+                    length: calculateLength(r)
+                });
+                await distanceLength.save();
+            } catch (e) {
+                console.error(e);
+                return e;
+            }
+            r = r + delta;
+            r = Math.round(r*10)/10;
+        }
     },
     getLength : async function (distance){
-        let result =  await getLength(distance);
-
-        if (result){
-            let valor = Math.round(Number(result[0]['length']));
-            return valor;
+        const result =  await getLength(distance);
+        if (result) {
+            return  Math.round(Number(result[0]['length']));
         }
-
         return 0;
     }
 };

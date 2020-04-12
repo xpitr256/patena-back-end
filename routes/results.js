@@ -1,13 +1,14 @@
 let express = require('express');
 let router = express.Router();
-let validationService = require('../services/validationService.js');
+let validationService = require('../services/validation/validationService.js');
 let resultService = require('../services/resultService');
 
 router.get('/', function(req, res, next) {
-    if ( validationService.isValidOrderNumber(req.query.orderNumber)) {
+    if (validationService.isValidOrderNumber(req.query.orderNumber)) {
         try {
+            //TODO await for result service response
             res.json({
-                orderNumber: resultService.downloadResult(req.query.orderNumber),
+                orderNumber: resultService.getResultsFor(req.query.orderNumber),
                 message: "Order number OK"
             });
 

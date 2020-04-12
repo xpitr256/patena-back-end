@@ -7,7 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('test:server');
 var http = require('http');
-var connectionDB = require('../model/baseDeDatos');
+var connectionDB = require('../model/database');
 
 /**
  * Get port from environment and store in Express.
@@ -94,4 +94,4 @@ function onListening() {
  * Event open connection for Mongodb server.
  */
 
-connectionDB.conectarDB();
+connectionDB.connect();
