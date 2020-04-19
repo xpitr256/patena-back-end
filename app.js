@@ -10,7 +10,6 @@ var contact = require('./routes/contact');
 var results = require('./routes/results');
 var analize = require('./routes/analyze');
 var design = require ('./routes/design')
-var upload = require("express-fileupload");
 
 var app = express();
 
@@ -54,8 +53,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/linkerLength', linkerLength);
 app.use('/results', results);
-app.use(upload());
-
 
 app.route("/contact")
     .post(contact.postContact);

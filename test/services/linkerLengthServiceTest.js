@@ -2,12 +2,9 @@ const expect = require('chai').expect;
 let service = require('../../services/linkerLengthService');
 let chai = require("chai");
 let assert = chai.assert;
-let connectionBBDD = require('../../model/database');
-
 
 describe('Consult Length', function () {
-    connectionBBDD.connect();
-    describe('Consulting BBDD Distance-Length', function () {
+    describe('Consulting Distance-Length', function () {
 
         it('Ask for the number 1.3 and I hope you return an answer ', async () => {
             const result = await service.getLength(1.3);
@@ -21,9 +18,8 @@ describe('Consult Length', function () {
 
         it('Ask for the number 1 and I hope you return the value 1.0', async () => {
             const result = await service.getLength(1);
-            expect(result).to.equal(1.0);
+            expect(result).to.equal(2.0);
         });
-
 
         it('Ask for the number 8.6 and I hope you return the value 3', async () => {
             const result = await service.getLength(8.6);
@@ -34,7 +30,5 @@ describe('Consult Length', function () {
             const result = await service.getLength(6.5);
             assert.isBelow(0,result);
         });
-
-
     });
 });

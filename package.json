@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "test": "mocha --recursive --timeout 15000 --reporter list",
-    "start": "node ./bin/www",
-    "generateLength": "node ./jobs/generateLength.js"
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "@sendgrid/mail": "^6.5.5",

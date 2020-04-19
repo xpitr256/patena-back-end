@@ -4,10 +4,10 @@ let validationService = require('../services/validation/validationService.js');
 let lengthService = require('../services/linkerLengthService');
 
 
-router.get('/', async function(req, res, next) {
+router.get('/', function(req, res, next) {
 
   if (validationService.isValidDistance(req.query.distance)) {
-    const length = await lengthService.getLength(req.query.distance);
+    const length = lengthService.getLength(req.query.distance);
     res.json({
       length: length ,
       distance: Number(req.query.distance)
