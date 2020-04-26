@@ -681,33 +681,33 @@ describe('Validation service test ', () => {
 
         it("Given  sum of frequencies equals 10.000 , it should return true", () => {
 
-            assert.isTrue(service.isValidFrequencies(SumOfFrequenciesToEquals10000));
+            assert.isTrue(service.areValidFrequencies(SumOfFrequenciesToEquals10000));
         });
 
         it("Given  sum of frequencies less than 10.000 , it should return false", () => {
 
-            assert.isFalse(service.isValidFrequencies(SumOfFrequenciesLessThan10000));
+            assert.isFalse(service.areValidFrequencies(SumOfFrequenciesLessThan10000));
         });
 
         it("Given  sum of frequencies greater than 10.000 , it should return false", () => {
 
-            assert.isFalse(service.isValidFrequencies(SumOfFrequenciesGreaterThan10000));
+            assert.isFalse(service.areValidFrequencies(SumOfFrequenciesGreaterThan10000));
         });
 
 
         it("Given  any algorithms actived , it should return true", () => {
 
-            assert.isTrue(service.isValidAlgorithms(algorithmsAnyActived));
+            assert.isTrue(service.areValidAlgorithms(algorithmsAnyActived));
         });
 
         it("Given  all algorithms actived , it should return true", () => {
 
-            assert.isTrue(service.isValidAlgorithms(algorithmsAllActived));
+            assert.isTrue(service.areValidAlgorithms(algorithmsAllActived));
         });
 
         it("Given  all algorithms desactived , it should return false", () => {
 
-            assert.isFalse(service.isValidAlgorithms(algorithmsAllDesactived));
+            assert.isFalse(service.areValidAlgorithms(algorithmsAllDesactived));
         });
 
         it("Given  net charge is four , it should return true", () => {

@@ -1,4 +1,4 @@
-let distanceLengthMap = new Map();
+const distanceLengthMap = new Map();
 distanceLengthMap.set(0,2);
 distanceLengthMap.set(1,2);
 distanceLengthMap.set(2,2);
@@ -6,7 +6,6 @@ distanceLengthMap.set(3,1);
 distanceLengthMap.set(4,1);
 distanceLengthMap.set(5,1);
 distanceLengthMap.set(6,1);
-
 distanceLengthMap.set(7,2);
 distanceLengthMap.set(8,2);
 distanceLengthMap.set(9,3);

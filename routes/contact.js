@@ -8,7 +8,7 @@ async function postContact(req, res) {
     const name = DOMPurify.sanitize(req.body.name);
     const message = DOMPurify.sanitize(req.body.message);
 
-    if ( validationService.isValidContactData(email, name , message)) {
+    if (validationService.isValidContactData(email, name , message)) {
         try {
             await mailService.sendContactMail(email, name, message);
             res.json({
