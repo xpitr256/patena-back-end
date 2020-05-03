@@ -109,7 +109,11 @@ function isValidFasta(sequence) {
 
 module.exports = {
     isValidDesign: function(data) {
-        return designValidationMap.has(data.designType) && designValidationMap.get(data.designType).validate(data) && isValidCustomConfig(data);
+        if (designValidationMap.has(data.designType)) {
+            const validateFunc = designValidationMap.get(data.designType);
+            return validateFunc(data) && isValidCustomConfig(data)
+        }
+        return false;
     },
     isValidFasta: function(data) {
         return isValidFasta(data);

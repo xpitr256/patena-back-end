@@ -16,9 +16,9 @@ async function postAnalyze(req, res) {
 
         if (validationService.isValidAnalyzeData(email, sequence)) {
             try {
-                let orderNumber = await analyzeService.createAnalysis(email, sequence);
+                const orderNumber = await analyzeService.createAnalysis(email, sequence);
                 res.json({
-                    orderNumber: orderNumber.toString()
+                    orderNumber: orderNumber
                 });
             } catch (err) {
                 res.status(500).send(err);

@@ -16,7 +16,7 @@ module.exports = {
             });
             await task.save();
         } catch (e) {
-            console.error(e);
+            console.error("Error creating a new Task: " + JSON.stringify(taskData));
             return e;
         }
     },
