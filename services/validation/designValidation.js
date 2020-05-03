@@ -75,7 +75,7 @@ function areValidAlgorithms(algorithms) {
 
 function areValidFrequencies(frequencies) {
     let result = 0
-    for (const amino in frequencies) {
+    for (const amino of frequencies) {
         result += parseFloat(amino.value);
     }
     return result.toFixed(1) === "100.0"
