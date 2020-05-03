@@ -2,7 +2,7 @@ const utils = require('./validationUtils');
 
 const noInitialSequenceDesign = {
     validate: function (data) {
-        return isValidOptionalEmail(data.email) && utils.isPositiveDecimal(data.distance) && validEmail;
+        return isValidOptionalEmail(data.email) && utils.isPositiveDecimal(data.distance);
     }
 }
 

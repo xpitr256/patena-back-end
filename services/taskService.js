@@ -5,15 +5,14 @@ const TYPE_DESIGN = 2;
 module.exports = {
     TYPE_ANALYSIS,
     TYPE_DESIGN,
-    save: async function (id, body, typeId) {
+    create: async function (id, taskData, typeId) {
         let task;
         try {
             task = new Task({
-                taskId: id,
+                id: id,
                 typeId: typeId,
-                body: body,
-                language: body.language
-
+                taskData: taskData,
+                language: taskData.language
             });
             await task.save();
         } catch (e) {

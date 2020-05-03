@@ -1,16 +1,17 @@
 const validationService = require('../services/validation/validationService.js');
 const designService = require ('../services/designService');
+const DOMPurify = require('isomorphic-dompurify');
 
 function postDesign(req, res) {
+    req.body.designType = DOMPurify.sanitize(req.body.designType);
     if (validationService.isValidDesign(req.body)) {
         try {
-            //TODO call designService.createDesign(req.body)
-            let orderNumber = designService.sendOrderNumber(req.body.email);
+            let orderNumber = designService.createDesign(req.body);
             res.json({
                 orderNumber: orderNumber.toString()
             });
         } catch (err) {
-            res.status(400).send(err);
+            res.status(500).send(err);
         }
     } else {
         res.status(400).send({
