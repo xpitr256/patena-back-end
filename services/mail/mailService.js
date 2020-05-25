@@ -4,7 +4,7 @@ sgMail.setApiKey(config.SENDGRID_API_KEY);
 const fs = require('fs');
 const mustache   = require('mustache');
 const translationService = require('../translationService');
-const taskService = require ('../taskService');
+const constants = require('../constants');
 
 function getCommonMailInformation(translations) {
     return {
@@ -22,8 +22,8 @@ function getWorkInProgressMailData(language, workType, workId) {
     const translations = translationService.getTranslationsIn(language);
     let mailData = getCommonMailInformation(translations);
 
-    mailData.subject = workType === taskService.TYPE_DESIGN ? translations.mailService.workInProgress.subject.design : translations.mailService.workInProgress.subject.analysis;
-    mailData.title = workType === taskService.TYPE_DESIGN ? translations.mailService.workInProgress.title.design : translations.mailService.workInProgress.title.analysis;
+    mailData.subject = workType === constants.TYPE_DESIGN ? translations.mailService.workInProgress.subject.design : translations.mailService.workInProgress.subject.analysis;
+    mailData.title = workType === constants.TYPE_DESIGN ? translations.mailService.workInProgress.title.design : translations.mailService.workInProgress.title.analysis;
     mailData.description = translations.mailService.workInProgress.description;
     mailData.orderNumber = workId;
     mailData.availableMessage = translations.mailService.workInProgress.availableMessage;
@@ -36,8 +36,8 @@ function getWorkSuccessMailData(language, workType, workId) {
     const translations = translationService.getTranslationsIn(language);
     let mailData = getCommonMailInformation(translations);
 
-    mailData.subject = workType === taskService.TYPE_DESIGN ? translations.mailService.workSuccess.subject.design : translations.mailService.workSuccess.subject.analysis;
-    mailData.title = workType === taskService.TYPE_DESIGN ? translations.mailService.workSuccess.title.design : translations.mailService.workSuccess.title.analysis;
+    mailData.subject = workType === constants.TYPE_DESIGN ? translations.mailService.workSuccess.subject.design : translations.mailService.workSuccess.subject.analysis;
+    mailData.title = workType === constants.TYPE_DESIGN ? translations.mailService.workSuccess.title.design : translations.mailService.workSuccess.title.analysis;
     mailData.description = translations.mailService.workSuccess.description;
     mailData.seeResults = translations.mailService.workSuccess.seeResults;
     const resultsLink = config.FRONT_END_BASE_URL + '/results?orderNumber=' + workId;
@@ -51,8 +51,8 @@ function getWorkErrorMailData(language, workType, workId) {
     const translations = translationService.getTranslationsIn(language);
     let mailData = getCommonMailInformation(translations);
 
-    mailData.subject = workType === taskService.TYPE_DESIGN ? translations.mailService.workError.subject.design : translations.mailService.workError.subject.analysis;
-    mailData.title = workType === taskService.TYPE_DESIGN ? translations.mailService.workError.title.design : translations.mailService.workError.title.analysis;
+    mailData.subject = workType === constants.TYPE_DESIGN ? translations.mailService.workError.subject.design : translations.mailService.workError.subject.analysis;
+    mailData.title = workType === constants.TYPE_DESIGN ? translations.mailService.workError.title.design : translations.mailService.workError.title.analysis;
     mailData.description = translations.mailService.workError.description;
     mailData.orderNumber = workId;
     const contactUsLink = config.FRONT_END_BASE_URL + '/contact';

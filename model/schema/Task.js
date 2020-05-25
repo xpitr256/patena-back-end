@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const taskService = require ('../../services/taskService');
+const constants = require ('../../services/constants');
 
 let TaskSchema = new Schema({
     id: String,
-    stateId: {type: Number, default: taskService.STATE_PENDING},
+    stateId: {type: Number, default: constants.STATE_PENDING},
     messageError: {type: String, default: ''},
     typeId: Number, // 1-analyze, 2-design
     creationDate: {type:Date, default:Date.now()},
