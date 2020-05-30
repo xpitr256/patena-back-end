@@ -24,31 +24,6 @@ const initialAndFlankingSequencesDesign = {
     }
 }
 
-const aminoAcids = [
-    "A",
-    "R",
-    "N",
-    "D",
-    "B",
-    "C",
-    "E",
-    "Q",
-    "Z",
-    "G",
-    "H",
-    "I",
-    "L",
-    "K",
-    "M",
-    "F",
-    "P",
-    "S",
-    "T",
-    "W",
-    "Y",
-    "V"
-];
-
 const designValidationMap = new Map();
 designValidationMap.set(1, noInitialSequenceDesign.validate);
 designValidationMap.set(2, initialSequenceDesign.validate);
@@ -100,7 +75,7 @@ function isValidFasta(sequence) {
         return false;
     }
     for (const aminoAcid of allContent) {
-        if (!aminoAcids.includes(aminoAcid)) {
+        if (!utils.getAminoAcids().includes(aminoAcid)) {
             return false;
         }
     }

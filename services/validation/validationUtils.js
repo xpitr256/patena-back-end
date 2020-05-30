@@ -1,3 +1,27 @@
+const aminoAcids = [
+    "A",
+    "R",
+    "N",
+    "D",
+    "B",
+    "C",
+    "E",
+    "Q",
+    "Z",
+    "G",
+    "H",
+    "I",
+    "L",
+    "K",
+    "M",
+    "F",
+    "P",
+    "S",
+    "T",
+    "W",
+    "Y",
+    "V"
+];
 module.exports = {
     isInt: function(value) {
         return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value));
@@ -30,5 +54,8 @@ module.exports = {
     },
     hasThirtySixCharacters: function (orderNumber) {
         return orderNumber.trim().length === 36;
+    },
+    getAminoAcids: function() {
+        return aminoAcids;
     }
 }

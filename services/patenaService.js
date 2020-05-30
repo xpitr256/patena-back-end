@@ -1,6 +1,8 @@
 
 const {PythonShell} = require('python-shell');
 const constants = require('./constants');
+const utils = require('./validation/validationUtils');
+const lengthService = require('./linkerLengthService');
 
 function runPatenaFor(args, workId){
     return new Promise((resolve, reject) => {
@@ -20,7 +22,21 @@ function runPatenaFor(args, workId){
 }
 
 function combineSequences(initial, sequence, final, length) {
-    // TODO do it.
+    const pre = initial.slice(Number(-1*length));
+    const pos = final.slice(0, length);
+    return pre + sequence + pos;
+}
+
+function generateRandomSequence(length) {
+    let sequence = '';
+    if (length > 0) {
+        const amountOfAminoAcids = utils.getAminoAcids().length;
+        for (let i = 0; i < length; i++) {
+            const aminoAcidPosition = Math.floor(Math.random() * amountOfAminoAcids);
+            sequence = sequence + utils.getAminoAcids()[aminoAcidPosition];
+        }
+    }
+    return sequence;
 }
 
 function getSequenceFrom(task) {
@@ -31,14 +47,22 @@ function getSequenceFrom(task) {
         case constants.DESIGN_TYPE_ONLY_INITIAL_SEQUENCE:
             return task.taskData.initialSequence.value;
         case constants.DESIGN_TYPE_INITIAL_AND_FLANKING_SEQUENCES:
-            return combineSequences(task.taskData.flankingSequence1.value,task.taskData.initialSequence.value, task.taskData.flankingSequence2.value, constants.FLANKING_WINDOW_SIZE);
+            return combineSequences(task.taskData.flankingSequence1.value, task.taskData.initialSequence.value, task.taskData.flankingSequence2.value, constants.FLANKING_WINDOW_SIZE);
         case constants.DESIGN_TYPE_ONLY_FLANKING_SEQUENCES:
-            // TODO ask this case
-            return '????'
+            const randomSequence = generateRandomSequence(lengthService.getLength(task.taskData.distance));
+            return combineSequences(task.taskData.flankingSequence1.value, randomSequence, task.taskData.flankingSequence2.value, constants.FLANKING_WINDOW_SIZE);
         default:
             return;
     }
 }
+
+function getSequenceLengthFrom(task) {
+    if (task.taskData.designType && task.taskData.designType === constants.DESIGN_TYPE_NO_INITIAL_SEQUENCE) {
+        return lengthService.getLength(task.taskData.distance);
+    }
+}
+
+
 
 function getPatenaArgumentsFor(task) {
     const args = [];
@@ -56,9 +80,12 @@ function getPatenaArgumentsFor(task) {
         args.push('--seq=' + sequence);
     }
 
-    // TODO complete it
+    const sequenceLength = getSequenceLengthFrom(task);
+    if (sequenceLength) {
+        args.push('--length=' + sequenceLength);
+    }
 
-    //Config parameters
+    // TODO complete it with config parameters
     return args;
 }
 
