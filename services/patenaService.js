@@ -62,7 +62,18 @@ function getSequenceLengthFrom(task) {
     }
 }
 
-
+const patenaAvoidAlgorithmMap = new Map();
+patenaAvoidAlgorithmMap.set('BLAST','--noblast');
+patenaAvoidAlgorithmMap.set('TANGO','--notango');
+patenaAvoidAlgorithmMap.set('ELM','--noelm');
+patenaAvoidAlgorithmMap.set('IUPred','--noiupred');
+patenaAvoidAlgorithmMap.set('ANCHOR','--noanchor');
+patenaAvoidAlgorithmMap.set('Prosite','--noprosite');
+patenaAvoidAlgorithmMap.set('Limbo','--nolimbo');
+patenaAvoidAlgorithmMap.set('TMHMM','--notmhmm');
+patenaAvoidAlgorithmMap.set('PASTA','--nopasta');
+patenaAvoidAlgorithmMap.set('Waltz','--nowaltz');
+patenaAvoidAlgorithmMap.set('Amyloid pattern','--noamyloidpattern');
 
 function getPatenaArgumentsFor(task) {
     const args = [];
@@ -85,7 +96,28 @@ function getPatenaArgumentsFor(task) {
         args.push('--length=' + sequenceLength);
     }
 
-    // TODO complete it with config parameters
+    if (task.taskData.config) {
+
+        args.push('--net-charge=' + task.taskData.config.netCharge);
+
+        const avoidedAlgorithms = task.taskData.config.algorithms.filter(algorithm => !algorithm.active).map(algorithm => algorithm.name);
+        avoidedAlgorithms.forEach((algorithm) => {
+            if (patenaAvoidAlgorithmMap.has(algorithm)) {
+                args.push(patenaAvoidAlgorithmMap.get(algorithm))
+            }
+        });
+
+        const frequencies = task.taskData.config.frequencies.map((frequency) => {
+            return {
+                name: frequency.name.toLowerCase(),
+                value: frequency.value
+            }
+        });
+        frequencies.forEach((frequency) => {
+            args.push('-' + frequency.name + '=' + frequency.value);
+        });
+    }
+
     return args;
 }
 
