@@ -75,12 +75,16 @@ patenaAvoidAlgorithmMap.set('PASTA','--nopasta');
 patenaAvoidAlgorithmMap.set('Waltz','--nowaltz');
 patenaAvoidAlgorithmMap.set('Amyloid pattern','--noamyloidpattern');
 
-function getPatenaArgumentsFor(task) {
+
+function getMandatoryParameters(task) {
     const args = [];
-    // Mandatory parameters
     args.push('--jobid=' + task.id);
     args.push('--json');
+    return args;
+}
 
+function getTaskInformationParameters(task) {
+    const args = [];
     // Design / Analysis parameters
     if (task.typeId === constants.TYPE_ANALYSIS) {
         args.push('--evaluation-only');
@@ -95,10 +99,18 @@ function getPatenaArgumentsFor(task) {
     if (sequenceLength) {
         args.push('--length=' + sequenceLength);
     }
+    return args;
+}
+
+
+function getConfigParameters(task) {
+    const args = [];
 
     if (task.taskData.config) {
 
-        args.push('--net-charge=' + task.taskData.config.netCharge);
+        if (task.taskData.config.netCharge) {
+            args.push('--net-charge=' + task.taskData.config.netCharge);
+        }
 
         const avoidedAlgorithms = task.taskData.config.algorithms.filter(algorithm => !algorithm.active).map(algorithm => algorithm.name);
         avoidedAlgorithms.forEach((algorithm) => {
@@ -118,6 +130,13 @@ function getPatenaArgumentsFor(task) {
         });
     }
 
+    return args;
+}
+
+function getPatenaArgumentsFor(task) {
+    let args = getMandatoryParameters(task);
+    args = args.concat(getTaskInformationParameters(task));
+    args = args.concat(getConfigParameters(task));
     return args;
 }
 
