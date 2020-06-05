@@ -10,6 +10,8 @@ const updateFailingTask = taskService.updateFailingTask;
 const taskIsCancelled = taskService.taskIsCancelled;
 const updateSentEmailNotification = taskService.updateSentEmailNotification;
 const runTask = taskService.runTask;
+const cancelTask = taskService.cancelTask;
+const oneDayInMs = 86400000;
 
 async function notifyUserThatTaskIsReady(task) {
     const email = task.taskData.email;
@@ -66,9 +68,16 @@ async function start() {
             }
         }
     } else {
-        // We investigate how long this task is in progress to avoid infinite loop processing
         const taskInProgress = await getTaskInProgress();
-        // TODO continue...
+        if (taskInProgress) {
+            // We investigate how long this task is in progress to avoid infinite loop processing
+            const dateDifferenceInMs = Date.now() - taskInProgress.lastExecutionDate;
+            if (dateDifferenceInMs > oneDayInMs) {
+                // We stop this task and mark it as cancelled
+                await cancelTask(taskInProgress);
+                await notifyUserThatTaskWasCancelled(taskInProgress);
+            }
+        }
     }
 }
 

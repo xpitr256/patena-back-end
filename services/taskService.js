@@ -4,6 +4,7 @@ const constants = require('./constants');
 
 async function updateTaskState(task, state) {
     task.stateId = state;
+    task.lastExecutionDate = Date.now();
     await task.save();
     return task;
 }
@@ -42,7 +43,6 @@ module.exports = {
     },
     updateFailingTask: async function(task, error) {
         task.attempts = task.attempts + 1;
-        task.lastExecutionDate = new Date();
         task.messageError = error;
         let nextState = constants.STATE_PENDING;
         if (task.attempts > 2) {
@@ -50,13 +50,15 @@ module.exports = {
         }
         return updateTaskState(task, nextState);
     },
+    cancelTask: async function(task) {
+        task.messageError = "The task could not be completed in the course of a day";
+        return updateTaskState(task, constants.STATE_CANCELLED);
+    },
     thereIsNoTaskInProgress: async function() {
         const tasks = await Task.find({
             stateId: constants.STATE_IN_PROGRESS
         });
-        //TODO CHANGE AFTER local test
-        //return tasks.length === 0;
-        return true;
+        return tasks.length === 0;
     },
     getNextPendingTask: async function() {
         const tasks = await Task.find({
@@ -78,5 +80,6 @@ module.exports = {
     runTask: async function (task) {
         await patenaService.start(task)
         // TODO look for PATENA results in output folder and put it into task and save the task.
+        // update task status to STATE_FINISHED
     }
 }
