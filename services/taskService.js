@@ -11,6 +11,12 @@ async function updateTaskState(task, state) {
 }
 
 async function addResultsTo(task) {
+
+    const carpeta = '/app/workers/Output/123';
+    const test = require(carpeta + '/results.json');
+    console.log("#################### GETTING file path: " + carpeta);
+    console.log(test);
+
     const directory = '/app/workers/Output/' + task.id;
     const result = require(directory + '/results.json');
     if (result) {
