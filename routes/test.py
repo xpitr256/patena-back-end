@@ -45,7 +45,7 @@ args = parser.parse_args()
 sequence=args.seq
 json_out = args.json_out
 
-DIR_ROOT_OUTPUT = '/app/routes/Output'
+DIR_ROOT_OUTPUT = './routes/Output'
 
 def create_directory(name):
     try:

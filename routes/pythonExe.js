@@ -22,7 +22,7 @@ PythonShell.run('./routes/test.py', options, function (err, results) {
     console.log("GETTING Back from python:");
     console.log(results);
 
-    const carpeta = '/app/routes/Output';
+    const carpeta = './routes/Output';
     const test = require(carpeta + '/results.json');
     console.log("#################### GETTING file path: " + carpeta);
     console.log(test);
