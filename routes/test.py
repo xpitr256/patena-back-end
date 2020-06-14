@@ -1,18 +1,7 @@
-#import sys
-#import json
 import argparse
+import os
+import json
 
-"""
-parametros = '{"aminoacidos": ["A", "Q","R"], "distancia":"0" ,"carga": "+3"}'
-parametros_dict = json.loads(parametros)
-
-parametros_dict["aminoacidos"]=sys.argv[1]
-listaAmino=parametros_dict["aminoacidos"]
-
-#for amino in listaAmino:
-    #print(str(listaAmino.index(amino)+1)+"-"+amino)
-
-"""
 parser = argparse.ArgumentParser(description='Evaluate/Generate linker sequences')
 parser.add_argument('--seq', nargs=1, help='Starting sequence')
 parser.add_argument('--json',dest='json_out',action='store_true',help='Save output to json file')
@@ -55,21 +44,32 @@ parser.add_argument('-v', type=float, default=6.9, dest='userCompositionV')
 args = parser.parse_args()
 sequence=args.seq
 json_out = args.json_out
+
+DIR_ROOT_OUTPUT = '/app/routes/Output'
+
+def create_directory(name):
+    try:
+        os.makedirs(name,exist_ok=True)
+
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
+
+
+create_directory(DIR_ROOT_OUTPUT)
+DATA_RESULT = {
+"initialSequence": "pablo_massuh",
+"mode": "design",
+}
+
+def create_file(path):
+    if path.__contains__(DIR_ROOT_OUTPUT):
+        with open(path + "/results.json", 'w') as outfile:
+            json.dump(DATA_RESULT, outfile)
+
+create_file(DIR_ROOT_OUTPUT)
+
 print(args)
-
-
-#print(sequence.upper())
-
-"""
-
-if (int(sys.argv[2])>0)  :
-    parametros_dict["distancia"]=int(sys.argv[2])*5
-
-parametros_dict["carga"]=str(sys.argv[3])*5
-
-print(parametros_dict)
-
-"""
 
 
 
