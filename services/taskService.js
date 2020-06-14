@@ -11,7 +11,7 @@ async function updateTaskState(task, state) {
 }
 
 async function addResultsTo(task) {
-    const directory = './../workers/Output/' + task.id;
+    const directory = './workers/Output/' + task.id;
     const result = require(directory + '/results.json');
     if (result) {
         task.output = result
