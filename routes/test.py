@@ -58,7 +58,7 @@ def create_directory(name):
 
 create_directory(DIR_ROOT_OUTPUT)
 DATA_RESULT = {
-"initialSequence": "pablo_massuh",
+"initialSequence": "pablo_massuh_2",
 "mode": "design",
 }
 
