@@ -10,7 +10,7 @@ function runPatenaFor(args, workId){
             mode: 'text',
             args: args
         };
-        PythonShell.run('./../mock/mockPatenaDesign.py', options, function (err, results) {
+        PythonShell.run('./mock/mockPatenaDesign.py', options, function (err, results) {
             if (err){
                 console.error("There was an ERROR running PATENA for workId=" + workId);
                 console.error(err);
