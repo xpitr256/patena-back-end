@@ -10,7 +10,7 @@ var options = {
     args: ['--seq=abc', '--jobid=550e8400-e29b-41d4-a716-446655440000', '--evaluation-only', '--noblast', '--json']
 };
 
-PythonShell.run('./test.py', options, function (err, results) {
+PythonShell.run('./routes/test.py', options, function (err, results) {
     if (err){
         console.error(err);
         throw err;
