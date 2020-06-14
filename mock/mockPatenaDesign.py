@@ -57,8 +57,8 @@ parser.add_argument('-v', type=float, default=6.9, dest='userCompositionV')
 args = parser.parse_args()
 jobId = args.job_id
 
-DIR_ROOT_INPUT = 'Input'
-DIR_ROOT_OUTPUT = 'Output'
+DIR_ROOT_INPUT = './workers/Input'
+DIR_ROOT_OUTPUT = './workers/Output'
 
 def create_directory(name):
     try:

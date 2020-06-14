@@ -2,6 +2,7 @@ const patenaService = require('./patenaService');
 const Task = require('../model/schema/Task');
 const constants = require('./constants');
 const fse = require('fs-extra')
+const fs = require('fs');
 
 async function updateTaskState(task, state) {
     task.stateId = state;
@@ -11,14 +12,8 @@ async function updateTaskState(task, state) {
 }
 
 async function addResultsTo(task) {
-
-    const carpeta = '/app/workers/Output/123';
-    const test = require(carpeta + '/results.json');
-    console.log("#################### GETTING file path: " + carpeta);
-    console.log(test);
-
-    const directory = '/app/workers/Output/' + task.id;
-    const result = require(directory + '/results.json');
+    const directory = './workers/Output/' + task.id;
+    const result = JSON.parse(fs.readFileSync(directory + '/results.json', 'utf8'));
     if (result) {
         task.output = result
         task.attempts = task.attempts + 1;
