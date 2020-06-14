@@ -10,13 +10,13 @@ function runPatenaFor(args, workId){
             mode: 'text',
             args: args
         };
-        PythonShell.run('./test.py', options, function (err, results) {
+        PythonShell.run('./../mock/mockPatenaDesign.py', options, function (err, results) {
             if (err){
                 console.error("There was an ERROR running PATENA for workId=" + workId);
                 console.error(err);
                 reject(err);
             }
-            resolve(results)
+            resolve()
         });
     });
 }
@@ -120,8 +120,12 @@ function getConfigParameters(task) {
         });
 
         const frequencies = task.taskData.config.frequencies.map((frequency) => {
+            let loweredName = frequency.name.toLowerCase();
+            if (loweredName === 'h') {
+                loweredName = 'hh';
+            }
             return {
-                name: frequency.name.toLowerCase(),
+                name: loweredName,
                 value: frequency.value
             }
         });

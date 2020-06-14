@@ -1,12 +1,25 @@
 const patenaService = require('./patenaService');
 const Task = require('../model/schema/Task');
 const constants = require('./constants');
+const fse = require('fs-extra')
 
 async function updateTaskState(task, state) {
     task.stateId = state;
     task.lastExecutionDate = Date.now();
     await task.save();
     return task;
+}
+
+async function addResultsTo(task) {
+    const directory = './../workers/Output/' + task.id;
+    const result = require(directory + '/results.json');
+    if (result) {
+        task.output = result
+        task.attempts = task.attempts + 1;
+        task.stateId = constants.STATE_FINISHED;
+        await task.save();
+        fse.removeSync(directory);
+    }
 }
 
 module.exports = {
@@ -78,8 +91,7 @@ module.exports = {
         return task;
     },
     runTask: async function (task) {
-        await patenaService.start(task)
-        // TODO look for PATENA results in output folder and put it into task and save the task.
-        // update task status to STATE_FINISHED
+        await patenaService.start(task);
+        await addResultsTo(task);
     }
 }

@@ -20,13 +20,13 @@ async function notifyUserThatTaskIsReady(task) {
         const workId = task.id;
         try {
             await mailService.sendWorkSuccessMail(email, task.language, workType, workId);
+            try {
+                await updateSentEmailNotification(task);
+            } catch (e) {
+                console.error("Task Analyzer: Cannot Update Sent Email Notification for workId=" + workId)
+            }
         } catch (e) {
             console.error("Task Analyzer: Cannot send work success email to=" + email + " for workId=" + workId)
-        }
-        try {
-            await updateSentEmailNotification(task);
-        } catch (e) {
-            console.error("Task Analyzer: Cannot Update Sent Email Notification for workId=" + workId)
         }
     }
 }
@@ -38,13 +38,13 @@ async function notifyUserThatTaskWasCancelled(task) {
         const workId = task.id;
         try {
             await mailService.sendWorkErrorMail(email, task.language, workType, workId);
+            try {
+                await updateSentEmailNotification(task);
+            } catch (e) {
+                console.error("Task Analyzer: Cannot Update Sent Email Notification for workId=" + workId)
+            }
         } catch (e) {
             console.error("Task Analyzer: Cannot send work error email to=" + email + " for workId=" + workId)
-        }
-        try {
-            await updateSentEmailNotification(task);
-        } catch (e) {
-            console.error("Task Analyzer: Cannot Update Sent Email Notification for workId=" + workId)
         }
     }
 }

@@ -27,7 +27,7 @@ parser.add_argument('--net-charge', nargs=1, type=int, help='Net charge of the f
 
 var options = {
     mode: 'text',
-    args: ['--seq=abc', '--jobid=550e8400-e29b-41d4-a716-446655440000', '--evaluation-only']
+    args: ['--seq=abc', '--jobid=550e8400-e29b-41d4-a716-446655440000', '--evaluation-only', '--noblast', '--json']
 };
 
 PythonShell.run('./test.py', options, function (err, results) {
@@ -37,10 +37,10 @@ PythonShell.run('./test.py', options, function (err, results) {
     }
     // results is an array consisting of messages collected during execution
 
-    let jsonString = results[0].replaceAll("'","\"");
-    let data = JSON.parse(jsonString);
+    //let jsonString = results[0].replaceAll("'","\"");
+    //let data = JSON.parse(results);
     console.log("GETTING Back from python:");
-    console.log(data);
+    console.log(results);
 });
 
 
