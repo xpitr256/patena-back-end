@@ -50,5 +50,8 @@
       "subject": "PATENA - New message",
       "title": "New message from a user"
     }
+  },
+  "taskService": {
+    "cancelMessageError": "The task could not be completed in the course of a day"
   }
 }

@@ -253,7 +253,7 @@ describe('Validation service test ', () => {
             assert.isFalse(service.isValidAnalyzeData("nicolascoco85@gmail.com", getSequence( ">>ABC")));
         });
     });
-
+/*
     describe('Design 1 validation ', () => {
         //Data required: distance, email, set configurations patena
         it('Given  email correct and distance equals 40 it should return true', () => {
@@ -635,7 +635,7 @@ describe('Validation service test ', () => {
         });
 
     });
-
+*/
     describe('Result validation', () => {
 
         it('Given order number format correct, it should return true', () => {
@@ -675,7 +675,7 @@ describe('Validation service test ', () => {
 
 
     });
-
+/*
     describe('Set Config Patena validation', () => {
 
 
@@ -716,5 +716,5 @@ describe('Validation service test ', () => {
         });
 
     });
-
+*/
 });

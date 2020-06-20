@@ -50,5 +50,8 @@
       "subject": "PATENA - Nuevo mensaje",
       "title": "Nuevo mensaje de un usuario"
     }
+  },
+  "taskService": {
+    "cancelMessageError": "La tarea no pudo completarse en todo un día de trabajo"
   }
 }

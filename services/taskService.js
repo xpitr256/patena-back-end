@@ -1,5 +1,6 @@
 const patenaService = require('./patenaService');
 const Task = require('../model/schema/Task');
+const translationService = require('./translationService');
 const constants = require('./constants');
 const fse = require('fs-extra')
 const fs = require('fs');
@@ -65,14 +66,9 @@ module.exports = {
         return updateTaskState(task, nextState);
     },
     cancelTask: async function(task) {
-        task.messageError = "The task could not be completed in the course of a day";
+        const translations = translationService.getTranslationsIn(task.language);
+        task.messageError = translations.taskService.cancelMessageError;
         return updateTaskState(task, constants.STATE_CANCELLED);
-    },
-    thereIsNoTaskInProgress: async function() {
-        const tasks = await Task.find({
-            stateId: constants.STATE_IN_PROGRESS
-        });
-        return tasks.length === 0;
     },
     getNextPendingTask: async function() {
         const tasks = await Task.find({

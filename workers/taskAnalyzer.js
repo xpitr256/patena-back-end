@@ -2,7 +2,6 @@ const taskService = require('./../services/taskService');
 const database = require('./../model/database');
 const mailService = require('./../services/mail/mailService');
 
-const thereIsNoTaskInProgress = taskService.thereIsNoTaskInProgress;
 const getNextPendingTask = taskService.getNextPendingTask;
 const getTaskInProgress = taskService.getTaskInProgress;
 const promoteTaskToInProgress = taskService.promoteTaskToInProgress;
@@ -49,33 +48,44 @@ async function notifyUserThatTaskWasCancelled(task) {
     }
 }
 
+function isTaskOverdue(task) {
+    // If task exceeds 1 day processing => is overdue
+    const dateDifferenceInMs = Date.now() - task.lastExecutionDate;
+    return dateDifferenceInMs > oneDayInMs;
+}
+
+async function promoteNextTask() {
+    let task = await getNextPendingTask();
+    if (task) {
+        return await promoteTaskToInProgress(task);
+    }
+}
+
 async function start() {
 
     await database.connect();
 
-    if (await thereIsNoTaskInProgress()) {
-        let task = await getNextPendingTask();
-        if (task) {
-            task = await promoteTaskToInProgress(task);
-            try {
-                await runTask(task);
-                await notifyUserThatTaskIsReady(task);
-            } catch (error) {
-                task = await updateFailingTask(task, error);
-                if (taskIsCancelled(task)) {
-                    await notifyUserThatTaskWasCancelled(task);
-                }
-            }
+    const taskInProgress = await getTaskInProgress();
+
+    if (taskInProgress) {
+        // We investigate how long this task is in progress to avoid infinite loop processing
+        if (isTaskOverdue(taskInProgress)) {
+            // We stop this task and mark it as cancelled
+            await cancelTask(taskInProgress);
+            await notifyUserThatTaskWasCancelled(taskInProgress);
         }
-    } else {
-        const taskInProgress = await getTaskInProgress();
-        if (taskInProgress) {
-            // We investigate how long this task is in progress to avoid infinite loop processing
-            const dateDifferenceInMs = Date.now() - taskInProgress.lastExecutionDate;
-            if (dateDifferenceInMs > oneDayInMs) {
-                // We stop this task and mark it as cancelled
-                await cancelTask(taskInProgress);
-                await notifyUserThatTaskWasCancelled(taskInProgress);
+        return;
+    }
+
+    const task = await promoteNextTask();
+    if (task) {
+        try {
+            await runTask(task);
+            await notifyUserThatTaskIsReady(task);
+        } catch (error) {
+            const failingTask = await updateFailingTask(task, error);
+            if (taskIsCancelled(failingTask)) {
+                await notifyUserThatTaskWasCancelled(failingTask);
             }
         }
     }
