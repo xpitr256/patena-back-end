@@ -1,6 +1,6 @@
 let chai = require("chai");
 let assert = chai.assert;
-let service = require('../../services/validation/validationService.js');
+let service = require('../../../services/validation/validationService.js');
 
 const SumOfFrequenciesToEquals10000= [
     { name: "A", value: 0.825 },
