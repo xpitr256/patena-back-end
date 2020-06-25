@@ -1,5 +1,9 @@
 const utils = require('./validationUtils');
 
+function validateFlankingSequences(data) {
+    return isValidFasta(data.flankingSequence1) && isValidFasta(data.flankingSequence2);
+}
+
 const noInitialSequenceDesign = {
     validate: function (data) {
         return isValidOptionalEmail(data.email) && utils.isPositiveDecimal(data.distance);
@@ -14,13 +18,13 @@ const initialSequenceDesign = {
 
 const flankingSequencesDesign = {
     validate: function(data) {
-        return isValidOptionalEmail(data.email) && isValidFasta(data.flankingSequence1) && isValidFasta(data.flankingSequence2);
+        return noInitialSequenceDesign.validate(data) && validateFlankingSequences(data);
     }
 }
 
 const initialAndFlankingSequencesDesign = {
     validate: function(data) {
-        return isValidOptionalEmail(data.email) &&  isValidFasta(data.flankingSequence1) && isValidFasta(data.flankingSequence2) && isValidFasta(data.initialSequence);
+        return initialSequenceDesign.validate(data) && validateFlankingSequences(data);
     }
 }
 
@@ -84,7 +88,7 @@ function isValidFasta(sequence) {
 
 module.exports = {
     isValidDesign: function(data) {
-        if (designValidationMap.has(data.designType)) {
+        if (data && designValidationMap.has(data.designType)) {
             const validateFunc = designValidationMap.get(data.designType);
             return validateFunc(data) && isValidCustomConfig(data)
         }
