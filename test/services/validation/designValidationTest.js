@@ -32,6 +32,259 @@ describe('Design Validation',() => {
             expect(result).to.be.false;
         });
 
+        describe('with custom config', () => {
+
+            let designData = {
+                designType: 1,
+                distance: 3.2,
+                email: 'valid@test.com'
+            }
+
+            it('should return false for no frequencies', () => {
+                let data = Object.assign({},designData);
+                data.config = {};
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.false;
+            });
+
+            it('should return false for empty frequencies array', () => {
+                let data = Object.assign({},designData);
+                data.config = {
+                    frequencies: []
+                };
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.false;
+            });
+
+            it('should return false for not 100% frequencies sum', () => {
+                let data = Object.assign({},designData);
+                data.config = {
+                    frequencies: [{
+                        value: 50
+                    }]
+                };
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.false;
+            });
+
+            it('should return false for 99.9% frequencies sum', () => {
+                let data = Object.assign({},designData);
+                data.config = {
+                    frequencies: [
+                        {
+                            value: 50
+                        },
+                        {
+                            value: 49.9
+                        }
+                    ],
+                    algorithms: [
+                        {
+                            active: true
+                        }
+                    ]
+                };
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.false;
+            });
+
+            it('should return true for 100% frequencies sum', () => {
+                let data = Object.assign({},designData);
+                data.config = {
+                    frequencies: [
+                        {
+                            value: 50
+                        },
+                        {
+                            value: 50
+                        }
+                    ],
+                    algorithms: [
+                        {
+                            active: true
+                        }
+                    ]
+                };
+                const result = designValidation.isValidDesign(designData);
+                expect(result).to.be.true;
+            });
+
+            let validConfig = {
+                frequencies: [
+                    {
+                        value: 50
+                    },
+                    {
+                        value: 50
+                    }
+                ],
+                algorithms: [
+                    {
+                        active: true
+                    }
+                ]
+            }
+
+            it('should return false for text net charge', () => {
+                let data = Object.assign({},designData);
+                data.config = Object.assign({},validConfig);
+                data.config.netCharge = 'text';
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.false;
+            });
+
+            it('should return false for numeric net charge but no initial sequence', () => {
+                let data = Object.assign({},designData);
+                data.config = Object.assign({},validConfig);
+                data.config.netCharge = 2;
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.false;
+            });
+
+            it('should return false for numeric net charge but no initial sequence value', () => {
+                let data = Object.assign({},designData);
+                data.config = Object.assign({},validConfig);
+                data.config.netCharge = 2;
+                data.initialSequence = {};
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.false;
+            });
+
+            it('should return false for net charge bigger than initial sequence length', () => {
+                let data = Object.assign({},designData);
+                data.config = Object.assign({},validConfig);
+                data.config.netCharge = 3;
+                data.initialSequence = {
+                    value: 'AB'
+                };
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.false;
+            });
+
+            it('should return false for negative net charge bigger in ABS than initial sequence length', () => {
+                let data = Object.assign({},designData);
+                data.config = Object.assign({},validConfig);
+                data.config.netCharge = -3;
+                data.initialSequence = {
+                    value: 'AB'
+                };
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.false;
+            });
+
+            it('should return false for a float net charge value with valid initial sequence value', () => {
+                let data = Object.assign({},designData);
+                data.config = Object.assign({},validConfig);
+                data.config.netCharge = 1.24;
+                data.initialSequence = {
+                    value: 'AB'
+                };
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.false;
+            });
+
+            it('should return true for no net charge and no initial sequence', () => {
+                let data = Object.assign({},designData);
+                data.config = Object.assign({},validConfig);
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.true;
+            });
+
+            it('should return false for net charge and no initial sequence', () => {
+                let data = Object.assign({},designData);
+                data.config = Object.assign({},validConfig);
+                data.initialSequence = {};
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.false;
+            });
+
+            it('should return true for valid positive net charge value with valid initial sequence value', () => {
+                let data = Object.assign({},designData);
+                data.config = Object.assign({},validConfig);
+                data.config.netCharge = 1;
+                data.initialSequence = {
+                    value: 'AB'
+                };
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.true;
+            });
+
+            it('should return true for valid negative net charge value with valid initial sequence value', () => {
+                let data = Object.assign({},designData);
+                data.config = Object.assign({},validConfig);
+                data.config.netCharge = -1;
+                data.initialSequence = {
+                    value: 'AB'
+                };
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.true;
+            });
+
+            it('should return true for zero net charge value with valid initial sequence value', () => {
+                let data = Object.assign({},designData);
+                data.config = Object.assign({},validConfig);
+                data.config.netCharge = 0;
+                data.initialSequence = {
+                    value: 'AB'
+                };
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.true;
+            });
+
+            it('should return false for no algorithms ', () => {
+                let data = Object.assign({},designData);
+                data.config = {
+                    frequencies: [
+                        {
+                            value: 100
+                        }
+                    ]
+                };
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.false;
+            });
+
+            it('should return false for no active algorithms ', () => {
+                let data = Object.assign({},designData);
+                data.config = {
+                    frequencies: [
+                        {
+                            value: 100
+                        }
+                    ],
+                    algorithms: [
+                        {
+                            active: false
+                        }
+                    ]
+                };
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.false;
+            });
+
+            it('should return true for at least 1 active algorithms ', () => {
+                let data = Object.assign({},designData);
+                data.config = {
+                    frequencies: [
+                        {
+                            value: 100
+                        }
+                    ],
+                    algorithms: [
+                        {
+                            active: false
+                        },
+                        {
+                            active: true
+                        }
+                    ]
+                };
+                const result = designValidation.isValidDesign(data);
+                expect(result).to.be.true;
+            });
+
+        });
+
         describe('for no initial sequence case', () => {
             it('should return false for invalid email', () => {
                 const result = designValidation.isValidDesign({
@@ -369,7 +622,5 @@ describe('Design Validation',() => {
                 expect(result).to.be.true;
             });
         });
-
-
     });
 });

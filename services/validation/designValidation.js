@@ -41,18 +41,42 @@ function isValidOptionalEmail(email) {
     return true; // if there is no email then the validation is Ok.
 }
 
-function isValidNetCharge (netCharge = undefined, initialSequence= undefined){
-    if (netCharge === undefined || initialSequence === undefined || initialSequence.value === undefined ){
-        return true
+function isValidNetCharge (netCharge, initialSequence) {
+
+    function isNotDefined(value) {
+        return value === undefined || value === null;
     }
-    return utils.isInt(netCharge) && netCharge <= initialSequence.value.length;
+
+    if (isNotDefined(netCharge) && initialSequence) {
+        return false;
+    }
+
+    if (netCharge && !initialSequence) {
+        return false;
+    }
+
+    if (netCharge && initialSequence && !initialSequence.value) {
+        return false;
+    }
+
+    if (isNotDefined(netCharge) && !initialSequence) {
+        return true;
+    }
+
+    return utils.isInt(netCharge) && Math.abs(netCharge) <= initialSequence.value.length;
 }
 
 function areValidAlgorithms(algorithms) {
+    if (!algorithms) {
+        return false;
+    }
     return algorithms.some((item) => item.active === true);
 }
 
 function areValidFrequencies(frequencies) {
+    if (!frequencies) {
+        return false;
+    }
     let result = 0
     for (const amino of frequencies) {
         result += parseFloat(amino.value);
