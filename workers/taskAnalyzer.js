@@ -20,7 +20,7 @@ async function notifyUserThatTaskIsReady(task) {
         try {
             await mailService.sendWorkSuccessMail(email, task.language, workType, workId);
             try {
-                await updateSentEmailNotification(task);
+                task = await updateSentEmailNotification(task);
             } catch (e) {
                 console.error("Task Analyzer: Cannot Update Sent Email Notification for workId=" + workId)
             }
@@ -28,6 +28,7 @@ async function notifyUserThatTaskIsReady(task) {
             console.error("Task Analyzer: Cannot send work success email to=" + email + " for workId=" + workId)
         }
     }
+    return task;
 }
 
 async function notifyUserThatTaskWasCancelled(task) {
@@ -38,7 +39,7 @@ async function notifyUserThatTaskWasCancelled(task) {
         try {
             await mailService.sendWorkErrorMail(email, task.language, workType, workId);
             try {
-                await updateSentEmailNotification(task);
+                task = await updateSentEmailNotification(task);
             } catch (e) {
                 console.error("Task Analyzer: Cannot Update Sent Email Notification for workId=" + workId)
             }
@@ -46,6 +47,7 @@ async function notifyUserThatTaskWasCancelled(task) {
             console.error("Task Analyzer: Cannot send work error email to=" + email + " for workId=" + workId)
         }
     }
+    return task;
 }
 
 function isTaskOverdue(task) {
@@ -72,7 +74,7 @@ async function start() {
         if (isTaskOverdue(taskInProgress)) {
             // We stop this task and mark it as cancelled
             await cancelTask(taskInProgress);
-            await notifyUserThatTaskWasCancelled(taskInProgress);
+            return await notifyUserThatTaskWasCancelled(taskInProgress);
         }
         return;
     }
@@ -81,11 +83,11 @@ async function start() {
     if (task) {
         try {
             await runTask(task);
-            await notifyUserThatTaskIsReady(task);
+            return await notifyUserThatTaskIsReady(task);
         } catch (error) {
             const failingTask = await updateFailingTask(task, error);
             if (taskIsCancelled(failingTask)) {
-                await notifyUserThatTaskWasCancelled(failingTask);
+                return await notifyUserThatTaskWasCancelled(failingTask);
             }
         }
     }

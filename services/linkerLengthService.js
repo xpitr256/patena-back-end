@@ -103,9 +103,11 @@ distanceLengthMap.set(100,438);
 
 module.exports = {
     getLength : function (distance) {
-        const intDistance = Math.round(distance);
-        if (distanceLengthMap.has(intDistance)) {
-            return distanceLengthMap.get(intDistance);
+        if (distance) {
+            const intDistance = Math.round(distance);
+            if (distanceLengthMap.has(intDistance)) {
+                return distanceLengthMap.get(intDistance);
+            }
         }
         return 0;
     }
