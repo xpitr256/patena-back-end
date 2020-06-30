@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "test": "mocha --recursive --timeout 15000",
-    "test-with-coverage": "nyc --reporter=text mocha --recursive --timeout 15000",
+    "test-with-coverage": "nyc --reporter=text --all mocha --recursive --timeout 15000",
     "start": "node ./bin/www"
   },
   "dependencies": {

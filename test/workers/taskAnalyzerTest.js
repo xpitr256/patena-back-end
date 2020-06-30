@@ -1,4 +1,3 @@
-const chai = require("chai");
 const expect = require('chai').expect;
 const proxyquire  =  require('proxyquire');
 const constants = require ('../../services/constants');
