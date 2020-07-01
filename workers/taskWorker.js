@@ -1,11 +1,12 @@
 
 const start = require('./taskAnalyzer');
+const functions = require('./workerFunctions');
 
 start().then( () => {
-    console.log("Worker finished: " + new Date());
-    process.exit();
+    functions.log("Worker finished: " + new Date());
+    functions.exit();
 }).catch( error => {
-    console.error("An error occurred running the taskWorker");
-    console.error(error);
-    process.exit(1);
+    functions.error("An error occurred running the taskWorker: " + new Date());
+    functions.error(error);
+    functions.exit(1);
 });

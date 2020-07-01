@@ -1,12 +1,12 @@
 const taskService = require ('./taskService');
-const utilsService = require ('./utilsService');
+const idGenerator = require ('./idGeneratorService');
 const mailService = require('./mail/mailService');
 const constants = require('../services/constants')
 
 module.exports = {
     createDesign: async function (data) {
         try {
-            const id = utilsService.uuidv4();
+            const id = idGenerator.uuidv4();
             await taskService.create(id, data, constants.TYPE_DESIGN);
             if (data.email) {
                 const language = data.language ? data.language : 'en';
