@@ -14,8 +14,7 @@ var design = require ('./routes/design')
 var app = express();
 
 let handleCorsHeaders = function (req, res, next) {
-  if (req.get("Origin") != null)
-  {
+  if (req.get("Origin") != null) {
     res.header('Access-Control-Allow-Origin', req.get('Origin'));
     res.header('Access-Control-Allow-Credentials', 'true');
     if (req.get('Access-Control-Request-Method')) {
