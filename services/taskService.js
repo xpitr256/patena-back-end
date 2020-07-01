@@ -2,6 +2,7 @@ const patenaService = require('./patenaService');
 const Task = require('../model/schema/Task');
 const translationService = require('./translationService');
 const constants = require('./constants');
+const logger = require('./log/logService');
 const fse = require('fs-extra')
 const fs = require('fs');
 
@@ -36,9 +37,10 @@ module.exports = {
                 language: taskData.language
             });
             await task.save();
-        } catch (e) {
-            console.error("Error creating a new Task: " + JSON.stringify(taskData));
-            return e;
+        } catch (error) {
+            logger.error("Error creating a new Task: " + JSON.stringify(taskData));
+            logger.error(error);
+            return error;
         }
     },
     getTask: async function (taskId) {

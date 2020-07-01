@@ -3,6 +3,11 @@ const proxyquire  =  require('proxyquire');
 
 describe('Task worker', async () => {
 
+    const mockLogger = {
+        log: function() {},
+        error: function() {}
+    }
+
     it('should finished ok for a success task run', async () => {
 
         const mockSuccessTaskRun = function() {
@@ -14,14 +19,13 @@ describe('Task worker', async () => {
         const mockWorkerFunctions = {
             exit: function (error) {
                 expect(error).to.be.equals(undefined);
-            },
-            log: function() {},
-            error: function() {}
+            }
         }
 
         await proxyquire('../../workers/taskWorker', {
             './taskAnalyzer': mockSuccessTaskRun,
             './workerFunctions': mockWorkerFunctions,
+            './../services/log/logService': mockLogger
         });
     });
 
@@ -36,14 +40,13 @@ describe('Task worker', async () => {
         const mockWorkerFunctions = {
             exit: function (error) {
                 expect(error).to.be.equals(1);
-            },
-            log: function() {},
-            error: function() {}
+            }
         }
 
         await proxyquire('../../workers/taskWorker', {
             './taskAnalyzer': mockFailingTaskRun,
             './workerFunctions': mockWorkerFunctions,
+            './../services/log/logService': mockLogger
         });
     });
 });
