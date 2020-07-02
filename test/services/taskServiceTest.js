@@ -126,4 +126,87 @@ describe('Task Service', async () => {
 
     });
 
+    describe('getTaskInProgress', async () => {
+
+        it('should return the existent task in progress ', async () => {
+
+            const id = '123345';
+            let createdTasks = [];
+
+            const taskMock = class TaskMock{
+                constructor(data) {
+                    this.id = data.id;
+                    this.stateId = data.stateId;
+                }
+
+                static async find () {
+                    return createdTasks;
+                }
+            };
+
+            createdTasks.push(new taskMock({id: id, stateId: constants.STATE_IN_PROGRESS}));
+
+            const taskService = proxyquire('../../services/taskService', {
+                '../model/schema/Task': taskMock
+            });
+
+            const retrievedTask = await taskService.getTaskInProgress();
+            expect(retrievedTask).not.to.be.equals(undefined)
+            expect(retrievedTask.id).to.be.equals(id);
+            expect(retrievedTask.stateId).to.be.equals(constants.STATE_IN_PROGRESS);
+
+        });
+
+        it('should return nothing for non existent in progress task', async () => {
+
+            let createdTasks = [];
+
+            const taskMock = class TaskMock{
+                constructor(data) {
+                    this.id = data.id;
+                }
+
+                static async find () {
+                    return createdTasks;
+                }
+            };
+
+            const taskService = proxyquire('../../services/taskService', {
+                '../model/schema/Task': taskMock
+            });
+
+            const retrievedTask = await taskService.getTaskInProgress();
+            expect(retrievedTask).to.be.equals(undefined)
+        });
+
+    });
+
+    describe('promoteTaskToInProgress', async () => {
+
+        it('should change and persist task state to in progress', async () => {
+
+            const id = '123345';
+
+            const taskMock = class TaskMock{
+                constructor(data) {
+                    this.id = data.id;
+                    this.stateId = data.stateId;
+                }
+
+                async save () {}
+            };
+
+            let createdTask  = new taskMock({id: id, stateId: constants.STATE_PENDING})
+
+            const taskService = proxyquire('../../services/taskService', {
+                '../model/schema/Task': taskMock
+            });
+
+            await taskService.promoteTaskToInProgress(createdTask);
+            expect(createdTask.id).to.be.equals(id);
+            expect(createdTask.stateId).to.be.equals(constants.STATE_IN_PROGRESS);
+            expect(createdTask.lastExecutionDate).to.be.a('Number');
+        });
+    })
+
 });

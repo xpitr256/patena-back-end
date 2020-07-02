@@ -12,6 +12,11 @@ function log(message) {
 
 describe('Model Database', async () => {
 
+    const mockLogger = {
+        log: function() {},
+        error: function() {}
+    }
+
     it('should connect with valid credentials', async () => {
         const moongoseMock = {
             connect: async function(user, pass) {
@@ -21,6 +26,7 @@ describe('Model Database', async () => {
 
         const database = proxyquire('../../model/database', {
             'mongoose': moongoseMock,
+            '../services/log/logService': mockLogger
         });
 
         const result = await database.connect();
@@ -39,6 +45,7 @@ describe('Model Database', async () => {
 
         const database = proxyquire('../../model/database', {
             'mongoose': moongoseMock,
+            '../services/log/logService': mockLogger
         });
 
         const result = await database.connect();
