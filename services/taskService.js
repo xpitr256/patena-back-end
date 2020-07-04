@@ -19,7 +19,7 @@ async function addResultsTo(task) {
     if (result) {
         task.output = result
         task.attempts = task.attempts + 1;
-        task.stateId = constants.STATE_FINISHED;
+        task.stateId = constants.TASK_STATE_FINISHED;
         await task.save();
         fse.removeSync(directory);
     }
@@ -31,7 +31,7 @@ module.exports = {
         try {
             task = new Task({
                 id: id,
-                stateId: constants.STATE_PENDING,
+                stateId: constants.TASK_STATE_PENDING,
                 typeId: typeId,
                 taskData: taskData,
                 language: taskData.language
@@ -51,37 +51,38 @@ module.exports = {
     },
     getTaskInProgress: async function() {
         const tasks = await Task.find({
-            stateId: constants.STATE_IN_PROGRESS
+            stateId: constants.TASK_STATE_IN_PROGRESS
         });
         return tasks.length > 0 ? tasks[0] : undefined;
     },
     promoteTaskToInProgress: async function(task) {
-        return updateTaskState(task, constants.STATE_IN_PROGRESS);
+        return updateTaskState(task, constants.TASK_STATE_IN_PROGRESS);
     },
     updateFailingTask: async function(task, error) {
         task.attempts = task.attempts + 1;
         task.messageError = error;
-        let nextState = constants.STATE_PENDING;
+        let nextState = constants.TASK_STATE_PENDING;
         if (task.attempts > 2) {
-            nextState = constants.STATE_CANCELLED
+            nextState = constants.TASK_STATE_CANCELLED
         }
         return updateTaskState(task, nextState);
     },
     cancelTask: async function(task) {
         const translations = translationService.getTranslationsIn(task.language);
         task.messageError = translations.taskService.cancelMessageError;
-        return updateTaskState(task, constants.STATE_CANCELLED);
+        return updateTaskState(task, constants.TASK_STATE_CANCELLED);
     },
     getNextPendingTask: async function() {
-        const tasks = await Task.find({
-            stateId: constants.STATE_PENDING
-        }).sort({
+        const query = await Task.find({
+            stateId: constants.TASK_STATE_PENDING
+        });
+        const tasks = query.sort({
             creationDate: 'asc'
         }).limit(1);
         return tasks.length > 0 ? tasks[0] : undefined;
     },
     taskIsCancelled: function(task) {
-        return task.stateId === constants.STATE_CANCELLED;
+        return task.stateId === constants.TASK_STATE_CANCELLED;
     },
     updateSentEmailNotification: async function (task) {
         task.emailSent = true;

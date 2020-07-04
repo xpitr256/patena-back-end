@@ -1,6 +1,9 @@
+const chai = require('chai');
 const expect = require('chai').expect;
 const proxyquire  =  require('proxyquire').noCallThru();
 const constants = require('../../services/constants');
+const chaiAsPromised = require("chai-as-promised");
+chai.use(chaiAsPromised);
 
 describe('Task Service', async () => {
 
@@ -40,7 +43,7 @@ describe('Task Service', async () => {
 
             taskService.create(id, newTaskData, constants.TYPE_ANALYSIS);
             expect(createdTask.id).to.be.equals(id);
-            expect(createdTask.stateId).to.be.equals(constants.STATE_PENDING);
+            expect(createdTask.stateId).to.be.equals(constants.TASK_STATE_PENDING);
             expect(createdTask.typeId).to.be.equals(constants.TYPE_ANALYSIS);
             expect(createdTask.language).to.be.equals('en');
         });
@@ -144,7 +147,7 @@ describe('Task Service', async () => {
                 }
             };
 
-            createdTasks.push(new taskMock({id: id, stateId: constants.STATE_IN_PROGRESS}));
+            createdTasks.push(new taskMock({id: id, stateId: constants.TASK_STATE_IN_PROGRESS}));
 
             const taskService = proxyquire('../../services/taskService', {
                 '../model/schema/Task': taskMock
@@ -153,7 +156,7 @@ describe('Task Service', async () => {
             const retrievedTask = await taskService.getTaskInProgress();
             expect(retrievedTask).not.to.be.equals(undefined)
             expect(retrievedTask.id).to.be.equals(id);
-            expect(retrievedTask.stateId).to.be.equals(constants.STATE_IN_PROGRESS);
+            expect(retrievedTask.stateId).to.be.equals(constants.TASK_STATE_IN_PROGRESS);
 
         });
 
@@ -183,7 +186,7 @@ describe('Task Service', async () => {
 
     describe('promoteTaskToInProgress', async () => {
 
-        it('should change and persist task state to in progress', async () => {
+        it('should change and persist a PENDING task state to IN PROGRESS', async () => {
 
             const id = '123345';
 
@@ -196,7 +199,7 @@ describe('Task Service', async () => {
                 async save () {}
             };
 
-            let createdTask  = new taskMock({id: id, stateId: constants.STATE_PENDING})
+            let createdTask  = new taskMock({id: id, stateId: constants.TASK_STATE_PENDING})
 
             const taskService = proxyquire('../../services/taskService', {
                 '../model/schema/Task': taskMock
@@ -204,9 +207,311 @@ describe('Task Service', async () => {
 
             await taskService.promoteTaskToInProgress(createdTask);
             expect(createdTask.id).to.be.equals(id);
-            expect(createdTask.stateId).to.be.equals(constants.STATE_IN_PROGRESS);
+            expect(createdTask.stateId).to.be.equals(constants.TASK_STATE_IN_PROGRESS);
             expect(createdTask.lastExecutionDate).to.be.a('Number');
         });
-    })
+    });
 
+    describe('updateFailingTask', async () => {
+
+        it('should increase the number of attempts, set error message and set back to PENDING state if number of attempts is equals or less than 2', async () => {
+
+            const errorMessage = "Default error message";
+
+            const taskMock = class TaskMock{
+                constructor(data) {
+                    this.stateId = data.stateId;
+                    this.attempts = 0;
+                }
+
+                async save () {}
+            };
+
+            let createdTask  = new taskMock({stateId: constants.TASK_STATE_IN_PROGRESS})
+
+            const taskService = proxyquire('../../services/taskService', {
+                '../model/schema/Task': taskMock
+            });
+
+            await taskService.updateFailingTask(createdTask, errorMessage);
+            expect(createdTask.attempts).to.be.equals(1);
+            expect(createdTask.stateId).to.be.equals(constants.TASK_STATE_PENDING);
+            expect(createdTask.lastExecutionDate).to.be.a('Number');
+        });
+
+        it('should increase the number of attempts, set error message and set CANCEL state if number of attempts is bigger than 2', async () => {
+
+            const errorMessage = "Default error message";
+
+            const taskMock = class TaskMock{
+                constructor(data) {
+                    this.stateId = data.stateId;
+                    this.attempts = 2;
+                }
+
+                async save () {}
+            };
+
+            let createdTask  = new taskMock({stateId: constants.TASK_STATE_IN_PROGRESS})
+
+            const taskService = proxyquire('../../services/taskService', {
+                '../model/schema/Task': taskMock
+            });
+
+            await taskService.updateFailingTask(createdTask, errorMessage);
+            expect(createdTask.attempts).to.be.equals(3);
+            expect(createdTask.stateId).to.be.equals(constants.TASK_STATE_CANCELLED);
+            expect(createdTask.lastExecutionDate).to.be.a('Number');
+        });
+    });
+
+    describe('cancelTask', async () => {
+
+        it('should set CANCEL state and set message Error in the task language', async () => {
+
+            const taskMock = class TaskMock{
+                constructor(data) {
+                    this.stateId = data.stateId;
+                }
+                async save () {}
+            };
+
+            let createdTask  = new taskMock({stateId: constants.TASK_STATE_PENDING})
+            const translationServiceMock = {
+                getTranslationsIn: function (language) {
+                    return {
+                        taskService: {
+                            cancelMessageError: "cancelMessageError"
+                        }
+                    }
+                }
+            }
+
+            const taskService = proxyquire('../../services/taskService', {
+                '../model/schema/Task': taskMock,
+                './translationService': translationServiceMock
+            });
+
+            await taskService.cancelTask(createdTask);
+            expect(createdTask.stateId).to.be.equals(constants.TASK_STATE_CANCELLED);
+            expect(createdTask.messageError).to.be.equals("cancelMessageError");
+        });
+    });
+
+    describe('getNextPendingTask', async () => {
+
+        it('should get nothing if there is no PENDING task', async () => {
+
+            const taskMock = class TaskMock{
+                static async find () {
+                    const query = {
+                        sort: function(criteria) {
+                            return {
+                                limit: function(limit) {
+                                    return []
+                                }
+                            }
+                        }
+                    }
+                    return query;
+                }
+            };
+
+            const taskService = proxyquire('../../services/taskService', {
+                '../model/schema/Task': taskMock
+            });
+
+            const nextPendingTask = await taskService.getNextPendingTask();
+            expect(nextPendingTask).to.be.equals(undefined);
+        });
+
+        it('should get the only PENDING task', async () => {
+
+            let pendingTasks = [];
+
+            const taskMock = class TaskMock{
+                constructor(data) {
+                    this.stateId = data.stateId;
+                }
+
+                static async find () {
+                    const query = {
+                        sort: function(criteria) {
+                            return {
+                                limit: function(limit) {
+                                    return pendingTasks;
+                                }
+                            }
+                        }
+                    }
+                    return query;
+                }
+            };
+
+            pendingTasks.push(new taskMock({stateId: constants.TASK_STATE_PENDING}));
+
+
+            const taskService = proxyquire('../../services/taskService', {
+                '../model/schema/Task': taskMock
+            });
+
+            const nextPendingTask = await taskService.getNextPendingTask();
+            expect(nextPendingTask).not.to.be.equals(undefined);
+            expect(nextPendingTask.stateId).to.be.equals(constants.TASK_STATE_PENDING);
+        });
+
+        it('should get the oldest PENDING task', async () => {
+
+            let pendingTasks = [];
+
+            const taskMock = class TaskMock{
+                constructor(data) {
+                    this.id = data.id;
+                    this.stateId = data.stateId;
+                    const date = new Date();
+                    if (this.id === '4') {
+                        date.setDate(date.getDate() - 2);
+                    }
+                    if (this.id === '2') {
+                        date.setDate(date.getDate() - 1);
+                    }
+                    if (this.id === '0') {
+                        date.setDate(date.getDate() + 1);
+                    }
+                    this.creationDate = date;
+                }
+
+                static async find () {
+                    const query = {
+                        sort: function(criteria) {
+                            pendingTasks.sort(function(a,b) {
+                                return new Date(a.creationDate) - new Date(b.creationDate);
+                            });
+                            return {
+                                limit: function(limit) {
+                                    return pendingTasks;
+                                }
+                            }
+                        }
+                    }
+                    pendingTasks = pendingTasks.filter(t => t.stateId === constants.TASK_STATE_PENDING);
+                    return query;
+                }
+            };
+            pendingTasks.push(new taskMock({id: '0', stateId: constants.TASK_STATE_PENDING}));
+            pendingTasks.push(new taskMock({id: '1', stateId: constants.TASK_STATE_PENDING}));
+            pendingTasks.push(new taskMock({id: '2', stateId: constants.TASK_STATE_PENDING}));
+            pendingTasks.push(new taskMock({id: '4', stateId: constants.TASK_STATE_FINISHED}));
+
+            const taskService = proxyquire('../../services/taskService', {
+                '../model/schema/Task': taskMock
+            });
+
+            const nextPendingTask = await taskService.getNextPendingTask();
+            expect(nextPendingTask).not.to.be.equals(undefined);
+            expect(nextPendingTask.stateId).to.be.equals(constants.TASK_STATE_PENDING);
+            expect(nextPendingTask.id).to.be.equals('2');
+        });
+
+    });
+
+    describe('taskIsCancelled', () => {
+        it('should return true for cancelled task', () => {
+            const taskService = proxyquire('../../services/taskService', {});
+            const result = taskService.taskIsCancelled({stateId: constants.TASK_STATE_CANCELLED})
+            expect(result).to.be.true;
+        });
+
+        it('should return false for a not cancelled task', () => {
+            const taskService = proxyquire('../../services/taskService', {});
+            const result = taskService.taskIsCancelled({stateId: constants.TASK_STATE_FINISHED})
+            expect(result).to.be.false;
+        });
+    });
+
+    describe('updateSentEmailNotification', async () => {
+        it('should update task setting email sent and sent Email Date', async () => {
+            const taskMock = class TaskMock{
+                constructor() {
+                    this.emailSent = false;
+                }
+                async save () {}
+            };
+
+            let createdTask  = new taskMock({})
+
+            const taskService = proxyquire('../../services/taskService', {
+                '../model/schema/Task': taskMock
+            });
+
+            await taskService.updateSentEmailNotification(createdTask);
+            expect(createdTask.emailSent).to.be.true;
+            expect(createdTask.sentEmailDate).to.be.a('Date');
+        });
+    });
+
+    describe('runTask', async () => {
+        it('should not update a task if patena service fails', async () => {
+            const taskMock = class TaskMock{
+                constructor() {
+                    this.stateId = constants.TASK_STATE_IN_PROGRESS;
+                }
+                async save () {}
+            };
+
+            let createdTask  = new taskMock({})
+
+            const patenaServiceMock = {
+                async start (task) {
+                    return new Promise((resolve,reject) => {
+                        reject("Save Task failure");
+                    })
+                }
+            }
+
+            const taskService = proxyquire('../../services/taskService', {
+                '../model/schema/Task': taskMock,
+                './patenaService': patenaServiceMock
+            });
+            await expect(taskService.runTask(createdTask)).to.be.rejected;
+            expect(createdTask.stateId).to.be.equals(constants.TASK_STATE_IN_PROGRESS);
+        });
+
+        it('should update a task with patena results', async () => {
+            const taskMock = class TaskMock{
+                constructor() {
+                    this.stateId = constants.TASK_STATE_IN_PROGRESS;
+                    this.attempts = 1;
+                }
+                async save () {}
+            };
+
+            let createdTask  = new taskMock({})
+
+            const patenaServiceMock = {
+                async start (task) {}
+            }
+            const fsMock = {
+                readFileSync: function(path, encode) {
+                    return '{"result":{"sequence":"ABC"}}';
+                }
+            }
+            const  fseMock = {
+                removeSync: function() {}
+            }
+
+            const taskService = proxyquire('../../services/taskService', {
+                '../model/schema/Task': taskMock,
+                './patenaService': patenaServiceMock,
+                'fs': fsMock,
+                'fs-extra': fseMock
+
+            });
+            await taskService.runTask(createdTask);
+            expect(createdTask.stateId).to.be.equals(constants.TASK_STATE_FINISHED);
+            expect(createdTask.attempts).to.be.equals(2);
+            expect(createdTask.output).not.to.be.undefined;
+            expect(createdTask.output.result.sequence).to.be.equals('ABC');
+        });
+    });
 });

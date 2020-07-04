@@ -48,7 +48,7 @@ function runFailingTask (task) {
 
 function promoteTaskToInProgress (task) {
     log("taskServiceMock:: promoteTaskToInProgress => updated task");
-    task.stateId = constants.STATE_IN_PROGRESS;
+    task.stateId = constants.TASK_STATE_IN_PROGRESS;
     return task;
 }
 
@@ -63,7 +63,7 @@ function updateFailingTaskCancellingTask(task, error) {
     log("taskServiceMock:: updateFailingTaskCancellingTask => ok");
     task.attempts = task.attempts + 1;
     task.messageError = error;
-    task.stateId = constants.STATE_CANCELLED;
+    task.stateId = constants.TASK_STATE_CANCELLED;
     return task;
 }
 
@@ -114,7 +114,7 @@ describe('Task analyzer worker',() => {
     it('should promote task to "in progress" for pending task', async () => {
 
         let task = {
-            stateId: constants.STATE_PENDING,
+            stateId: constants.TASK_STATE_PENDING,
             taskData: {}
         };
 
@@ -134,13 +134,13 @@ describe('Task analyzer worker',() => {
 
         await start();
 
-        expect(task.stateId).to.be.equals(constants.STATE_IN_PROGRESS);
+        expect(task.stateId).to.be.equals(constants.TASK_STATE_IN_PROGRESS);
     });
 
     it('should mark email sent and sent email date for a successful task run with email', async () => {
 
         let task = {
-            stateId: constants.STATE_PENDING,
+            stateId: constants.TASK_STATE_PENDING,
             emailSent: false,
             taskData: {
                 email: "test_email@test.com"
@@ -176,7 +176,7 @@ describe('Task analyzer worker',() => {
 
         let task = {
             id: 12345,
-            stateId: constants.STATE_PENDING,
+            stateId: constants.TASK_STATE_PENDING,
             emailSent: false,
             taskData: {
                 email: "test_email@test.com"
@@ -212,7 +212,7 @@ describe('Task analyzer worker',() => {
 
         let task = {
             id: 12345,
-            stateId: constants.STATE_PENDING,
+            stateId: constants.TASK_STATE_PENDING,
             emailSent: false,
             taskData: {
                 email: "test_email@test.com"
@@ -247,7 +247,7 @@ describe('Task analyzer worker',() => {
     it('should update a failing task by increasing its attempts and saving error message', async () => {
 
         let task = {
-            stateId: constants.STATE_PENDING,
+            stateId: constants.TASK_STATE_PENDING,
             attempts: 0,
         };
 
@@ -276,7 +276,7 @@ describe('Task analyzer worker',() => {
     it('should cancel a 3 times failing task', async () => {
 
         let task = {
-            stateId: constants.STATE_PENDING,
+            stateId: constants.TASK_STATE_PENDING,
             attempts: 2,
             taskData: {}
         };
@@ -299,14 +299,14 @@ describe('Task analyzer worker',() => {
         await start();
 
         expect(task.attempts).to.be.equals(3);
-        expect(task.stateId).to.be.equals(constants.STATE_CANCELLED);
+        expect(task.stateId).to.be.equals(constants.TASK_STATE_CANCELLED);
     });
 
     it('should notify a user that task is canceled', async () => {
 
         let task = {
             id: 12345,
-            stateId: constants.STATE_PENDING,
+            stateId: constants.TASK_STATE_PENDING,
             emailSent: false,
             attempts: 2,
             taskData: {
@@ -337,7 +337,7 @@ describe('Task analyzer worker',() => {
         task = await start();
 
         expect(task.attempts).to.be.equals(3);
-        expect(task.stateId).to.be.equals(constants.STATE_CANCELLED);
+        expect(task.stateId).to.be.equals(constants.TASK_STATE_CANCELLED);
         expect(task.emailSent).to.be.true;
         expect(task.sentEmailDate).to.be.an('Date');
     });
@@ -346,7 +346,7 @@ describe('Task analyzer worker',() => {
 
         let task = {
             id: 12345,
-            stateId: constants.STATE_PENDING,
+            stateId: constants.TASK_STATE_PENDING,
             emailSent: false,
             attempts: 2,
             taskData: {
@@ -377,7 +377,7 @@ describe('Task analyzer worker',() => {
         await start();
 
         expect(task.attempts).to.be.equals(3);
-        expect(task.stateId).to.be.equals(constants.STATE_CANCELLED);
+        expect(task.stateId).to.be.equals(constants.TASK_STATE_CANCELLED);
         expect(task.emailSent).to.be.false;
         expect(task.sentEmailDate).to.be.an('undefined');
     });
@@ -387,7 +387,7 @@ describe('Task analyzer worker',() => {
 
         let task = {
             id: 12345,
-            stateId: constants.STATE_PENDING,
+            stateId: constants.TASK_STATE_PENDING,
             emailSent: false,
             attempts: 2,
             taskData: {
@@ -418,7 +418,7 @@ describe('Task analyzer worker',() => {
         task = await start();
 
         expect(task.attempts).to.be.equals(3);
-        expect(task.stateId).to.be.equals(constants.STATE_CANCELLED);
+        expect(task.stateId).to.be.equals(constants.TASK_STATE_CANCELLED);
         expect(task.emailSent).to.be.false;
         expect(task.sentEmailDate).to.be.an('undefined');
     });
@@ -430,7 +430,7 @@ describe('Task analyzer worker',() => {
 
     it('should wait (do nothing) if a non overdue task is currently in progress', async () => {
         let taskInProgress = {
-            stateId: constants.STATE_IN_PROGRESS,
+            stateId: constants.TASK_STATE_IN_PROGRESS,
             lastExecutionDate: new Date(),
             taskData: {}
         };
@@ -448,7 +448,7 @@ describe('Task analyzer worker',() => {
 
         await start();
 
-        expect(taskInProgress.stateId).to.be.equals(constants.STATE_IN_PROGRESS);
+        expect(taskInProgress.stateId).to.be.equals(constants.TASK_STATE_IN_PROGRESS);
     });
 
     it('should cancel an overdue task', async () => {
@@ -459,7 +459,7 @@ describe('Task analyzer worker',() => {
         yesterday.setDate(yesterday.getDate() - 1);
 
         let taskInProgress = {
-            stateId: constants.STATE_IN_PROGRESS,
+            stateId: constants.TASK_STATE_IN_PROGRESS,
             lastExecutionDate: yesterday,
             taskData: {}
         };
@@ -472,7 +472,7 @@ describe('Task analyzer worker',() => {
         taskServiceMock.cancelTask = function(task) {
             log("taskServiceMock:: updateFailingTask => ok");
             task.messageError = translations.taskService.cancelMessageError;
-            task.stateId = constants.STATE_CANCELLED;
+            task.stateId = constants.TASK_STATE_CANCELLED;
             return task;
         }
 
@@ -484,6 +484,6 @@ describe('Task analyzer worker',() => {
         await start();
 
         expect(taskInProgress.messageError).to.be.equals(translations.taskService.cancelMessageError);
-        expect(taskInProgress.stateId).to.be.equals(constants.STATE_CANCELLED);
+        expect(taskInProgress.stateId).to.be.equals(constants.TASK_STATE_CANCELLED);
     });
 });
