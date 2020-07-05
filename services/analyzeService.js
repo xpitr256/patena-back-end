@@ -13,8 +13,8 @@ module.exports = {
             const id = idGenerator.uuidv4();
             await taskService.create(id, taskData, constants.TYPE_ANALYSIS);
             if (email) {
-                const english = 'en'; //TODO read it from client.
-                await mailService.sendWorkInProgressMail(email, english, constants.TYPE_ANALYSIS, id);
+                const language = data.language ? data.language : 'en';
+                await mailService.sendWorkInProgressMail(email, language, constants.TYPE_ANALYSIS, id);
             }
             return id;
         } catch (e) {

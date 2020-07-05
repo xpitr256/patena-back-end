@@ -1,19 +1,20 @@
 
-const {PythonShell} = require('python-shell');
+const PythonShell = require('python-shell');
 const constants = require('./constants');
 const utils = require('./validation/validationUtils');
 const lengthService = require('./linkerLengthService');
+const logger = require('./log/logService');
 
-function runPatenaFor(args, workId){
+function runPatenaFor(args, workId) {
     return new Promise((resolve, reject) => {
         const options = {
             mode: 'text',
             args: args
         };
         PythonShell.run('./mock/mockPatenaDesign.py', options, function (err, results) {
-            if (err){
-                console.error("There was an ERROR running PATENA for workId=" + workId);
-                console.error(err);
+            if (err) {
+                logger.error("There was an ERROR running PATENA for workId=" + workId);
+                logger.error(err);
                 reject(err);
             }
             resolve()
