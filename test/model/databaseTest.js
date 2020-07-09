@@ -52,4 +52,26 @@ describe('Model Database', async () => {
         expect(result).to.be.equals(undefined);
     });
 
+    it('should disconnect after being connected', async () => {
+        const moongoseMock = {
+            connect: async function(user, pass) {
+                log("moongoseMock:: connect => OK");
+            },
+            connection: {
+                close: async function() {
+                    log("moongoseMock:: close => OK");
+                }
+            }
+        }
+
+        const database = proxyquire('../../model/database', {
+            'mongoose': moongoseMock,
+            '../services/log/logService': mockLogger
+        });
+
+        await database.connect();
+        const result = await database.disconnect();
+        expect(result).to.be.equals(undefined);
+    });
+
 })

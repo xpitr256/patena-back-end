@@ -1,10 +1,11 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
-  //TODO create index with endpoints documentation
-  res.render('index', { title: 'Express' });
+  res.json({
+    name: 'PATENA api',
+    version: 'v1'
+  });
 });
 
 module.exports = router;

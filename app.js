@@ -8,7 +8,7 @@ var indexRouter = require('./routes/index');
 var linkerLength = require('./routes/linkerLength');
 var contact = require('./routes/contact');
 var results = require('./routes/results');
-var analize = require('./routes/analyze');
+var analyze = require('./routes/analyze');
 var design = require ('./routes/design')
 
 var app = express();
@@ -57,7 +57,7 @@ app.route("/contact")
     .post(contact.postContact);
 
 app.route("/analyze")
-    .post(analize.postAnalyze);
+    .post(analyze.postAnalyze);
 
 app.route("/design")
     .post(design.postDesign);

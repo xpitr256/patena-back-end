@@ -47,7 +47,6 @@ describe('/GET invalid route',() => {
             });
     });
 
-
     it('should return a 200 for OPTIONS method', (done) => {
         chai.request(application)
             .options('/invalid')
@@ -58,3 +57,18 @@ describe('/GET invalid route',() => {
             });
     });
 });
+
+describe('/GET index default route',() => {
+
+    it('should return a name and api version', (done) => {
+        chai.request(application)
+            .get('/')
+            .end( (err,res) => {
+                expect(res).to.have.status(200);
+                expect(res.body.name).to.be.equals('PATENA api');
+                expect(res.body.version).to.be.equals('v1');
+                done();
+            });
+    });
+});
+
