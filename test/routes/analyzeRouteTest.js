@@ -5,16 +5,29 @@ chai.use(chaiHttp);
 const application = require('../../app');
 const proxyquire  =  require('proxyquire');
 
+const mockLogger = {
+    log: function() {},
+    error: function() {}
+}
+const databaseWithMockLogger = proxyquire('../../model/database', {
+    '../services/log/logService': mockLogger
+});
 
-describe('/POST analyze route',() => {
+const mockDatabase = proxyquire('../model/databaseTestHelper', {
+    './../../model/database': databaseWithMockLogger
+});
+
+const Task = require('../../model/schema/Task');
+
+describe('/POST analyze route', () => {
 
     const validEmail = 'valid@test.com';
-    const validName = 'TestName';
-    const validMessage = 'Test Message Wit hMore Than Fifty Characters Required';
+    const validSequenceName = 'TestName';
+    const validSequenceValue = 'AABBBBBBB';
 
-    it('should return a 400 error for empty contact information', (done) => {
+    it('should return a 400 error for no information', (done) => {
         chai.request(application)
-            .post('/contact')
+            .post('/analyze')
             .send({})
             .end( (err,res) => {
                 expect(res).to.have.status(400);
@@ -22,13 +35,11 @@ describe('/POST analyze route',() => {
             });
     });
 
-    it('should return a 400 error for invalid mail in contact information', (done) => {
+    it('should return a 400 error for invalid mail', (done) => {
         chai.request(application)
-            .post('/contact')
+            .post('/analyze')
             .send({
-                email: 'invalid',
-                name: validName,
-                message: validMessage
+                email: 'invalid'
             })
             .end( (err,res) => {
                 expect(res).to.have.status(400);
@@ -36,13 +47,12 @@ describe('/POST analyze route',() => {
             });
     });
 
-    it('should return a 400 error for invalid name in contact information', (done) => {
+    it('should return a 400 error for empty sequence', (done) => {
         chai.request(application)
-            .post('/contact')
+            .post('/analyze')
             .send({
                 email: validEmail,
-                name: '    ',
-                message: validMessage
+                sequence: {},
             })
             .end( (err,res) => {
                 expect(res).to.have.status(400);
@@ -50,13 +60,15 @@ describe('/POST analyze route',() => {
             });
     });
 
-    it('should return a 400 error for less than 50 characters message in contact information', (done) => {
+    it('should return a 400 error for empty sequence value', (done) => {
         chai.request(application)
-            .post('/contact')
+            .post('/analyze')
             .send({
                 email: validEmail,
-                name: validName,
-                message: 'Too short message'
+                sequence: {
+                    name: validSequenceName,
+                    value: ''
+                },
             })
             .end( (err,res) => {
                 expect(res).to.have.status(400);
@@ -64,57 +76,68 @@ describe('/POST analyze route',() => {
             });
     });
 
-    it('should send valid contact information', (done) => {
-        const emailServiceMock = {
-            sendContactMail : async function(email, name, message) {}
-        }
-        const contactWithMockedMailService = proxyquire('../../routes/contact', {
-            '../services/mail/mailService.js': emailServiceMock
+    it('should return a 400 error for invalid sequence value. (It has "J" a non existent amino acid)', (done) => {
+        chai.request(application)
+            .post('/analyze')
+            .send({
+                email: validEmail,
+                sequence: {
+                    name: validSequenceName,
+                    value: 'ABJ'
+                },
+            })
+            .end( (err,res) => {
+                expect(res).to.have.status(400);
+                done();
+            });
+    });
+
+    describe('with valid analyze data ', () => {
+        before(async () => {
+           await mockDatabase.createInMemoryDataBase();
         });
 
-        const application = proxyquire('../../app',{
-            './routes/contact': contactWithMockedMailService
-        });
-
-        chai.request(application)
-            .post('/contact')
-            .send({
-                email: validEmail,
-                name: validName,
-                message: validMessage
-            })
-            .end( (err,res) => {
-                expect(res).to.have.status(200);
-                done();
-            });
-    });
-
-    it('should return 500 error if it cannot send email', (done) => {
-        const emailServiceMock = {
-            sendContactMail : async function(email, name, message) {
-                return new Promise(((resolve, reject) => {
-                    reject("Mail service failing on purpose");
-                }))
+        it('should send valid contact information', (done) => {
+            const emailServiceMock = {
+                sendWorkInProgressMail: async function(email, language, workType, workId) {
+                    expect(email).to.be.equals(validEmail);
+                    expect(language).to.be.equals('en');
+                }
             }
-        }
-        const contactWithMockedMailService = proxyquire('../../routes/contact', {
-            '../services/mail/mailService.js': emailServiceMock
-        });
 
-        const application = proxyquire('../../app',{
-            './routes/contact': contactWithMockedMailService
-        });
-
-        chai.request(application)
-            .post('/contact')
-            .send({
-                email: validEmail,
-                name: validName,
-                message: validMessage
+            const analyzeServiceWithMockedEmailService = proxyquire('../../services/analyzeService', {
+                './mail/mailService': emailServiceMock
             })
-            .end( (err,res) => {
-                expect(res).to.have.status(500);
-                done();
+
+            const analyzeWithMockedAnalyzeService = proxyquire('../../routes/analyze', {
+                '../services/analyzeService': analyzeServiceWithMockedEmailService
             });
+
+            const application = proxyquire('../../app', {
+                './routes/analyze': analyzeWithMockedAnalyzeService
+            });
+
+            chai.request(application)
+                .post('/analyze')
+                .send({
+                    email: validEmail,
+                    sequence: {
+                        name: validSequenceName,
+                        value: validSequenceValue
+                    },
+                })
+                .end( async (err,res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body.orderNumber).to.be.lengthOf(36);
+                    const createdTasks = await Task.countDocuments();
+                    expect(createdTasks).to.be.equals(1);
+                    done();
+                });
+        });
+
+        after(async () => {
+            await mockDatabase.destroyInMemoryDataBase();
+        });
     });
+
 });

@@ -57,10 +57,8 @@ describe('Model Database', async () => {
             connect: async function(user, pass) {
                 log("moongoseMock:: connect => OK");
             },
-            connection: {
-                close: async function() {
-                    log("moongoseMock:: close => OK");
-                }
+            disconnect: async function() {
+                log("moongoseMock:: disconnect => OK");
             }
         }
 

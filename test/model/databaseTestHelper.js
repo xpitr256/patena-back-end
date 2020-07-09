@@ -14,6 +14,7 @@ const createInMemoryDataBase = async () => {
 
 const destroyInMemoryDataBase = async () => {
     await database.disconnect();
+    await server.stop();
 };
 
 module.exports = {

@@ -12,5 +12,5 @@ module.exports = {
             logger.error('Error connecting to DB: ' + err);
         }
     },
-    disconnect: async () => await mongoose.connection.close()
+    disconnect: async () => await mongoose.disconnect()
 };
