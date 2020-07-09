@@ -14,7 +14,6 @@ async function postContact(req, res) {
             res.json({
                 message: "Contact form sent ok!"
             });
-
         } catch (err) {
             res.status(500).send(err);
         }
