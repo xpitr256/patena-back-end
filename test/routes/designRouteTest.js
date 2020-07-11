@@ -4,6 +4,7 @@ const expect = require('chai').expect;
 chai.use(chaiHttp);
 const application = require('../../app');
 const proxyquire  =  require('proxyquire');
+const constants = require('../../services/constants');
 
 const mockLogger = {
     log: function() {},
@@ -19,16 +20,52 @@ const mockDatabase = proxyquire('../model/databaseTestHelper', {
 
 const Task = require('../../model/schema/Task');
 
-describe('/POST analyze route', () => {
+describe('/POST design route', () => {
 
     const validEmail = 'valid@test.com';
     const validSequenceName = 'TestName';
     const validSequenceValue = 'AABBBBBBB';
 
-    it('should return a 400 error for no information', (done) => {
+    it('should return a 400 error for no design information', (done) => {
         chai.request(application)
-            .post('/analyze')
+            .post('/design')
             .send({})
+            .end( (err,res) => {
+                expect(res).to.have.status(400);
+                done();
+            });
+    });
+
+    it('should return a 400 error for invalid design type', (done) => {
+        chai.request(application)
+            .post('/design')
+            .send({
+                designType: 'invalid'
+            })
+            .end( (err,res) => {
+                expect(res).to.have.status(400);
+                done();
+            });
+    });
+
+    it('should return a 400 error for 0 (non 1-4) design type', (done) => {
+        chai.request(application)
+            .post('/design')
+            .send({
+                designType: 0
+            })
+            .end( (err,res) => {
+                expect(res).to.have.status(400);
+                done();
+            });
+    });
+
+    it('should return a 400 error for 5 (non 1-4) design type', (done) => {
+        chai.request(application)
+            .post('/design')
+            .send({
+                designType: 5
+            })
             .end( (err,res) => {
                 expect(res).to.have.status(400);
                 done();
@@ -37,8 +74,9 @@ describe('/POST analyze route', () => {
 
     it('should return a 400 error for invalid mail', (done) => {
         chai.request(application)
-            .post('/analyze')
+            .post('/design')
             .send({
+                designType: constants.DESIGN_TYPE_ONLY_INITIAL_SEQUENCE,
                 email: 'invalid'
             })
             .end( (err,res) => {
@@ -47,12 +85,12 @@ describe('/POST analyze route', () => {
             });
     });
 
-    it('should return a 400 error for empty sequence', (done) => {
+    it('should return a 400 error for no initial sequence', (done) => {
         chai.request(application)
-            .post('/analyze')
+            .post('/design')
             .send({
                 email: validEmail,
-                sequence: {},
+                designType: constants.DESIGN_TYPE_ONLY_INITIAL_SEQUENCE,
             })
             .end( (err,res) => {
                 expect(res).to.have.status(400);
@@ -62,10 +100,11 @@ describe('/POST analyze route', () => {
 
     it('should return a 400 error for empty sequence value', (done) => {
         chai.request(application)
-            .post('/analyze')
+            .post('/design')
             .send({
                 email: validEmail,
-                sequence: {
+                designType: constants.DESIGN_TYPE_ONLY_INITIAL_SEQUENCE,
+                initialSequence: {
                     name: validSequenceName,
                     value: ''
                 },
@@ -76,12 +115,13 @@ describe('/POST analyze route', () => {
             });
     });
 
-    it('should return a 400 error for invalid sequence value. (It has "J" a non existent amino acid)', (done) => {
+    it('should return a 400 error for invalid initial sequence value. (It has "J" a non existent amino acid)', (done) => {
         chai.request(application)
-            .post('/analyze')
+            .post('/design')
             .send({
                 email: validEmail,
-                sequence: {
+                designType: constants.DESIGN_TYPE_ONLY_INITIAL_SEQUENCE,
+                initialSequence: {
                     name: validSequenceName,
                     value: 'ABJ'
                 },
@@ -92,37 +132,38 @@ describe('/POST analyze route', () => {
             });
     });
 
-    describe('with valid analyze data ', () => {
+    describe('with valid design data ', () => {
         beforeEach(async () => {
            await mockDatabase.createInMemoryDataBase();
         });
 
-        it('should save the analyze task', (done) => {
-
+        it('should save the design Task', (done) => {
             const emailServiceMock = {
                 sendWorkInProgressMail: async function(email, language, workType, workId) {
                     expect(email).to.be.equals(validEmail);
                     expect(language).to.be.equals('en');
+                    expect(workType).to.be.equals(constants.TYPE_DESIGN);
                 }
             }
 
-            const analyzeServiceWithMockedEmailService = proxyquire('../../services/analyzeService', {
+            const designServiceWithMockedEmailService = proxyquire('../../services/designService', {
                 './mail/mailService': emailServiceMock
             })
 
-            const analyzeWithMockedAnalyzeService = proxyquire('../../routes/analyze', {
-                '../services/analyzeService': analyzeServiceWithMockedEmailService
+            const designWithMockedDesignService = proxyquire('../../routes/design', {
+                '../services/designService': designServiceWithMockedEmailService
             });
 
             const application = proxyquire('../../app', {
-                './routes/analyze': analyzeWithMockedAnalyzeService
+                './routes/design': designWithMockedDesignService
             });
 
             chai.request(application)
-                .post('/analyze')
+                .post('/design')
                 .send({
                     email: validEmail,
-                    sequence: {
+                    designType: constants.DESIGN_TYPE_ONLY_INITIAL_SEQUENCE,
+                    initialSequence: {
                         name: validSequenceName,
                         value: validSequenceValue
                     },
@@ -136,29 +177,30 @@ describe('/POST analyze route', () => {
                 });
         });
 
-        it('should not save the analyze task if createAnalysis from analyze service fails', (done) => {
+        it('should not save the design task if designAnalysis from design service fails', (done) => {
 
-            const analyzeServiceMock = {
-                createAnalysis: async function(email, sequence) {
+            const designServiceMock = {
+                createDesign: async function (data) {
                     return new Promise(((resolve, reject) => {
                         reject('Failing on purpose');
                     }))
                 }
             }
 
-            const analyzeWithFailingMockedAnalyzeService = proxyquire('../../routes/analyze', {
-                '../services/analyzeService': analyzeServiceMock
+            const designWithFailingMockedDesignService = proxyquire('../../routes/design', {
+                '../services/designService': designServiceMock
             });
 
             const application = proxyquire('../../app', {
-                './routes/analyze': analyzeWithFailingMockedAnalyzeService
+                './routes/design': designWithFailingMockedDesignService
             });
 
             chai.request(application)
-                .post('/analyze')
+                .post('/design')
                 .send({
                     email: validEmail,
-                    sequence: {
+                    designType: constants.DESIGN_TYPE_ONLY_INITIAL_SEQUENCE,
+                    initialSequence: {
                         name: validSequenceName,
                         value: validSequenceValue
                     },
@@ -170,6 +212,7 @@ describe('/POST analyze route', () => {
                     done();
                 });
         });
+
 
         afterEach(async () => {
             await mockDatabase.destroyInMemoryDataBase();
