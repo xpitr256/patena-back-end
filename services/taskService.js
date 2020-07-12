@@ -1,4 +1,4 @@
-const patenaService = require('./patenaService');
+const patenaService = require('./patena/patenaService');
 const Task = require('../model/schema/Task');
 const translationService = require('./translationService');
 const constants = require('./constants');

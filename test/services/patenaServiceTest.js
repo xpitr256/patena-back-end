@@ -10,8 +10,8 @@ describe('Patena Service', async () => {
     const orderNumber = '550e8400-e29b-41d4-a716-446655440000';
 
     it('should run Patena for ANALYSIS with default config settings if Task has no config defined ', async () => {
-        const pythonShellMock = class PythonShellMock {
-            static run (path, options, callBack) {
+        const pythonRunnerMock = {
+            run: (path, options, callBack) => {
 
                 expect(options).not.to.be.undefined;
 
@@ -32,8 +32,8 @@ describe('Patena Service', async () => {
                 callBack();
             }
         };
-        const patenaService = proxyquire('../../services/patenaService', {
-            'python-shell': pythonShellMock
+        const patenaService = proxyquire('../../services/patena/patenaService', {
+            './pythonRunner': pythonRunnerMock
         });
         const task = {
             id: orderNumber,
@@ -49,8 +49,8 @@ describe('Patena Service', async () => {
 
 
     it('should run Patena for DESIGN => DESIGN_TYPE_ONLY_INITIAL_SEQUENCE with default config settings if Task has no config defined ', async () => {
-        const pythonShellMock = class PythonShellMock {
-            static run (path, options, callBack) {
+        const pythonRunnerMock = {
+            run: (path, options, callBack) => {
 
                 expect(options).not.to.be.undefined;
 
@@ -68,8 +68,8 @@ describe('Patena Service', async () => {
                 callBack();
             }
         };
-        const patenaService = proxyquire('../../services/patenaService', {
-            'python-shell': pythonShellMock
+        const patenaService = proxyquire('../../services/patena/patenaService', {
+            './pythonRunner': pythonRunnerMock
         });
         const task = {
             id: orderNumber,
@@ -85,8 +85,8 @@ describe('Patena Service', async () => {
     });
 
     it('should run Patena for DESIGN => DESIGN_TYPE_INITIAL_AND_FLANKING_SEQUENCES combining last 10 positions from flankingSequence1 and first 10 position from flankingSequence2', async () => {
-        const pythonShellMock = class PythonShellMock {
-            static run (path, options, callBack) {
+        const pythonRunnerMock = {
+            run: (path, options, callBack) => {
 
                 expect(options).not.to.be.undefined;
 
@@ -105,8 +105,8 @@ describe('Patena Service', async () => {
                 callBack();
             }
         };
-        const patenaService = proxyquire('../../services/patenaService', {
-            'python-shell': pythonShellMock
+        const patenaService = proxyquire('../../services/patena/patenaService', {
+            './pythonRunner': pythonRunnerMock
         });
         const task = {
             id: orderNumber,
@@ -128,8 +128,8 @@ describe('Patena Service', async () => {
     });
 
     it('should run Patena for DESIGN => DESIGN_TYPE_ONLY_FLANKING_SEQUENCES combining last 10 positions from flankingSequence1 + random amino acids + and first 10 position from flankingSequence2', async () => {
-        const pythonShellMock = class PythonShellMock {
-            static run (path, options, callBack) {
+        const pythonRunnerMock = {
+            run: (path, options, callBack) => {
 
                 expect(options).not.to.be.undefined;
 
@@ -154,8 +154,8 @@ describe('Patena Service', async () => {
                 callBack();
             }
         };
-        const patenaService = proxyquire('../../services/patenaService', {
-            'python-shell': pythonShellMock
+        const patenaService = proxyquire('../../services/patena/patenaService', {
+            './pythonRunner': pythonRunnerMock
         });
         const task = {
             id: orderNumber,
@@ -175,8 +175,8 @@ describe('Patena Service', async () => {
     });
 
     it('should run Patena for DESIGN => DESIGN_TYPE_NO_INITIAL_SEQUENCE with random amino acids', async () => {
-        const pythonShellMock = class PythonShellMock {
-            static run (path, options, callBack) {
+        const pythonRunnerMock = {
+            run: (path, options, callBack) => {
 
                 expect(options).not.to.be.undefined;
 
@@ -195,8 +195,8 @@ describe('Patena Service', async () => {
                 callBack();
             }
         };
-        const patenaService = proxyquire('../../services/patenaService', {
-            'python-shell': pythonShellMock
+        const patenaService = proxyquire('../../services/patena/patenaService', {
+            './pythonRunner': pythonRunnerMock
         });
         const task = {
             id: orderNumber,
@@ -215,15 +215,14 @@ describe('Patena Service', async () => {
             log: function() {},
             error: function() {}
         }
-
-        const pythonShellMock = class PythonShellMock {
-            static run (path, options, callBack) {
+        const pythonRunnerMock = {
+            run: (path, options, callBack) => {
                 callBack("Failing on purpose");
             }
         };
-        const patenaService = proxyquire('../../services/patenaService', {
-            'python-shell': pythonShellMock,
-            './log/logService': mockLogger
+        const patenaService = proxyquire('../../services/patena/patenaService', {
+            './pythonRunner': pythonRunnerMock,
+            '../log/logService': mockLogger
         });
         const task = {
             id: orderNumber,
@@ -239,8 +238,8 @@ describe('Patena Service', async () => {
 
 
     it('should run Patena with custom config parameters if Task includes config', async () => {
-        const pythonShellMock = class PythonShellMock {
-            static run (path, options, callBack) {
+        const pythonRunnerMock = {
+            run: (path, options, callBack) => {
 
                 expect(options).not.to.be.undefined;
 
@@ -262,8 +261,8 @@ describe('Patena Service', async () => {
                 callBack();
             }
         };
-        const patenaService = proxyquire('../../services/patenaService', {
-            'python-shell': pythonShellMock
+        const patenaService = proxyquire('../../services/patena/patenaService', {
+            './pythonRunner': pythonRunnerMock
         });
         const task = {
             id: orderNumber,

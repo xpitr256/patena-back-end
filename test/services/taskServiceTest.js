@@ -458,7 +458,7 @@ describe('Task Service', async () => {
 
             const taskService = proxyquire('../../services/taskService', {
                 '../model/schema/Task': taskMock,
-                './patenaService': patenaServiceMock
+                './patena/patenaService': patenaServiceMock
             });
             await expect(taskService.runTask(createdTask)).to.be.rejected;
             expect(createdTask.stateId).to.be.equals(constants.TASK_STATE_IN_PROGRESS);
@@ -489,7 +489,7 @@ describe('Task Service', async () => {
 
             const taskService = proxyquire('../../services/taskService', {
                 '../model/schema/Task': taskMock,
-                './patenaService': patenaServiceMock,
+                './patena/patenaService': patenaServiceMock,
                 'fs': fsMock,
                 'fs-extra': fseMock
 
