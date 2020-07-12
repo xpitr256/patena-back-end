@@ -7,7 +7,7 @@ let TaskSchema = new Schema({
     stateId: {type: Number, default: constants.TASK_STATE_PENDING},
     messageError: {type: String, default: ''},
     typeId: Number, // 1-analyze, 2-design
-    creationDate: {type:Date, default:Date.now()},
+    creationDate: {type:Date, default:Date.now},
     attempts: {type: Number, default: 0},
     lastExecutionDate: {type:Date, default:null},
     output: {type:Object, default:null},
