@@ -8,7 +8,7 @@ router.get('/', async function(req, res, next) {
         try {
             res.json(await resultService.getResultsFor(req.query.orderNumber));
         } catch (err) {
-            res.status(400).send(err);
+            res.status(500).send(err);
         }
     } else {
         res.status(400).send({
