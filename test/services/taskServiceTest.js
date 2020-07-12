@@ -300,117 +300,104 @@ describe('Task Service', async () => {
 
     describe('getNextPendingTask', async () => {
 
+        const mockLogger = {
+            log: function() {},
+            error: function() {}
+        }
+        const databaseWithMockLogger = proxyquire('../../model/database', {
+            '../services/log/logService': mockLogger
+        });
+
+        const mockDatabase = proxyquire('../model/databaseTestHelper', {
+            './../../model/database': databaseWithMockLogger
+        });
+
+        const Task = require('../../model/schema/Task');
+
+        beforeEach(async () => {
+            await mockDatabase.createInMemoryDataBase();
+        });
+
+        afterEach(async () => {
+            await mockDatabase.destroyInMemoryDataBase();
+        });
+
+
         it('should get nothing if there is no PENDING task', async () => {
-
-            const taskMock = class TaskMock{
-                static async find () {
-                    const query = {
-                        sort: function(criteria) {
-                            return {
-                                limit: function(limit) {
-                                    return []
-                                }
-                            }
-                        }
-                    }
-                    return query;
-                }
-            };
-
-            const taskService = proxyquire('../../services/taskService', {
-                '../model/schema/Task': taskMock
-            });
-
+            const taskService = proxyquire('../../services/taskService', {});
             const nextPendingTask = await taskService.getNextPendingTask();
             expect(nextPendingTask).to.be.equals(undefined);
         });
 
         it('should get the only PENDING task', async () => {
-
-            let pendingTasks = [];
-
-            const taskMock = class TaskMock{
-                constructor(data) {
-                    this.stateId = data.stateId;
-                }
-
-                static async find () {
-                    const query = {
-                        sort: function(criteria) {
-                            return {
-                                limit: function(limit) {
-                                    return pendingTasks;
-                                }
-                            }
-                        }
-                    }
-                    return query;
-                }
-            };
-
-            pendingTasks.push(new taskMock({stateId: constants.TASK_STATE_PENDING}));
-
-
-            const taskService = proxyquire('../../services/taskService', {
-                '../model/schema/Task': taskMock
+            const task = new Task({
+                id: 123,
+                stateId: constants.TASK_STATE_PENDING,
+                typeId: constants.TYPE_ANALYSIS,
+                taskData: {},
+                language: 'en'
             });
-
+            await task.save();
+            const taskService = proxyquire('../../services/taskService', {});
             const nextPendingTask = await taskService.getNextPendingTask();
             expect(nextPendingTask).not.to.be.equals(undefined);
             expect(nextPendingTask.stateId).to.be.equals(constants.TASK_STATE_PENDING);
+            expect(nextPendingTask.id).to.be.equals("123");
         });
 
         it('should get the oldest PENDING task', async () => {
 
-            let pendingTasks = [];
-
-            const taskMock = class TaskMock{
-                constructor(data) {
-                    this.id = data.id;
-                    this.stateId = data.stateId;
-                    const date = new Date();
-                    if (this.id === '4') {
-                        date.setDate(date.getDate() - 2);
-                    }
-                    if (this.id === '2') {
-                        date.setDate(date.getDate() - 1);
-                    }
-                    if (this.id === '0') {
-                        date.setDate(date.getDate() + 1);
-                    }
-                    this.creationDate = date;
-                }
-
-                static async find () {
-                    const query = {
-                        sort: function(criteria) {
-                            pendingTasks.sort(function(a,b) {
-                                return new Date(a.creationDate) - new Date(b.creationDate);
-                            });
-                            return {
-                                limit: function(limit) {
-                                    return pendingTasks;
-                                }
-                            }
-                        }
-                    }
-                    pendingTasks = pendingTasks.filter(t => t.stateId === constants.TASK_STATE_PENDING);
-                    return query;
-                }
-            };
-            pendingTasks.push(new taskMock({id: '0', stateId: constants.TASK_STATE_PENDING}));
-            pendingTasks.push(new taskMock({id: '1', stateId: constants.TASK_STATE_PENDING}));
-            pendingTasks.push(new taskMock({id: '2', stateId: constants.TASK_STATE_PENDING}));
-            pendingTasks.push(new taskMock({id: '4', stateId: constants.TASK_STATE_FINISHED}));
-
-            const taskService = proxyquire('../../services/taskService', {
-                '../model/schema/Task': taskMock
+            const task0 = new Task({
+                id: 0,
+                stateId: constants.TASK_STATE_FINISHED,
+                typeId: constants.TYPE_ANALYSIS,
+                taskData: {},
+                language: 'en'
             });
+            await task0.save();
 
+            const task1 = new Task({
+                id: 1,
+                stateId: constants.TASK_STATE_PENDING,
+                typeId: constants.TYPE_DESIGN,
+                taskData: {},
+                language: 'en'
+            });
+            await task1.save();
+
+            const task2 = new Task({
+                id: 2,
+                stateId: constants.TASK_STATE_PENDING,
+                typeId: constants.TYPE_ANALYSIS,
+                taskData: {},
+                language: 'en'
+            });
+            await task2.save();
+
+            const task3 = new Task({
+                id: 3,
+                stateId: constants.TASK_STATE_PENDING,
+                typeId: constants.TYPE_DESIGN,
+                taskData: {},
+                language: 'en'
+            });
+            await task3.save();
+
+            const task4 = new Task({
+                id: 4,
+                stateId: constants.TASK_STATE_FINISHED,
+                typeId: constants.TYPE_ANALYSIS,
+                taskData: {},
+                language: 'en'
+            });
+            await task4.save();
+
+            const taskService = proxyquire('../../services/taskService', {});
             const nextPendingTask = await taskService.getNextPendingTask();
             expect(nextPendingTask).not.to.be.equals(undefined);
             expect(nextPendingTask.stateId).to.be.equals(constants.TASK_STATE_PENDING);
-            expect(nextPendingTask.id).to.be.equals('2');
+            expect(nextPendingTask.id).to.be.equals('1');
+            expect(nextPendingTask.typeId).to.be.equals(constants.TYPE_DESIGN);
         });
 
     });

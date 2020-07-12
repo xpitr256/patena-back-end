@@ -73,10 +73,9 @@ module.exports = {
         return updateTaskState(task, constants.TASK_STATE_CANCELLED);
     },
     getNextPendingTask: async function() {
-        const query = await Task.find({
+        const tasks = await Task.find({
             stateId: constants.TASK_STATE_PENDING
-        });
-        const tasks = query.sort({
+        }).sort({
             creationDate: 'asc'
         }).limit(1);
         return tasks.length > 0 ? tasks[0] : undefined;
