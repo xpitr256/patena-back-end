@@ -23,7 +23,7 @@ describe('/POST analyze route', () => {
 
     const validEmail = 'valid@test.com';
     const validSequenceName = 'TestName';
-    const validSequenceValue = 'AABBBBBBB';
+    const validSequenceValue = 'AACCCCCCC';
 
     it('should return a 400 error for no information', (done) => {
         chai.request(application)

@@ -24,7 +24,7 @@ describe('/POST design route', () => {
 
     const validEmail = 'valid@test.com';
     const validSequenceName = 'TestName';
-    const validSequenceValue = 'AABBBBBBB';
+    const validSequenceValue = 'AACCCCCCC';
 
     it('should return a 400 error for no design information', (done) => {
         chai.request(application)

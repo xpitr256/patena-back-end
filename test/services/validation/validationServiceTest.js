@@ -105,7 +105,7 @@ describe('Validation service test ', () => {
     describe('Analize validation ', () => {
 
         it('Given  email and content correct it should return true', () => {
-            assert.isTrue(service.isValidAnalyzeData("nicolascoco85@gmail.com", getSequence( "ABC")));
+            assert.isTrue(service.isValidAnalyzeData("nicolascoco85@gmail.com", getSequence( "ACC")));
         });
 
         it('Given  email and content empty it should return false', () => {

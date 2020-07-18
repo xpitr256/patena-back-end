@@ -155,7 +155,7 @@ describe('Design Validation',() => {
                 data.config = Object.assign({},validConfig);
                 data.config.netCharge = 3;
                 data.initialSequence = {
-                    value: 'AB'
+                    value: 'AC'
                 };
                 const result = designValidation.isValidDesign(data);
                 expect(result).to.be.false;
@@ -166,7 +166,7 @@ describe('Design Validation',() => {
                 data.config = Object.assign({},validConfig);
                 data.config.netCharge = -3;
                 data.initialSequence = {
-                    value: 'AB'
+                    value: 'AC'
                 };
                 const result = designValidation.isValidDesign(data);
                 expect(result).to.be.false;
@@ -177,7 +177,7 @@ describe('Design Validation',() => {
                 data.config = Object.assign({},validConfig);
                 data.config.netCharge = 1.24;
                 data.initialSequence = {
-                    value: 'AB'
+                    value: 'AC'
                 };
                 const result = designValidation.isValidDesign(data);
                 expect(result).to.be.false;
@@ -203,7 +203,7 @@ describe('Design Validation',() => {
                 data.config = Object.assign({},validConfig);
                 data.config.netCharge = 1;
                 data.initialSequence = {
-                    value: 'AB'
+                    value: 'AC'
                 };
                 const result = designValidation.isValidDesign(data);
                 expect(result).to.be.true;
@@ -214,7 +214,7 @@ describe('Design Validation',() => {
                 data.config = Object.assign({},validConfig);
                 data.config.netCharge = -1;
                 data.initialSequence = {
-                    value: 'AB'
+                    value: 'AC'
                 };
                 const result = designValidation.isValidDesign(data);
                 expect(result).to.be.true;
@@ -225,7 +225,7 @@ describe('Design Validation',() => {
                 data.config = Object.assign({},validConfig);
                 data.config.netCharge = 0;
                 data.initialSequence = {
-                    value: 'AB'
+                    value: 'AC'
                 };
                 const result = designValidation.isValidDesign(data);
                 expect(result).to.be.true;
@@ -358,7 +358,7 @@ describe('Design Validation',() => {
                 const result = designValidation.isValidDesign({
                     designType: 2,
                     initialSequence: {
-                        value:  'AAAAAABBBBBBCCCCCJ'
+                        value:  'AAAAAACCCCCCCCCCCJ'
                     }
                 });
                 expect(result).to.be.false;
@@ -368,7 +368,7 @@ describe('Design Validation',() => {
                 const result = designValidation.isValidDesign({
                     designType: 2,
                     initialSequence: {
-                        value:  'AAAAAABBBBBBCCCCC'
+                        value:  'AAAAAACCCCCCCCCCC'
                     }
                 });
                 expect(result).to.be.true;
@@ -397,7 +397,7 @@ describe('Design Validation',() => {
                     designType: 3,
                     distance: 10,
                     flankingSequence2: {
-                        value:'ABC'
+                        value:'ACC'
                     }
                 });
                 expect(result).to.be.false;
@@ -408,7 +408,7 @@ describe('Design Validation',() => {
                     designType: 3,
                     distance: 10,
                     flankingSequence1: {
-                        value:'ABC'
+                        value:'ACC'
                     }
                 });
                 expect(result).to.be.false;
@@ -420,7 +420,7 @@ describe('Design Validation',() => {
                     distance: 10,
                     flankingSequence1: '',
                     flankingSequence2: {
-                        value:'ABC'
+                        value:'ACC'
                     }
                 });
                 expect(result).to.be.false;
@@ -432,7 +432,7 @@ describe('Design Validation',() => {
                     distance: 10,
                     flankingSequence2: '',
                     flankingSequence1: {
-                        value:'ABC'
+                        value:'ACC'
                     }
                 });
                 expect(result).to.be.false;
@@ -446,7 +446,7 @@ describe('Design Validation',() => {
                         value: '  '
                     },
                     flankingSequence2: {
-                        value:'ABC'
+                        value:'ACC'
                     }
                 });
                 expect(result).to.be.false;
@@ -460,7 +460,7 @@ describe('Design Validation',() => {
                         value: '  '
                     },
                     flankingSequence1: {
-                        value:'ABC'
+                        value:'ACC'
                     }
                 });
                 expect(result).to.be.false;
@@ -471,10 +471,10 @@ describe('Design Validation',() => {
                     designType: 3,
                     distance: 10,
                     flankingSequence1: {
-                        value:  'AAAAAABBBBBBCCCCCJ'
+                        value:  'AAAAAACCCCCCCCCCCJ'
                     },
                     flankingSequence2: {
-                        value:'ABC'
+                        value:'ACC'
                     }
                 });
                 expect(result).to.be.false;
@@ -485,10 +485,10 @@ describe('Design Validation',() => {
                     designType: 3,
                     distance: 10,
                     flankingSequence2: {
-                        value:  'AAAAAABBBBBBCCCCCJ'
+                        value:  'AAAAAACCCCCCCCCCCJ'
                     },
                     flankingSequence1: {
-                        value:'ABC'
+                        value:'ACC'
                     }
                 });
                 expect(result).to.be.false;
@@ -498,10 +498,10 @@ describe('Design Validation',() => {
                     designType: 3,
                     distance: 10,
                     flankingSequence2: {
-                        value:  'AAAAAABBBBBBCCCCC'
+                        value:  'AAAAAACCCCCCCCCCC'
                     },
                     flankingSequence1: {
-                        value:'ABC'
+                        value:'ACC'
                     }
                 });
                 expect(result).to.be.true;
@@ -522,10 +522,10 @@ describe('Design Validation',() => {
                 const result = designValidation.isValidDesign({
                     designType: 4,
                     flankingSequence1: {
-                        value: 'ABC'
+                        value: 'ACC'
                     },
                     flankingSequence2: {
-                        value:'ABC'
+                        value:'ACC'
                     }
                 });
                 expect(result).to.be.false;
@@ -535,10 +535,10 @@ describe('Design Validation',() => {
                 const result = designValidation.isValidDesign({
                     designType: 4,
                     initialSequence: {
-                        value: 'ABC'
+                        value: 'ACC'
                     },
                     flankingSequence2: {
-                        value:'ABC'
+                        value:'ACC'
                     }
                 });
                 expect(result).to.be.false;
@@ -548,10 +548,10 @@ describe('Design Validation',() => {
                 const result = designValidation.isValidDesign({
                     designType: 4,
                     initialSequence: {
-                        value: 'ABC'
+                        value: 'ACC'
                     },
                     flankingSequence1: {
-                        value:'ABC'
+                        value:'ACC'
                     }
                 });
                 expect(result).to.be.false;
@@ -561,13 +561,13 @@ describe('Design Validation',() => {
                 const result = designValidation.isValidDesign({
                     designType: 4,
                     initialSequence: {
-                        value: 'ABCJ'
+                        value: 'ACCJ'
                     },
                     flankingSequence1: {
-                        value:  'AAAAAABBBBBBCCCCC'
+                        value:  'AAAAAACCCCCCCCCCC'
                     },
                     flankingSequence2: {
-                        value:'ABC'
+                        value:'ACC'
                     }
                 });
                 expect(result).to.be.false;
@@ -577,13 +577,13 @@ describe('Design Validation',() => {
                 const result = designValidation.isValidDesign({
                     designType: 4,
                     initialSequence: {
-                        value: 'ABC'
+                        value: 'ACC'
                     },
                     flankingSequence1: {
-                        value:  'AAAAAABBBBBBCCCCCJ'
+                        value:  'AAAAAACCCCCCCCCCCJ'
                     },
                     flankingSequence2: {
-                        value:'ABC'
+                        value:'ACC'
                     }
                 });
                 expect(result).to.be.false;
@@ -593,13 +593,13 @@ describe('Design Validation',() => {
                 const result = designValidation.isValidDesign({
                     designType: 4,
                     initialSequence: {
-                        value: 'ABC'
+                        value: 'ACC'
                     },
                     flankingSequence1: {
                         value:  'CDE'
                     },
                     flankingSequence2: {
-                        value:'AAAAAABBBBBBCCCCCJ'
+                        value:'AAAAAACCCCCCCCCCCJ'
                     }
                 });
                 expect(result).to.be.false;
@@ -610,7 +610,7 @@ describe('Design Validation',() => {
                 const result = designValidation.isValidDesign({
                     designType: 4,
                     initialSequence: {
-                        value: 'ABC'
+                        value: 'ACC'
                     },
                     flankingSequence1: {
                         value:  'CDE'

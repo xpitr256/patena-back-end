@@ -239,7 +239,7 @@ describe('Validation Utils',() => {
         it('should return an array of 22 elements', () => {
             const result = utils.getAminoAcids();
             expect(result).to.be.array();
-            expect(result).to.be.ofSize(22);
+            expect(result).to.be.ofSize(20);
         });
 
     });
