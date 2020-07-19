@@ -5,8 +5,7 @@
   "scripts": {
     "test": "mocha --recursive --timeout 60000",
     "test-cv": "nyc --reporter=text --all mocha --recursive --timeout 60000",
-    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && mocha --recursive --timeout 60000",
-    "coverage": "codecov --disable=gcv",
+    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "start": "node ./bin/www"
   },
   "dependencies": {
