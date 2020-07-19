@@ -5,14 +5,13 @@
   "scripts": {
     "test": "mocha --recursive --timeout 60000",
     "test-cv": "nyc --reporter=text --all mocha --recursive --timeout 60000",
-    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov --disable=gcov",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start": "node ./bin/www"
   },
   "dependencies": {
     "@sendgrid/mail": "^6.5.5",
     "acorn": "5.7.4",
     "body-parser": "^1.19.0",
-    "codecov": "^3.7.1",
     "cookie-parser": "^1.4.5",
     "debug": "~2.6.9",
     "express": "^4.17.1",
@@ -40,6 +39,7 @@
     "mocha": "^6.2.3",
     "proxyquire": "^2.1.3",
     "nyc": "^15.1.0",
-    "mongodb-memory-server": "^6.6.1"
+    "mongodb-memory-server": "^6.6.1",
+    "coveralls": "^3.1.0"
   }
 }

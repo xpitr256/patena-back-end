@@ -5,8 +5,4 @@ install:
   - npm install
 script:
   - npm run test-cv
-  - npm run report-coverage
-codecov:
-  max_report_age: off
-fixes:
-  - "/home/travis/build/xpitr256/::"
+  - npm run coverage
