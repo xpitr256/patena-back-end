@@ -1,52 +1,49 @@
-const expect = require('chai').expect;
-const proxyquire  =  require('proxyquire');
+const expect = require("chai").expect;
+const proxyquire = require("proxyquire");
 
-describe('Task worker', async () => {
+describe("Task worker", async () => {
+  const mockLogger = {
+    log: function () {},
+    error: function () {},
+  };
 
-    const mockLogger = {
-        log: function() {},
-        error: function() {}
-    }
+  it("should finished ok for a success task run", async () => {
+    const mockSuccessTaskRun = function () {
+      return new Promise((resolve) => {
+        resolve();
+      });
+    };
 
-    it('should finished ok for a success task run', async () => {
+    const mockWorkerFunctions = {
+      exit: function (error) {
+        expect(error).to.be.equals(undefined);
+      },
+    };
 
-        const mockSuccessTaskRun = function() {
-            return new Promise(resolve => {
-                resolve();
-            });
-        };
-
-        const mockWorkerFunctions = {
-            exit: function (error) {
-                expect(error).to.be.equals(undefined);
-            }
-        }
-
-        await proxyquire('../../workers/taskWorker', {
-            './taskAnalyzer': mockSuccessTaskRun,
-            './workerFunctions': mockWorkerFunctions,
-            './../services/log/logService': mockLogger
-        });
+    await proxyquire("../../workers/taskWorker", {
+      "./taskAnalyzer": mockSuccessTaskRun,
+      "./workerFunctions": mockWorkerFunctions,
+      "./../services/log/logService": mockLogger,
     });
+  });
 
-    it('should fail for a failing task run', async () => {
+  it("should fail for a failing task run", async () => {
+    const mockFailingTaskRun = function () {
+      return new Promise((resolve, reject) => {
+        reject("Failing task");
+      });
+    };
 
-        const mockFailingTaskRun = function() {
-            return new Promise((resolve, reject) => {
-                reject("Failing task");
-            });
-        };
+    const mockWorkerFunctions = {
+      exit: function (error) {
+        expect(error).to.be.equals(1);
+      },
+    };
 
-        const mockWorkerFunctions = {
-            exit: function (error) {
-                expect(error).to.be.equals(1);
-            }
-        }
-
-        await proxyquire('../../workers/taskWorker', {
-            './taskAnalyzer': mockFailingTaskRun,
-            './workerFunctions': mockWorkerFunctions,
-            './../services/log/logService': mockLogger
-        });
+    await proxyquire("../../workers/taskWorker", {
+      "./taskAnalyzer": mockFailingTaskRun,
+      "./workerFunctions": mockWorkerFunctions,
+      "./../services/log/logService": mockLogger,
     });
+  });
 });

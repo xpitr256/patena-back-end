@@ -1,6 +1,6 @@
-const fs = require('fs');
+const fs = require("fs");
 module.exports = {
-    getTranslationsIn: function (language) {
-        return JSON.parse(fs.readFileSync('./lang/'+language+'.json', 'utf-8'));
-    }
+  getTranslationsIn: function (language) {
+    return JSON.parse(fs.readFileSync("./lang/" + language + ".json", "utf-8"));
+  },
 };
