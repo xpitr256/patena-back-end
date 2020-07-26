@@ -1,5 +1,5 @@
 module.exports = {
-  MONGODB_URI: process.env.MONGODB_URI || "mongodb://localhost/test",
+  MONGODB_URI: process.env.MONGO_URI || "mongodb://localhost/test",
   MONGODB_CONFIG: {
     useNewUrlParser: true,
     useUnifiedTopology: true,
