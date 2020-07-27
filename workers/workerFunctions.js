@@ -1,3 +1,3 @@
 module.exports = {
-    exit: process.exit
+  exit: process.exit,
 };

@@ -2,3 +2,8 @@
 node_modules/
 npm-debug.log
 sendgrid.env
+coverage
+.nyc_output
+*.lcov
+workers/Input
+workers/Output
