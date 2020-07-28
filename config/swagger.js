@@ -354,6 +354,29 @@ module.exports = {
             }
           }
         }
+      },
+
+      //Microcomponents
+      email: {
+        type: 'string', description: 'Your email',
+        example: 'john@example.com'
+      },
+      language: {
+        type: 'string', description: 'Language support "en" or "es"',
+        example: 'en'
+      },
+      Sequence: {
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            example: 'SEQUENCE_1'
+          },
+          value: {
+            type: 'string',
+            example: 'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG'
+          }
+        }
       }
     }
   }
