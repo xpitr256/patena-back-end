@@ -1,3 +1,6 @@
+const tokenService = require("../services/tokenService");
+const config = require("./config");
+
 module.exports = {
 
   openapi: '3.0.1',
@@ -29,8 +32,7 @@ module.exports = {
   tags: [
     {
       name: 'CRUD Operations Patena-API'
-    },
-  ],
+    }],
   paths: {
     '/linkerLength': {
       get: {
@@ -82,6 +84,7 @@ module.exports = {
         summary: 'Send messages to those responsible',
         description: 'Send message to those responsible ',
         operationId: 'postContact',
+        security: [{ Bearer: [] }],
         requestBody: {
           content: {
             'application/json': {
@@ -124,7 +127,9 @@ module.exports = {
         tags: ['CRUD Operations Patena-API'],
         description: 'send messages to those responsible ',
         operationId: 'postAnalyze',
-        parameters: [],
+        parameters: [
+        ],
+        security: [{ Bearer: [] }],
         requestBody: {
           content: {
             'application/json': {
@@ -207,177 +212,187 @@ module.exports = {
       }
     },
   },
-  components: {
-    schemas: {
+    components: {
+        schemas: {
 
-      //Request
-      RequestAnalyze: {
-        properties: {
-          email: {
-            $ref: '#/components/schemas/email'
-          },
-          language: {
-            $ref: '#/components/schemas/language'
-          },
-          sequence: {
-            $ref: '#/components/schemas/Sequence'
-          }
-        }
-      },
-      RequestContact: {
-        type: 'object', properties: {
-          name: {
-            type: 'string', description: 'Your name',
-            example: 'John'
-          },
-          email: {
-            $ref: '#/components/schemas/email'
-          },
-          message: {
-            type: 'string', description: 'Your message',
-            example: 'Hello, my name John. I would like to contact a person in charge of the patena system for technical issues.'
-          }
-        }
-      },
-
-      //Response: 200
-      Contact: {
-        type: 'object', properties: {
-          message: {
-            type: 'string', description: 'Status message',
-            example: 'Contact form sent ok!'
-          }
-        }
-      },
-      OrderNumber: {
-        type: 'object', properties: {
-          orderNumber: {
-            type: 'string', description: 'Order number to check the status of the task ',
-            example: '550e8400-e29b-41d4-a716-446655440000'
-          }
-        }
-      },
-      LinkerLength: {
-        type: 'object', properties: {
-          length: {
-            type: 'string', description: 'The most likely length ',
-            example: '25'
-          },
-          distance: {
-            type: 'string', description: 'The distance required',
-            example: '50'
-          }
-        }
-      },
-      DesignResultNotFound: {
-        type: 'object', properties: {
-          stateId: {
-            type: 'integer', description: 'Id status task ',
-            example: 0
-          },
-          status: {
-            type: 'string', description: 'Description status',
-            example: 'The order was not found.'
-          }
-        }
-      },
-      DesignResultPending: {
-        type: 'object', properties: {
-          stateId: {
-            type: 'integer', description: 'Id status task ',
-            example: 1
-          },
-          status: {
-            type: 'string', description: 'Description status',
-            example: 'The order is waiting to be processed.'
-          }
-        }
-      },
-
-
-      //Response: 400,500..
-      ErrorLinkerLength: {
-        type: 'object',
-        properties: {
-          message: {
-            type: 'string', description: 'the cause of the error',
-            example: 'Invalid distance value'
-          }
-        }
-      },
-      ErrorContact: {
-        type: 'object',
-        properties: {
-          message: {
-            type: 'string', description: 'the cause of the error',
-            example: 'Invalid contact information'
-          }
-        }
-      },
-      ErrorAnalyze: {
-        type: 'object',
-        properties: {
-          message: {
-            type: 'string', description: 'the cause of the error',
-            example: 'Invalid analyze information (wrong email or invalid sequence)'
-          }
-        }
-      },
-      Error: {
-        type: 'object',
-        properties: {
-          message: {
-            type: 'string', description: 'the cause of the error',
-            example: 'not found'
-          }
-        },
-
-        //Microcomponents
-        email: {
-          type: 'string', description: 'Your email',
-          example: 'john@example.com'
-        },
-        language: {
-          type: 'string', description: 'Language support "en" or "es"',
-          example: 'en'
-        },
-        Sequence: {
-          type: 'object',
-          properties: {
-            name: {
-              type: 'string',
-              example: 'SEQUENCE_1'
+            //Request
+            RequestAnalyze: {
+                properties: {
+                    email: {
+                        $ref: '#/components/schemas/email'
+                    },
+                    language: {
+                        $ref: '#/components/schemas/language'
+                    },
+                    sequence: {
+                        $ref: '#/components/schemas/Sequence'
+                    }
+                }
             },
-            value: {
-              type: 'string',
-              example: 'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG'
-            }
-          }
-        }
-      },
+            RequestContact: {
+                type: 'object', properties: {
+                    name: {
+                        type: 'string', description: 'Your name',
+                        example: 'John'
+                    },
+                    email: {
+                        $ref: '#/components/schemas/email'
+                    },
+                    message: {
+                        type: 'string', description: 'Your message',
+                        example: 'Hello, my name John. I would like to contact a person in charge of the patena system for technical issues.'
+                    }
+                }
+            },
 
-      //Microcomponents
-      email: {
-        type: 'string', description: 'Your email',
-        example: 'john@example.com'
-      },
-      language: {
-        type: 'string', description: 'Language support "en" or "es"',
-        example: 'en'
-      },
-      Sequence: {
-        type: 'object',
-        properties: {
-          name: {
-            type: 'string',
-            example: 'SEQUENCE_1'
-          },
-          value: {
-            type: 'string',
-            example: 'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG'
-          }
+            //Response: 200
+            Contact: {
+                type: 'object', properties: {
+                    message: {
+                        type: 'string', description: 'Status message',
+                        example: 'Contact form sent ok!'
+                    }
+                }
+            },
+            OrderNumber: {
+                type: 'object', properties: {
+                    orderNumber: {
+                        type: 'string', description: 'Order number to check the status of the task ',
+                        example: '550e8400-e29b-41d4-a716-446655440000'
+                    }
+                }
+            },
+            LinkerLength: {
+                type: 'object', properties: {
+                    length: {
+                        type: 'string', description: 'The most likely length ',
+                        example: '25'
+                    },
+                    distance: {
+                        type: 'string', description: 'The distance required',
+                        example: '50'
+                    }
+                }
+            },
+            DesignResultNotFound: {
+                type: 'object', properties: {
+                    stateId: {
+                        type: 'integer', description: 'Id status task ',
+                        example: 0
+                    },
+                    status: {
+                        type: 'string', description: 'Description status',
+                        example: 'The order was not found.'
+                    }
+                }
+            },
+            DesignResultPending: {
+                type: 'object', properties: {
+                    stateId: {
+                        type: 'integer', description: 'Id status task ',
+                        example: 1
+                    },
+                    status: {
+                        type: 'string', description: 'Description status',
+                        example: 'The order is waiting to be processed.'
+                    }
+                }
+            },
+
+
+            //Response: 400,500..
+            ErrorLinkerLength: {
+                type: 'object',
+                properties: {
+                    message: {
+                        type: 'string', description: 'the cause of the error',
+                        example: 'Invalid distance value'
+                    }
+                }
+            },
+            ErrorContact: {
+                type: 'object',
+                properties: {
+                    message: {
+                        type: 'string', description: 'the cause of the error',
+                        example: 'Invalid contact information'
+                    }
+                }
+            },
+            ErrorAnalyze: {
+                type: 'object',
+                properties: {
+                    message: {
+                        type: 'string', description: 'the cause of the error',
+                        example: 'Invalid analyze information (wrong email or invalid sequence)'
+                    }
+                }
+            },
+            Error: {
+                type: 'object',
+                properties: {
+                    message: {
+                        type: 'string', description: 'the cause of the error',
+                        example: 'not found'
+                    }
+                },
+
+                //Microcomponents
+                email: {
+                    type: 'string', description: 'Your email',
+                    example: 'john@example.com'
+                },
+                language: {
+                    type: 'string', description: 'Language support "en" or "es"',
+                    example: 'en'
+                },
+                Sequence: {
+                    type: 'object',
+                    properties: {
+                        name: {
+                            type: 'string',
+                            example: 'SEQUENCE_1'
+                        },
+                        value: {
+                            type: 'string',
+                            example: 'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG\n' +
+                                'LVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHK\n' +
+                                'IPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTL\n' +
+                                'MGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL'
+                        }
+                    }
+                }
+            },
+
+            //Microcomponents
+            email: {
+                type: 'string', description: 'Your email',
+                example: 'john@example.com'
+            },
+            language: {
+                type: 'string', description: 'Language support "en" or "es"',
+                example: 'en'
+            },
+            Sequence: {
+                type: 'object',
+                properties: {
+                    name: {
+                        type: 'string',
+                        example: 'SEQUENCE_1'
+                    },
+                    value: {
+                        type: 'string',
+                        example: 'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG'
+                    }
+                }
+            }
+        },
+        securitySchemes: {
+            Bearer: {
+                type: 'apiKey',
+                name: 'Authorization',
+                in: 'header'
+            }
         }
-      }
-    }
-  }
+    },
 }
