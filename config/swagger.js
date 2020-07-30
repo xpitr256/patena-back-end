@@ -126,6 +126,7 @@ module.exports = {
       post:{
         tags: ['CRUD Operations Patena-API'],
         description: 'send messages to those responsible ',
+        summary: 'Send the amino acid sequence to get its properties',
         operationId: 'postAnalyze',
         parameters: [
         ],
@@ -173,6 +174,7 @@ module.exports = {
         summary: 'Get result by order number',
         description: 'You can get you can get the results of analyzing or designing a sequence',
         operationId: 'getResultsFor',
+        security: [{ Bearer: [] }],
         parameters: [
           {
             name: 'orderNumber',
