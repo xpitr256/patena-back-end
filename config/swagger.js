@@ -34,141 +34,12 @@ module.exports = {
             name: 'CRUD Operations Patena-API'
         }],
     paths: {
-        '/linkerLength': {
-            get: {
-                tags: ['CRUD Operations Patena-API'],
-                summary: 'Get length',
-                description: 'get most likely length by specific distance between aminoacids',
-                operationId: 'getLength',
-                parameters: [
-                    {
-                        name: 'distance',
-                        in: 'query',
-                        schema: {
-                            type: 'integer',
-                            default: 50
-                        },
-                        required: true
-                    },
-                ],
-                responses: {
-                    '200': {
-                        description: 'return length associated to distance',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    $ref: '#/components/schemas/LinkerLength'
-                                },
-                            }
-                        }
-                    },
-                    '400': {
-                        description: 'Invalid distance value',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    $ref: '#/components/schemas/ErrorLinkerLength'
-                                },
-                                example: {
-                                    message: 'Invalid distance value'
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        '/contact':{
-            post:{
-                tags: ['CRUD Operations Patena-API'],
-                summary: 'Send messages to those responsible',
-                description: 'Send message to those responsible ',
-                operationId: 'postContact',
-                security: [{ Bearer: [] }],
-                requestBody: {
-                    content: {
-                        'application/json': {
-                            schema: {
-                                $ref: '#/components/schemas/RequestContact'
-                            }
-                        }
-                    },
-                    required: true
-                },
-                responses: {
-                    '200': {
-                        description: 'Contact form sent ok!',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    $ref: '#/components/schemas/Contact'
-                                },
-                            }
-                        }
-                    },
-                    '400': {
-                        description: 'Error: Bad Request',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    $ref: '#/components/schemas/ErrorContact'
-                                },
-                                example: {
-                                    message: 'Invalid contact information'
-                                }
-                            }
-                        }
-                    },
-                    '401': {
-                        description: 'Invalid contact information',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    $ref: '#/components/schemas/ErrorAnalyze'
-                                },
-                                example: {
-                                    message: 'Invalid analyze information (wrong email or invalid sequence)'
-                                }
-                            }
-                        }
-                    },
-                    '403': {
-                        description: 'Error: Forbidden',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    $ref: '#/components/schemas/ErrorAnalyze'
-                                },
-                                example: {
-                                    message: 'There is no authorization headers'
-                                }
-                            }
-                        }
-                    },
-                    '500': {
-                        description: 'Error: Internal Server Error',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    $ref: '#/components/schemas/Error'
-                                },
-                                example: {
-                                    message: 'Error: Internal Server Error'
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         '/analyze':{
             post:{
                 tags: ['CRUD Operations Patena-API'],
                 description: 'send messages to those responsible ',
                 summary: 'Send the amino acid sequence to get its properties',
                 operationId: 'postAnalyze',
-                parameters: [
-                ],
                 security: [{ Bearer: [] }],
                 requestBody: {
                     content: {
@@ -200,6 +71,50 @@ module.exports = {
                                 },
                                 example: {
                                     message: 'Invalid analyze information (wrong email or invalid sequence)'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        '/linkerLength': {
+            get: {
+                tags: ['CRUD Operations Patena-API'],
+                summary: 'Get length',
+                description: 'get most likely length by specific distance between aminoacids',
+                operationId: 'getLength',
+                parameters: [
+                    {
+                        name: 'distance',
+                        in: 'query',
+                        schema: {
+                            type: 'integer',
+                            default: 50
+                        },
+                        required: true
+                    },
+                ],
+                responses: {
+                    '200': {
+                        description: 'return length associated to distance',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/LinkerLength'
+                                },
+                            }
+                        }
+                    },
+                    '400': {
+                        description: 'Error: Bad Request',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/ErrorLinkerLength'
+                                },
+                                example: {
+                                    message: 'Invalid distance value'
                                 }
                             }
                         }
@@ -338,21 +253,115 @@ module.exports = {
                 }
             }
         },
+        '/contact':{
+            post:{
+                tags: ['CRUD Operations Patena-API'],
+                summary: 'Send messages to those responsible',
+                description: 'Send message to those responsible ',
+                operationId: 'postContact',
+                security: [{ Bearer: [] }],
+                requestBody: {
+                    content: {
+                        'application/json': {
+                            schema: {
+                                $ref: '#/components/schemas/RequestContact'
+                            }
+                        }
+                    },
+                    required: true
+                },
+                responses: {
+                    '200': {
+                        description: 'Contact form sent ok!',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/SendContact'
+                                },
+                            }
+                        }
+                    },
+                    '400': {
+                        description: 'Error: Bad Request',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/ErrorContact'
+                                },
+                                example: {
+                                    message: 'Invalid contact information'
+                                }
+                            }
+                        }
+                    },
+                    '401': {
+                        description: 'Invalid contact information',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/ErrorAnalyze'
+                                },
+                                example: {
+                                    message: 'Invalid analyze information (wrong email or invalid sequence)'
+                                }
+                            }
+                        }
+                    },
+                    '403': {
+                        description: 'Error: Forbidden',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/ErrorAnalyze'
+                                },
+                                example: {
+                                    message: 'There is no authorization headers'
+                                }
+                            }
+                        }
+                    },
+                    '500': {
+                        description: 'Error: Internal Server Error',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/Error'
+                                },
+                                example: {
+                                    message: 'Error: Internal Server Error'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
     },
     components: {
         schemas: {
 
             //Request
             RequestAnalyze: {
-                properties: {
+                type: 'object',properties: {
                     email: {
-                        $ref: '#/components/schemas/email'
+                        type: 'string',
+                        description: 'Your email',
+                        example: 'john@example.com',
+                        required:false
+
                     },
                     language: {
-                        $ref: '#/components/schemas/language'
+                        type: 'string', description: '"en" or "es" Default: "en"',
+                        example: 'en',
+                        required:false
+
                     },
                     sequence: {
-                        $ref: '#/components/schemas/Sequence'
+                        type: 'string',
+                        description: 'sequence aminoacid',
+                        example:'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEGLVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHKMGQFYVMDDKKTVEQVIAEKEKEF',
+                        required:true
+
                     }
                 }
             },
@@ -366,26 +375,28 @@ module.exports = {
             RequestContact: {
                 type: 'object', properties: {
                     name: {
-                        type: 'string', description: 'Your name',
+                        description: 'Your name',
+                        type: 'string',
                         example: 'John',
                         required:true
                     },
                     email: {
                         type: 'string',
                         description: 'Your email',
-                        default: 'john@example.com',
-                        example: 'john@example.com'
+                        example: 'john@example.com',
+                        required:true
                     },
                     message: {
                         type: 'string', description: 'Your message',
                         example: 'Hello, my name John. I would like to contact a person in charge of the patena system for technical issues.',
+                        minlength:50,
                         required:true
                     }
                 }
             },
 
             //Response: 200
-            Contact: {
+            SendContact: {
                 type: 'object', properties: {
                     message: {
                         type: 'string', description: 'Status message',
@@ -396,7 +407,7 @@ module.exports = {
             OrderNumber: {
                 type: 'object', properties: {
                     orderNumber: {
-                        type: 'string', description: 'Order number to check the status of the task ',
+                        type: 'string', description: 'This is order number for to check the status of the task ',
                         example: '550e8400-e29b-41d4-a716-446655440000'
                     }
                 }
@@ -437,7 +448,6 @@ module.exports = {
                     }
                 }
             },
-
 
             //Response: 400,500..
             ErrorLinkerLength: {
