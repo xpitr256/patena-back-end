@@ -53,7 +53,7 @@ module.exports = {
                 },
                 responses: {
                     '200': {
-                        description: 'Contact form sent ok!',
+                        description: 'Return a order number',
                         content: {
                             'application/json': {
                                 schema: {
@@ -63,14 +63,40 @@ module.exports = {
                         }
                     },
                     '400': {
-                        description: 'Invalid contact information',
+                        description: 'Error: Bad Request',
                         content: {
                             'application/json': {
                                 schema: {
-                                    $ref: '#/components/schemas/ErrorAnalyze'
+                                    $ref: '#/components/schemas/Error'
                                 },
                                 example: {
                                     message: 'Invalid analyze information (wrong email or invalid sequence)'
+                                }
+                            }
+                        }
+                    },
+                    '403': {
+                        description: 'Error: Forbidden',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/ErrorAuthentication'
+                                },
+                                example: {
+                                    message: 'There is no authorization headers'
+                                }
+                            }
+                        }
+                    },
+                    '500': {
+                        description: 'Error: Internal Server Error',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/Error'
+                                },
+                                example: {
+                                    message: 'Error: Internal Server Error'
                                 }
                             }
                         }
@@ -101,7 +127,7 @@ module.exports = {
                         content: {
                             'application/json': {
                                 schema: {
-                                    $ref: '#/components/schemas/LinkerLength'
+                                    $ref: '#/components/schemas/ResponseLinkerLength'
                                 },
                             }
                         }
@@ -115,6 +141,32 @@ module.exports = {
                                 },
                                 example: {
                                     message: 'Invalid distance value'
+                                }
+                            }
+                        }
+                    },
+                    '403': {
+                        description: 'Error: Forbidden',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/ErrorAuthentication'
+                                },
+                                example: {
+                                    message: 'There is no authorization headers'
+                                }
+                            }
+                        }
+                    },
+                    '500': {
+                        description: 'Error: Internal Server Error',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/Error'
+                                },
+                                example: {
+                                    message: 'Error: Internal Server Error'
                                 }
                             }
                         }
@@ -157,20 +209,7 @@ module.exports = {
                         content: {
                             'application/json': {
                                 schema: {
-                                    $ref: '#/components/schemas/ErrorAnalyze'
-                                },
-                                example: {
-                                    message: 'Invalid analyze information (wrong email or invalid sequence)'
-                                }
-                            }
-                        }
-                    },
-                    '401': {
-                        description: 'Invalid contact information',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    $ref: '#/components/schemas/ErrorAnalyze'
+                                    $ref: '#/components/schemas/Error'
                                 },
                                 example: {
                                     message: 'Invalid analyze information (wrong email or invalid sequence)'
@@ -183,7 +222,7 @@ module.exports = {
                         content: {
                             'application/json': {
                                 schema: {
-                                    $ref: '#/components/schemas/ErrorAnalyze'
+                                    $ref: '#/components/schemas/Error'
                                 },
                                 example: {
                                     message: 'There is no authorization headers'
@@ -221,24 +260,24 @@ module.exports = {
                         in: 'query',
                         schema: {
                             type: 'string',
-                            default: 'a8a32746-0465-4a60-9318-075b3309500b'
+                            example: 'a8a32746-0465-4a60-9318-075b3309500b'
                         },
                         required: true
                     },
                 ],
                 responses: {
                     '200': {
-                        description: 'return result by order number',
+                        description: 'Return result by order number',
                         content: {
                             'application/json': {
                                 schema: {
-                                    $ref: '#/components/schemas/DesignResultPending'
+                                    $ref: '#/components/schemas/ResponseResult'
                                 },
                             }
                         }
                     },
                     '400': {
-                        description: 'Error result design',
+                        description: 'Error: Bad Request',
                         content: {
                             'application/json': {
                                 schema: {
@@ -246,6 +285,32 @@ module.exports = {
                                 },
                                 example: {
                                     message: '-'
+                                }
+                            }
+                        }
+                    },
+                    '403': {
+                        description: 'Error: Forbidden',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/Error'
+                                },
+                                example: {
+                                    message: 'There is no authorization headers'
+                                }
+                            }
+                        }
+                    },
+                    '500': {
+                        description: 'Error: Internal Server Error',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/Error'
+                                },
+                                example: {
+                                    message: 'Error: Internal Server Error'
                                 }
                             }
                         }
@@ -286,23 +351,10 @@ module.exports = {
                         content: {
                             'application/json': {
                                 schema: {
-                                    $ref: '#/components/schemas/ErrorContact'
+                                    $ref: '#/components/schemas/Error'
                                 },
                                 example: {
                                     message: 'Invalid contact information'
-                                }
-                            }
-                        }
-                    },
-                    '401': {
-                        description: 'Invalid contact information',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    $ref: '#/components/schemas/ErrorAnalyze'
-                                },
-                                example: {
-                                    message: 'Invalid analyze information (wrong email or invalid sequence)'
                                 }
                             }
                         }
@@ -312,7 +364,7 @@ module.exports = {
                         content: {
                             'application/json': {
                                 schema: {
-                                    $ref: '#/components/schemas/ErrorAnalyze'
+                                    $ref: '#/components/schemas/ErrorAuthentication'
                                 },
                                 example: {
                                     message: 'There is no authorization headers'
@@ -357,11 +409,21 @@ module.exports = {
 
                     },
                     sequence: {
-                        type: 'string',
-                        description: 'sequence aminoacid',
-                        example:'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEGLVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHKMGQFYVMDDKKTVEQVIAEKEKEF',
-                        required:true
-
+                        type: 'object',
+                        properties: {
+                            name:{
+                                type: 'string',
+                                description: 'file name',
+                                example:'SEQUENCE_1',
+                                required:true
+                            },
+                            value:{
+                                type: 'string',
+                                description: 'sequence aminoacid',
+                                example:'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEGLVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHKMGQFYVMDDKKTVEQVIAEKEKEF',
+                                required:true
+                            }
+                        }
                     }
                 }
             },
@@ -412,7 +474,7 @@ module.exports = {
                     }
                 }
             },
-            LinkerLength: {
+            ResponseLinkerLength: {
                 type: 'object', properties: {
                     length: {
                         type: 'string', description: 'The most likely length ',
@@ -424,20 +486,14 @@ module.exports = {
                     }
                 }
             },
-            DesignResultNotFound: {
-                type: 'object', properties: {
-                    stateId: {
-                        type: 'integer', description: 'Id status task ',
-                        example: 0
-                    },
-                    status: {
-                        type: 'string', description: 'Description status',
-                        example: 'The order was not found.'
-                    }
-                }
-            },
-            DesignResultPending: {
-                type: 'object', properties: {
+            ResponseResult: {
+                type: 'object',
+                description: 'stateId --> NOT_FOUND = 0\n' +
+                    'PENDING = 1\n' +
+                    'IN_PROGRESS = 2\n' +
+                    'FINISHED = 3\n' +
+                    'CANCELLED = 4' ,
+                properties: {
                     stateId: {
                         type: 'integer', description: 'Id status task ',
                         example: 1
@@ -445,6 +501,10 @@ module.exports = {
                     status: {
                         type: 'string', description: 'Description status',
                         example: 'The order is waiting to be processed.'
+                    },
+                    orderNumber: {
+                        type: 'string', description: 'Order number searched',
+                        example: "55ba5fcd-33b8-4a70-b726-0f06377b6462"
                     }
                 }
             },
@@ -459,21 +519,12 @@ module.exports = {
                     }
                 }
             },
-            ErrorContact: {
+            ErrorAuthentication: {
                 type: 'object',
                 properties: {
                     message: {
                         type: 'string', description: 'the cause of the error',
-                        example: 'Invalid contact information'
-                    }
-                }
-            },
-            ErrorAnalyze: {
-                type: 'object',
-                properties: {
-                    message: {
-                        type: 'string', description: 'the cause of the error',
-                        example: 'Invalid analyze information (wrong email or invalid sequence)'
+                        example: 'There is no authorization headers'
                     }
                 }
             },
@@ -510,81 +561,6 @@ module.exports = {
                                 'MGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL'
                         }
                     }
-                }
-            },
-            DesignTypeNothing:{
-                type:'object',
-                properties:{
-                    distance:{
-                        $ref: '#/components/schemas/distance',
-                        required: true
-                    },
-                    email: {
-                        $ref: '#/components/schemas/email'
-                    },
-                    language: {
-                        $ref: '#/components/schemas/language',
-                        required: true
-                    },
-                    designType:{
-                        $ref: '#/components/schemas/DesignType',
-                        required: true
-                    },
-                    config:{
-                        type:'object',
-                        $ref: '#/components/schemas/Config',
-                    }
-
-                },
-
-                //Microcomponents
-                email: {
-                    type: 'string',
-                    description: 'Your email',
-                    default: 'john@example.com',
-                    example: 'john@example.com'
-                },
-                language: {
-                    type: 'string', description: 'Language support "en" or "es"',
-                    example: 'en'
-                },
-                Sequence: {
-                    type: 'object',
-                    properties: {
-                        name: {
-                            type: 'string',
-                            example: 'SEQUENCE_1'
-                        },
-                        value: {
-                            type: 'string',
-                            example: 'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG'
-                        }
-                    }
-                },
-
-                distance: {
-                    type: 'integer', description: 'The distance required',
-                    example: 50
-                },
-
-                DesignType:{
-                    type: 'integer',
-                    description:
-                        ' 1- No data, ' +
-                        '2- with sequence initial, ' +
-                        '3- with flanking sequences ' +
-                        '4- with sequence initial and flanking sequences',
-                    example: 1
-                },
-                algorithms:{
-                    type:'array',
-                    description: 'Set config algorithms',
-                    example:[{"active":true,"name":"BLAST"},{"active":true,"name":"TANGO"},{"active":true,"name":"ELM"},{"active":true,"name":"IUPred"},{"active":true,"name":"ANCHOR"},{"active":true,"name":"Prosite"},{"active":true,"name":"Limbo"},{"active":true,"name":"TMHMM"},{"active":true,"name":"PASTA"},{"active":true,"name":"Waltz"},{"active":true,"name":"Amyloid pattern"}]
-                },
-                frequencies:{
-                    type:'array',
-                    description: 'Set config aminoacid`s frequency',
-                    example:[{"name":"A","value":8.2},{"name":"R","value":5.5},{"name":"N","value":4},{"name":"D","value":5.4},{"name":"C","value":1.4},{"name":"Q","value":3.9},{"name":"E","value":6.8},{"name":"G","value":7.1},{"name":"H","value":2.3},{"name":"I","value":6},{"name":"L","value":9.7},{"name":"K","value":5.8},{"name":"M","value":2.4},{"name":"F","value":3.9},{"name":"P","value":4.7},{"name":"S","value":6.7},{"name":"T","value":5.3},{"name":"W","value":1.1},{"name":"Y","value":2.9},{"name":"V","value":6.9}]
                 }
             },
             Config:{ type: 'object',
