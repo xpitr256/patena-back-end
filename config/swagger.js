@@ -394,7 +394,8 @@ module.exports = {
 
             //Request
             RequestAnalyze: {
-                type: 'object',properties: {
+                type: 'object',
+                properties: {
                     email: {
                         type: 'string',
                         description: 'Your email',
@@ -428,9 +429,58 @@ module.exports = {
                 }
             },
             RequestDesign: {
+                type: 'object',
                 properties: {
+                    email: {
+                        type: 'string',
+                        description: 'Your email',
+                        example: 'john@example.com',
+                        required:false
+
+                    },
+                    language: {
+                        type: 'string', description: 'Default: "en"',
+                        example: 'es',
+                        required:false
+
+                    },
                     designType: {
-                        $ref: '#/components/schemas/DesignType'
+                        type: 'integer',
+                        description:'TYPE:\n\n' +
+                            'NO_INITIAL_SEQUENCE = 1\n\n' +
+                            'ONLY_INITIAL_SEQUENCE = 2\n\n' +
+                            'ONLY_FLANKING_SEQUENCES = 3\n\n' +
+                            'INITIAL_AND_FLANKING_SEQUENCES = 4\n\n',
+                        example: 1,
+                        required:true
+                    },
+                    config:{
+                        type: 'object',
+                        properties:{
+                            algorithms: {
+                                type: 'array',
+                                items: {
+                                   oneOf: [
+                                        {
+                                            "$ref": "#/components/schemas/Algorithm"
+                                        }
+                                    ]
+                                },
+                                example:[
+                                    {name: "BLAST", active: true},
+                                    {name: "TANGO", active: true},
+                                    {name: "ELM", active: true},
+                                    {name: "IUPred", active: true},
+                                    {name: "ANCHOR", active: true},
+                                    {name: "Prosite", active: true},
+                                    {name: "Limbo", active: true},
+                                    {name: "TMHMM", active: true},
+                                    {name: "PASTA", active: true},
+                                    {name: "Waltz", active: true}
+                                    ]
+
+                            }
+                        }
                     }
                 }
             },
@@ -536,37 +586,66 @@ module.exports = {
                         example: 'not found'
                     }
                 },
+            },
 
-                //Microcomponents
-                email: {
-                    type: 'string', description: 'Your email',
-                    example: 'john@example.com'
-                },
-                language: {
-                    type: 'string', description: 'Language support "en" or "es"',
-                    example: 'en'
-                },
-                Sequence: {
-                    type: 'object',
-                    properties: {
-                        name: {
-                            type: 'string',
-                            example: 'SEQUENCE_1'
-                        },
-                        value: {
-                            type: 'string',
-                            example: 'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG\n' +
-                                'LVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHK\n' +
-                                'IPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTL\n' +
-                                'MGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL'
-                        }
+            //Microcomponents
+            email: {
+                type: 'string', description: 'Your email',
+                example: 'john@example.com'
+            },
+            language: {
+                type: 'string',
+                description: 'Language support "en" or "es"',
+                example: 'en'
+            },
+            Sequence: {
+                type: 'object',
+                properties: {
+                    name: {
+                        type: 'string',
+                        example: 'SEQUENCE_1'
+                    },
+                    value: {
+                        type: 'string',
+                        example: 'MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG\n' +
+                            'LVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHK\n' +
+                            'IPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTL\n' +
+                            'MGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL'
                     }
                 }
             },
-            Config:{ type: 'object',
+            Algorithm:{
+                type:'object',
                 properties:{
+                    name: {
+                        type: 'string',
+                        description: 'Name algorithm',
+                    },
+                    active: {
+                        type: 'boolean',
+                        example: true,
+
+                    }
+                }
+            },
+            Config:{
+                type: 'object',
+                properties:{
+                    type: 'array',
                     algorithms: {
-                        $ref: '#/components/schemas/algorithms'
+                        items:{
+                            type: 'object',
+                            properties: {
+                                name: {
+                                    type: 'string',
+                                    example: 'BLAST'
+                                },
+                                active: {
+                                    type: 'boolean',
+                                    example: true
+                                }
+                            }
+                        }
                     },
                     frequencies: {
                         $ref: '#/components/schemas/frequencies'
