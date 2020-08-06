@@ -57,7 +57,7 @@ module.exports = {
                         content: {
                             'application/json': {
                                 schema: {
-                                    $ref: '#/components/schemas/OrderNumber'
+                                    $ref: '#/components/schemas/ResponseOrderNumber'
                                 },
                             }
                         }
@@ -199,7 +199,7 @@ module.exports = {
                         content: {
                             'application/json': {
                                 schema: {
-                                    $ref: '#/components/schemas/OrderNumber'
+                                    $ref: '#/components/schemas/ResponseOrderNumber'
                                 },
                             }
                         }
@@ -271,50 +271,10 @@ module.exports = {
                         content: {
                             'application/json': {
                                 schema:
-                                    {$ref: '#/components/schemas/ResponseFinishedResult'}
+                                    {$ref: '#/components/schemas/ResponseDesignFinishedResult'}
                             }
                         }
 
-                    },
-                    '201': {
-                        description: 'Return result by order number',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    $ref: '#/components/schemas/ResponsePendingResult'
-                                },
-                            }
-                        }
-                    },
-                    '202': {
-                        description: 'Return result by order number',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    $ref: '#/components/schemas/ResponseInProgressResult'
-                                },
-                            }
-                        }
-                    },
-                    '203': {
-                        description: 'Return result by order number',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    $ref: '#/components/schemas/ResponseCancelledResult'
-                                },
-                            }
-                        }
-                    },
-                    '204': {
-                        description: 'Return result by order number',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    $ref: '#/components/schemas/ResponseNotFoundResult'
-                                },
-                            }
-                        }
                     },
                     '400': {
                         description: 'Error: Bad Request',
@@ -324,7 +284,7 @@ module.exports = {
                                     $ref: '#/components/schemas/Error'
                                 },
                                 example: {
-                                    message: '-'
+                                    message: 'Invalid order number'
                                 }
                             }
                         }
@@ -381,7 +341,7 @@ module.exports = {
                         content: {
                             'application/json': {
                                 schema: {
-                                    $ref: '#/components/schemas/SendContact'
+                                    $ref: '#/components/schemas/ResponseContact'
                                 },
                             }
                         }
@@ -498,13 +458,13 @@ module.exports = {
                         required:true
                     },
                     initialSequence:{
-                            "$ref": "#/components/schemas/Sequence"
+                            "$ref": "#/components/schemas/sequence"
                     },
                     flankingSequence1:{
-                            "$ref": "#/components/schemas/Sequence"
+                            "$ref": "#/components/schemas/sequence"
                     },
                     flankingSequence2:{
-                            "$ref": "#/components/schemas/Sequence"
+                            "$ref": "#/components/schemas/sequence"
                     },
                     config:{
                         type: 'object',
@@ -593,7 +553,7 @@ module.exports = {
             },
 
             //Response: 200
-            SendContact: {
+            ResponseContact: {
                 type: 'object', properties: {
                     message: {
                         type: 'string', description: 'Status message',
@@ -601,7 +561,7 @@ module.exports = {
                     }
                 }
             },
-            OrderNumber: {
+            ResponseOrderNumber: {
                 type: 'object', properties: {
                     orderNumber: {
                         type: 'string', description: 'This is order number for to check the status of the task ',
@@ -693,7 +653,7 @@ module.exports = {
                     }
                 }
             },
-            ResponseFinishedResult: {
+            ResponseDesignFinishedResult: {
                 type: 'object',
                 description:'Order number not found',
                 properties: {
@@ -802,7 +762,7 @@ module.exports = {
                 description: 'Language support "en" or "es"',
                 example: 'en'
             },
-            Sequence: {
+            sequence: {
                 type: 'object',
                 properties: {
                     name: {
