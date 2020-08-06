@@ -3,7 +3,7 @@ const config = require("./config");
 
 module.exports = {
 
-    openapi: '3.0.1',
+    openapi: '3.0.0',
     info: {
         version: '0.0.1',
         title: 'Patena-API',
@@ -177,7 +177,7 @@ module.exports = {
         '/design':{
             post:{
                 tags: ['CRUD Operations Patena-API'],
-                description: 'send messages to those responsible ',
+                description: ' ',
                 summary: 'Send the amino acid sequence to get its properties',
                 operationId: 'postDesign',
                 parameters: [
@@ -259,8 +259,8 @@ module.exports = {
                         name: 'orderNumber',
                         in: 'query',
                         schema: {
-                            type: 'string',
-                            example: 'a8a32746-0465-4a60-9318-075b3309500b'
+                            type: 'string'
+
                         },
                         required: true
                     },
@@ -270,8 +270,48 @@ module.exports = {
                         description: 'Return result by order number',
                         content: {
                             'application/json': {
+                                schema:
+                                    {$ref: '#/components/schemas/ResponseFinishedResult'}
+                            }
+                        }
+
+                    },
+                    '201': {
+                        description: 'Return result by order number',
+                        content: {
+                            'application/json': {
                                 schema: {
-                                    $ref: '#/components/schemas/ResponseResult'
+                                    $ref: '#/components/schemas/ResponsePendingResult'
+                                },
+                            }
+                        }
+                    },
+                    '202': {
+                        description: 'Return result by order number',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/ResponseInProgressResult'
+                                },
+                            }
+                        }
+                    },
+                    '203': {
+                        description: 'Return result by order number',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/ResponseCancelledResult'
+                                },
+                            }
+                        }
+                    },
+                    '204': {
+                        description: 'Return result by order number',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/ResponseNotFoundResult'
                                 },
                             }
                         }
@@ -444,27 +484,42 @@ module.exports = {
                         required:false
 
                     },
+                    distance:{
+                        type:'integer',
+                        description: 'Value obtanied from the length ',
+                        example: 50,
+                        required: true
+                    },
                     designType: {
                         type: 'integer',
-                        description:'TYPE:\n\n' +
-                            'NO_INITIAL_SEQUENCE = 1\n\n' +
-                            'ONLY_INITIAL_SEQUENCE = 2\n\n' +
-                            'ONLY_FLANKING_SEQUENCES = 3\n\n' +
-                            'INITIAL_AND_FLANKING_SEQUENCES = 4\n\n',
-                        example: 1,
+                        description:'The initialSequence is required all types design,' +
+                            '\n\nflankingSequence1 and flankingSequence2 are required for type design 3 or 4',
+                        example: 4,
                         required:true
+                    },
+                    initialSequence:{
+                            "$ref": "#/components/schemas/Sequence"
+                    },
+                    flankingSequence1:{
+                            "$ref": "#/components/schemas/Sequence"
+                    },
+                    flankingSequence2:{
+                            "$ref": "#/components/schemas/Sequence"
                     },
                     config:{
                         type: 'object',
                         properties:{
+                            netCharge:{
+                                type:'integer',
+                                description: 'Range of values between negative and positive of the distance obtained from the length ',
+                                example: 0,
+                                required: false
+                            },
+
                             algorithms: {
                                 type: 'array',
                                 items: {
-                                   oneOf: [
-                                        {
-                                            "$ref": "#/components/schemas/Algorithm"
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/algorithm"
                                 },
                                 example:[
                                     {name: "BLAST", active: true},
@@ -479,7 +534,37 @@ module.exports = {
                                     {name: "Waltz", active: true}
                                     ]
 
+                            },
+                            frequencies: {
+                                type: 'array',
+                                items: {
+                                    "$ref": "#/components/schemas/frequency"
+                                },
+                                example:[
+                                    {name: "A", value: 8.2},
+                                    {name: "R", value: 5.5},
+                                    {name: "N", value: 4},
+                                    {name: "D", value: 5.4},
+                                    {name: "C", value: 1.4},
+                                    {name: "Q", value: 3.9},
+                                    {name: "E", value: 6.8},
+                                    {name: "G", value: 7.1},
+                                    {name: "H", value: 2.3},
+                                    {name: "I", value: 6},
+                                    {name: "L", value: 9.7},
+                                    {name: "K", value: 5.8},
+                                    {name: "M", value: 2.4},
+                                    {name: "F", value: 3.9},
+                                    {name: "P", value: 4.7},
+                                    {name: "S", value: 6.7},
+                                    {name: "T", value: 5.3},
+                                    {name: "W", value: 1.1},
+                                    {name: "V", value: 6.9},
+                                    {name: "Y", value: 2.9}
+                                ]
+
                             }
+
                         }
                     }
                 }
@@ -536,13 +621,9 @@ module.exports = {
                     }
                 }
             },
-            ResponseResult: {
+            ResponsePendingResult: {
                 type: 'object',
-                description: 'stateId --> NOT_FOUND = 0\n' +
-                    'PENDING = 1\n' +
-                    'IN_PROGRESS = 2\n' +
-                    'FINISHED = 3\n' +
-                    'CANCELLED = 4' ,
+                description: 'Your order in the queue',
                 properties: {
                     stateId: {
                         type: 'integer', description: 'Id status task ',
@@ -555,6 +636,129 @@ module.exports = {
                     orderNumber: {
                         type: 'string', description: 'Order number searched',
                         example: "55ba5fcd-33b8-4a70-b726-0f06377b6462"
+                    }
+                }
+            },
+            ResponseInProgressResult: {
+                type: 'object',
+                description: 'In progress',
+                properties: {
+                    stateId: {
+                        type: 'integer', description: 'Id status task ',
+                        example: 2
+                    },
+                    status: {
+                        type: 'string', description: 'Description status',
+                        example: 'Your order is being processed right now. Results will be ready very soon.'
+                    },
+                    orderNumber: {
+                        type: 'string', description: 'Order number searched',
+                        example: "55ba5fcd-33b8-4a70-b726-0f06377b6462"
+                    }
+                }
+            },
+            ResponseCancelledResult: {
+                type: 'object',
+                description: "the task could not be processed",
+                properties: {
+                    stateId: {
+                        type: 'integer', description: 'Id status task ',
+                        example: 4
+                    },
+                    status: {
+                        type: 'string', description: 'Description status',
+                        example: 'Your order has been cancelled.'
+                    },
+                    orderNumber: {
+                        type: 'string', description: 'Order number searched',
+                        example: "55ba5fcd-33b8-4a70-b726-0f06377b6462"
+                    }
+                }
+            },
+            ResponseNotFoundResult: {
+                type: 'object',
+                description:'Order number not found',
+                properties: {
+                    stateId: {
+                        type: 'integer', description: 'Id status task ',
+                        example: 0
+                    },
+                    status: {
+                        type: 'string', description: 'Description status',
+                        example: 'The requested order number was not found. Please try another one.'
+                    },
+                    orderNumber: {
+                        type: 'string', description: 'Order number searched',
+                        example: "55ba5fcd-33b8-4a70-b726-0f06377b6462"
+                    }
+                }
+            },
+            ResponseFinishedResult: {
+                type: 'object',
+                description:'Order number not found',
+                properties: {
+                    stateId: {
+                        type: 'integer', description: 'Id status task ',
+                        example: 3
+                    },
+                    status: {
+                        type: 'string', description: 'Description status',
+                        example: 'The order is successfully finished."'
+                    },
+                    orderNumber: {
+                        type: 'string', description: 'Order number searched',
+                        example: "55ba5fcd-33b8-4a70-b726-0f06377b6462"
+                    },
+                    results:{
+                        type:'object',
+                        properties:{
+                            initialSequence:{
+                                type:'string',
+                                example:'WGKLLVTTINKLNSFRQTLTPP'
+                            },
+                            mode:{
+                                type:'string',
+                                description:'Mode design',
+                                example:'design'
+                            },
+                            initialScore:{
+                                type:'integer',
+                                example:131
+                            },
+                            mutationsHistory:{
+                                type: 'array',
+                                items: {
+                                    "$ref": "#/components/schemas/mutationHistory"
+                                },
+                                example:[
+                                    {
+                                    mutated_sequence:"WGKTLVTTINKLNSFRQTLTPP",
+                                    mutated_position:3,
+                                    previous_residue:"L",
+                                    replacement_aa:"T",
+                                    method:"score_difference",
+                                    score_after_mutation:120
+                                    },
+                                    {
+                                        mutated_sequence:"WGKTLVTTINKLNSFKQTLTPP",
+                                        mutated_position:15,
+                                        previous_residue:"R",
+                                        replacement_aa:"K",
+                                        method:"score_difference",
+                                        score_after_mutation:0
+                                    }]
+
+                            },
+                            finalScore:{
+                                type:'integer',
+                                example:0
+                            },
+                            finalSequence:{
+                                type:'string',
+                                example:'WGKTLVTTINKLNSFKQTLTPP'
+                            }
+                        }
+
                     }
                 }
             },
@@ -614,7 +818,7 @@ module.exports = {
                     }
                 }
             },
-            Algorithm:{
+            algorithm:{
                 type:'object',
                 properties:{
                     name: {
@@ -624,31 +828,52 @@ module.exports = {
                     active: {
                         type: 'boolean',
                         example: true,
+                    }
+                }
+            },
+            frequency:{
+                type:'object',
+                description:'the sum must be 100%',
+                properties:{
+                    name: {
+                        type: 'string',
+                        description: 'Name algorithm',
+                    },
+                    value: {
+                        type: 'boolean',
+                        example: true,
 
                     }
                 }
             },
-            Config:{
-                type: 'object',
+            mutationHistory:{
+                type:'object',
                 properties:{
-                    type: 'array',
-                    algorithms: {
-                        items:{
-                            type: 'object',
-                            properties: {
-                                name: {
-                                    type: 'string',
-                                    example: 'BLAST'
-                                },
-                                active: {
-                                    type: 'boolean',
-                                    example: true
-                                }
-                            }
-                        }
+                    mutated_sequence:
+                        {
+                            type:'string',
+                            description: 'the sequence consisting of the 20 amino acids '
+                        },
+                    mutated_position:
+                        {
+                            type:'integer',
+                            description: 'number mutated position'
+                        },
+                    previous_residue:
+                        {
+                            type:'string',
+                            description: 'Aminoacid to replace'
+                        },
+                    replacement_aa: {
+                        type:'string',
+                        description: 'Aminoacid replaced'
                     },
-                    frequencies: {
-                        $ref: '#/components/schemas/frequencies'
+                    method:{
+                        type:'string',
+                        description: 'The replacement method'
+                    },
+                    score_after_mutation:   {
+                        type:'integer'
                     }
                 }
             }
