@@ -2,6 +2,7 @@ import argparse
 import os
 import shutil
 import json
+import time
 
 
 #**************************
@@ -769,6 +770,10 @@ def create_file(path):
     if path.__contains__(DIR_ROOT_OUTPUT):
         with open(path + "/results.json", 'w') as outfile:
             json.dump(DATA_RESULT, outfile)
+"""
+Simulate PATENA takes 12 minutes to get the tasks done.
+"""
+time.sleep(60*12)
 
 create_file(PATH_INPUT)
 create_file(PATH_OUTPUT)

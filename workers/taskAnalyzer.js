@@ -1,6 +1,7 @@
 const taskService = require("./../services/taskService");
 const database = require("./../model/database");
 const mailService = require("./../services/mail/mailService");
+const logger = require("./../services/log/logService");
 
 const getNextPendingTask = taskService.getNextPendingTask;
 const getTaskInProgress = taskService.getTaskInProgress;
@@ -91,6 +92,8 @@ async function promoteNextTask() {
 
 async function start() {
   await database.connect();
+
+  logger.log("STARTING workerId=[" + process.pid + "]");
 
   const taskInProgress = await getTaskInProgress();
 

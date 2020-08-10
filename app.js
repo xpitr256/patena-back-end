@@ -1,17 +1,16 @@
-
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./config/swagger.js');
-var indexRouter = require('./routes/index');
-var linkerLength = require('./routes/linkerLength');
-var contact = require('./routes/contact');
-var results = require('./routes/results');
-var analyze = require('./routes/analyze');
-var design = require ('./routes/design')
+var createError = require("http-errors");
+var express = require("express");
+var path = require("path");
+var cookieParser = require("cookie-parser");
+var logger = require("morgan");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./config/swagger.js");
+var indexRouter = require("./routes/index");
+var linkerLength = require("./routes/linkerLength");
+var contact = require("./routes/contact");
+var results = require("./routes/results");
+var analyze = require("./routes/analyze");
+var design = require("./routes/design");
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
@@ -26,18 +25,20 @@ var analyze = require("./routes/analyze");
 var design = require("./routes/design");
 var middleware = require("./routes/midddleware");
 
-
 var app = express();
 
-
 const options = {
-  explorer: true,// habilita el explorar para hacer busquedas
+  explorer: true, // habilita el explorar para hacer busquedas
   swaggerOptions: {
-    validatorUrl: null
+    validatorUrl: null,
   },
   // customCss: '.swagger-ui .topbar { display: none }'// Desactiva el la cabecera que dice swagguer ui
 };
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument,options));
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, options)
+);
 
 let handleCorsHeaders = function (req, res, next) {
   if (req.get("Origin") != null) {
