@@ -25,7 +25,7 @@ module.exports = {
                 description: 'Testing server'
             },
             {
-                url: 'https://patena.herokuapp.com/',
+                url: 'https://patena-api.herokuapp.com/',
                 description: 'Production server'
             }
         ],
