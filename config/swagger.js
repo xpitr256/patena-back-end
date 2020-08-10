@@ -833,7 +833,8 @@ module.exports = {
                         description: 'The replacement method'
                     },
                     score_after_mutation:   {
-                        type:'integer'
+                        type:'integer',
+                        description: 'Score indicator. Zero desirable value'
                     }
                 }
             }
