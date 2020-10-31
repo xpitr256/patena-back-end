@@ -8,6 +8,9 @@ var app = require('../app');
 var debug = require('debug')('test:server');
 var http = require('http');
 var connectionDB = require('../model/database');
+const Queue = require("bull");
+const config = require('../config/config')
+const workQueue = new Queue(constants.PATENA_QUEUE, config.REDIS_URL);
 
 /**
  * Get port from environment and store in Express.
@@ -95,3 +98,8 @@ function onListening() {
  */
 
 connectionDB.connect();
+
+
+workQueue.on('global:completed', (jobId, result) => {
+  console.log(`Task ${jobId} completed with result ${result}`);
+});

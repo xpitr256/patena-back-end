@@ -1,81 +1,17 @@
 const taskService = require("./../services/taskService");
 const database = require("./../model/database");
-const mailService = require("./../services/mail/mailService");
+const notifyService = require("./../services/notifier/notifyService");
 const logger = require("./../services/log/logService");
+const config = require("../config/config")
+const constants = require("../services/constants")
 
 const getNextPendingTask = taskService.getNextPendingTask;
 const getTaskInProgress = taskService.getTaskInProgress;
 const promoteTaskToInProgress = taskService.promoteTaskToInProgress;
-const updateFailingTask = taskService.updateFailingTask;
-const taskIsCancelled = taskService.taskIsCancelled;
-const updateSentEmailNotification = taskService.updateSentEmailNotification;
-const runTask = taskService.runTask;
 const cancelTask = taskService.cancelTask;
+const notifyUserThatTaskWasCancelled = notifyService.notifyUserThatTaskWasCancelled;
 const oneDayInMs = 86400000;
-
-async function notifyUserThatTaskIsReady(task) {
-  const email = task.taskData.email;
-  if (email) {
-    const workType = task.typeId;
-    const workId = task.id;
-    try {
-      await mailService.sendWorkSuccessMail(
-        email,
-        task.language,
-        workType,
-        workId
-      );
-      try {
-        task = await updateSentEmailNotification(task);
-      } catch (e) {
-        console.error(
-          "Task Analyzer: Cannot Update Sent Email Notification for workId=" +
-            workId
-        );
-      }
-    } catch (e) {
-      console.error(
-        "Task Analyzer: Cannot send work success email to=" +
-          email +
-          " for workId=" +
-          workId
-      );
-    }
-  }
-  return task;
-}
-
-async function notifyUserThatTaskWasCancelled(task) {
-  const email = task.taskData.email;
-  if (email) {
-    const workType = task.typeId;
-    const workId = task.id;
-    try {
-      await mailService.sendWorkErrorMail(
-        email,
-        task.language,
-        workType,
-        workId
-      );
-      try {
-        task = await updateSentEmailNotification(task);
-      } catch (e) {
-        console.error(
-          "Task Analyzer: Cannot Update Sent Email Notification for workId=" +
-            workId
-        );
-      }
-    } catch (e) {
-      console.error(
-        "Task Analyzer: Cannot send work error email to=" +
-          email +
-          " for workId=" +
-          workId
-      );
-    }
-  }
-  return task;
-}
+let Queue = require("bull");
 
 function isTaskOverdue(task) {
   // If task exceeds 1 day processing => is overdue
@@ -90,34 +26,33 @@ async function promoteNextTask() {
   }
 }
 
+async function abortTask(task, workQueue) {
+  const functions = [
+    cancelTask(task),
+    workQueue.removeJobs(task.id)
+  ];
+  await Promise.all(functions);
+  await notifyUserThatTaskWasCancelled(task);
+}
+
 async function start() {
   await database.connect();
 
   logger.log("STARTING workerId=[" + process.pid + "]");
 
   const taskInProgress = await getTaskInProgress();
+  const workQueue = new Queue(constants.PATENA_QUEUE, config.REDIS_URL);
 
   if (taskInProgress) {
-    // We investigate how long this task is in progress to avoid infinite loop processing
     if (isTaskOverdue(taskInProgress)) {
-      // We stop this task and mark it as cancelled
-      await cancelTask(taskInProgress);
-      return await notifyUserThatTaskWasCancelled(taskInProgress);
+      await abortTask(taskInProgress, workQueue)
     }
     return;
   }
 
   const task = await promoteNextTask();
   if (task) {
-    try {
-      await runTask(task);
-      return await notifyUserThatTaskIsReady(task);
-    } catch (error) {
-      const failingTask = await updateFailingTask(task, error);
-      if (taskIsCancelled(failingTask)) {
-        return await notifyUserThatTaskWasCancelled(failingTask);
-      }
-    }
+    workQueue.add(task.id,{ task: task })
   }
 }
 

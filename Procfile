@@ -1,2 +1,2 @@
 web: node ./bin/www
-patena: node ./workers/taskWorker.js
+worker: node ./workers/queueWorker.js

@@ -5,13 +5,14 @@
   "scripts": {
     "test": "mocha --recursive --timeout 60000",
     "test-cv": "nyc --reporter=text --all mocha --recursive --timeout 60000",
-    "start": "nodemon ./bin/www",
+    "start": "node ./bin/www",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {
     "@sendgrid/mail": "^6.5.5",
     "acorn": "5.7.4",
     "body-parser": "^1.19.0",
+    "bull": "^3.18.0",
     "cookie-parser": "^1.4.5",
     "debug": "~2.6.9",
     "express": "^4.17.1",
@@ -26,11 +27,12 @@
     "morgan": "~1.9.1",
     "multer": "^1.4.2",
     "mustache": "^4.0.1",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "node-powershell": "^4.0.0",
     "pug": "^2.0.4",
     "python-shell": "^2.0.1",
-    "swagger-ui-express": "^4.1.4"
+    "swagger-ui-express": "^4.1.4",
+    "throng": "^5.0.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
