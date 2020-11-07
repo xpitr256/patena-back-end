@@ -1,11 +1,10 @@
 const expect = require("chai").expect;
 const proxyquire = require("proxyquire");
+const MockLogger = require( './../mocks/MockLogger')
+const MockQueue = require( './../mocks/MockQueue')
 
 describe("Task worker", async () => {
-  const mockLogger = {
-    log: function () {},
-    error: function () {},
-  };
+  const mockLogger = new MockLogger(false)
 
   it("should finished ok for a success task run", async () => {
     const mockSuccessTaskRun = function () {
@@ -20,10 +19,11 @@ describe("Task worker", async () => {
       },
     };
 
-    await proxyquire("../../workers/taskWorker", {
+    await proxyquire("../../workers/taskAnalyzerWorker", {
       "./taskAnalyzer": mockSuccessTaskRun,
       "./workerFunctions": mockWorkerFunctions,
       "./../services/log/logService": mockLogger,
+      "bull": MockQueue,
     });
   });
 
@@ -40,10 +40,11 @@ describe("Task worker", async () => {
       },
     };
 
-    await proxyquire("../../workers/taskWorker", {
+    await proxyquire("../../workers/taskAnalyzerWorker", {
       "./taskAnalyzer": mockFailingTaskRun,
       "./workerFunctions": mockWorkerFunctions,
       "./../services/log/logService": mockLogger,
+      "bull": MockQueue,
     });
   });
 });

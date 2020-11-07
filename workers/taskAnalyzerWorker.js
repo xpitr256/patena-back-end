@@ -1,8 +1,13 @@
 const start = require("./taskAnalyzer");
 const functions = require("./workerFunctions");
 const logger = require("./../services/log/logService");
+const Queue = require("bull");
+const config = require("../config/config")
+const constants = require("../services/constants")
 
-start()
+const workQueue = new Queue(constants.PATENA_QUEUE_NAME, config.REDIS_URL);
+
+start(workQueue)
   .then(() => {
     logger.log("Worker finished: " + new Date());
     logger.log("FINISHING workerId=[" + process.pid + "]");
