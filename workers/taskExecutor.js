@@ -11,7 +11,7 @@ const logger = require("../services/log/logService");
 
 function startWith(workQueue) {
   logger.log("[Task Executor] startWith with queue=[" + workQueue.name + "]");
-  workQueue.process(maxJobsPerWorker, async (job) => {
+  workQueue.process('*', maxJobsPerWorker, async (job) => {
     logger.log("[Task Executor] workQueue is processing a job=[" + job + "]");
     const task = job.data;
     try {
