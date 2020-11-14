@@ -1,9 +1,9 @@
 module.exports = {
-    buildDatabaseWith(logger) {
-        return  {
-            connect: () => {
-                logger.log("databaseMock:: connected OK!")
-            }
-        }
-    }
-}
+  buildDatabaseWith(logger) {
+    return {
+      connect: () => {
+        logger.log("databaseMock:: connected OK!");
+      },
+    };
+  },
+};

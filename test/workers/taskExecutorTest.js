@@ -3,396 +3,489 @@ const proxyquire = require("proxyquire");
 
 const genericErrorMessage = "FAILING ON PURPOSE";
 const constants = require("../../services/constants");
-const MockQueue = require( './../mocks/MockQueue')
-const MockLogger = require("./../mocks/MockLogger")
-const MockDatabase = require("./../mocks/MockDatabase")
+const MockQueue = require("./../mocks/MockQueue");
+const MockLogger = require("./../mocks/MockLogger");
+const MockDatabase = require("./../mocks/MockDatabase");
 
 const DEBUG_MODE = false;
-const TEST_QUEUE_NAME = "patena-test-job-queue"
-const TEST_REDIS_URL = "redis://127.0.0.1:6379"
-const TEST_TASK_ID = "47774471-b6d0-480e-b134-81578b044049"
+const TEST_QUEUE_NAME = "patena-test-job-queue";
+const TEST_REDIS_URL = "redis://127.0.0.1:6379";
+const TEST_TASK_ID = "47774471-b6d0-480e-b134-81578b044049";
 
-const mockLogger = new MockLogger(DEBUG_MODE)
+const mockLogger = MockLogger.buildLogger(DEBUG_MODE);
 
 //TASK SERVICE MOCK FUNCTIONS
 function failingUpdateSentEmailNotification(task) {
-    mockLogger.log("taskServiceMock:: updateSentEmailNotification => FAILED");
-    return new Promise((resolve, reject) => {
-        reject(genericErrorMessage);
-    });
+  mockLogger.log("taskServiceMock:: updateSentEmailNotification => FAILED");
+  return new Promise((resolve, reject) => {
+    reject(genericErrorMessage);
+  });
 }
 
 function updateSentEmailNotification(task) {
-    mockLogger.log("taskServiceMock:: updateSentEmailNotification => updated task");
-    task.emailSent = true;
-    task.sentEmailDate = new Date();
-    return task;
+  mockLogger.log(
+    "taskServiceMock:: updateSentEmailNotification => updated task"
+  );
+  task.emailSent = true;
+  task.sentEmailDate = new Date();
+  return task;
 }
 function failingUpdateSentEmailNotification(task) {
-    mockLogger.log("taskServiceMock:: updateSentEmailNotification => FAILED");
-    return new Promise((resolve, reject) => {
-        reject(genericErrorMessage);
-    });
+  mockLogger.log("taskServiceMock:: updateSentEmailNotification => FAILED");
+  return new Promise((resolve, reject) => {
+    reject(genericErrorMessage);
+  });
 }
 
 function updateSentEmailNotification(task) {
-    mockLogger.log("taskServiceMock:: updateSentEmailNotification => updated task");
-    task.emailSent = true;
-    task.sentEmailDate = new Date();
-    return task;
+  mockLogger.log(
+    "taskServiceMock:: updateSentEmailNotification => updated task"
+  );
+  task.emailSent = true;
+  task.sentEmailDate = new Date();
+  return task;
 }
 
 function getNoTaskInProgress(task) {
-    mockLogger.log("taskServiceMock:: getTaskInProgress => undefined");
+  mockLogger.log("taskServiceMock:: getTaskInProgress => undefined");
 }
 
 function getNoNextPendingTask(task) {
-    mockLogger.log("taskServiceMock:: getNextPendingTask => undefined");
+  mockLogger.log("taskServiceMock:: getNextPendingTask => undefined");
 }
 
 function runNoTask(task) {
-    mockLogger.log("taskServiceMock:: runTask => nothing");
+  mockLogger.log("taskServiceMock:: runTask => nothing");
 }
 
 function runFailingTask(task) {
-    mockLogger.log("taskServiceMock:: runTask => FAILED");
-    return new Promise((resolve, reject) => {
-        reject(genericErrorMessage);
-    });
+  mockLogger.log("taskServiceMock:: runTask => FAILED");
+  return new Promise((resolve, reject) => {
+    reject(genericErrorMessage);
+  });
 }
 
 function promoteTaskToInProgress(task) {
-    mockLogger.log("taskServiceMock:: promoteTaskToInProgress => updated task");
-    task.stateId = constants.TASK_STATE_IN_PROGRESS;
-    return task;
+  mockLogger.log("taskServiceMock:: promoteTaskToInProgress => updated task");
+  task.stateId = constants.TASK_STATE_IN_PROGRESS;
+  return task;
 }
 
 function updateFailingTask(task, error) {
-    mockLogger.log("taskServiceMock:: updateFailingTask => ok");
-    task.attempts = task.attempts + 1;
-    task.messageError = error;
-    return task;
+  mockLogger.log("taskServiceMock:: updateFailingTask => ok");
+  task.attempts = task.attempts + 1;
+  task.messageError = error;
+  return task;
 }
 
 function updateFailingTaskCancellingTask(task, error) {
-    mockLogger.log("taskServiceMock:: updateFailingTaskCancellingTask => ok");
-    task.attempts = task.attempts + 1;
-    task.messageError = error;
-    task.stateId = constants.TASK_STATE_CANCELLED;
-    return task;
+  mockLogger.log("taskServiceMock:: updateFailingTaskCancellingTask => ok");
+  task.attempts = task.attempts + 1;
+  task.messageError = error;
+  task.stateId = constants.TASK_STATE_CANCELLED;
+  return task;
 }
 
 function taskIsCancelledReturnFalse(task) {
-    mockLogger.log("taskServiceMock:: taskIsCancelled => false");
-    return false;
+  mockLogger.log("taskServiceMock:: taskIsCancelled => false");
+  return false;
 }
 
 //EMAIL SERVICE MOCK FUNCTIONS
 function sendWorkSuccessMail(email, language, workType, workId) {
-    mockLogger.log("emailServiceMock:: sendWorkSuccessMail => sent OK");
+  mockLogger.log("emailServiceMock:: sendWorkSuccessMail => sent OK");
 }
 
 function sendWorkErrorMail(email, language, workType, workId) {
-    mockLogger.log("emailServiceMock:: sendWorkErrorMail => sent OK");
+  mockLogger.log("emailServiceMock:: sendWorkErrorMail => sent OK");
 }
 
 function failSendingEmail(task) {
-    mockLogger.log("emailServiceMock:: sendWorkSuccessMail | sendWorkErrorMail => FAILED");
-    return new Promise((resolve, reject) => {
-        reject(genericErrorMessage);
-    });
+  mockLogger.log(
+    "emailServiceMock:: sendWorkSuccessMail | sendWorkErrorMail => FAILED"
+  );
+  return new Promise((resolve, reject) => {
+    reject(genericErrorMessage);
+  });
 }
 
 describe("Queue worker", () => {
+  it("should mark email sent and sent email date for a successful task run with email and remove task from queue jobs", async () => {
+    let task = {
+      id: TEST_TASK_ID,
+      stateId: constants.TASK_STATE_PENDING,
+      emailSent: false,
+      taskData: {
+        email: "test_email@test.com",
+      },
+    };
 
-    it("should mark email sent and sent email date for a successful task run with email and remove task from queue jobs", async () => {
-        let task = {
-            id: TEST_TASK_ID,
-            stateId: constants.TASK_STATE_PENDING,
-            emailSent: false,
-            taskData: {
-                email: "test_email@test.com",
-            },
-        };
+    let taskServiceMock = {};
+    taskServiceMock.getTaskInProgress = getNoTaskInProgress;
+    taskServiceMock.getNextPendingTask = function () {
+      mockLogger.log("taskServiceMock:: getNextPendingTask => task");
+      return task;
+    };
+    taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
+    taskServiceMock.runTask = runNoTask;
+    taskServiceMock.updateSentEmailNotification = updateSentEmailNotification;
 
-        let taskServiceMock = {};
-        taskServiceMock.getTaskInProgress = getNoTaskInProgress;
-        taskServiceMock.getNextPendingTask = function () {
-            mockLogger.log("taskServiceMock:: getNextPendingTask => task");
-            return task;
-        };
-        taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
-        taskServiceMock.runTask = runNoTask;
-        taskServiceMock.updateSentEmailNotification = updateSentEmailNotification;
+    let emailServiceMock = {};
+    emailServiceMock.sendWorkSuccessMail = sendWorkSuccessMail;
 
-        let emailServiceMock = {};
-        emailServiceMock.sendWorkSuccessMail = sendWorkSuccessMail;
+    let notifyServiceMock = proxyquire(
+      "./../../services/notifier/notifyService",
+      {
+        "./../mail/mailService": emailServiceMock,
+        "./../taskService": taskServiceMock,
+      }
+    );
 
-        let notifyServiceMock = proxyquire("./../../services/notifier/notifyService", {
-            './../mail/mailService': emailServiceMock,
-            './../taskService': taskServiceMock,
-        });
+    const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
+    mockQueue.add(TEST_TASK_ID, task);
+    expect(mockQueue.count()).to.be.equals(1);
 
-        const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
-        mockQueue.add(TEST_TASK_ID,task)
-        expect(mockQueue.count()).to.be.equals(1)
-
-        const startWith = proxyquire("../../workers/taskExecutor", {
-            "./../services/taskService": taskServiceMock,
-            "./../services/notifier/notifyService": notifyServiceMock,
-        });
-
-        await startWith(mockQueue);
-
-        expect(task.emailSent).to.be.true;
-        expect(task.sentEmailDate).to.be.an("Date");
-        expect(mockQueue.count()).to.be.equals(0)
-    }).timeout(10000);
-
-/*
-    it("should not mark email sent if sendWorkSuccessMail fails for a successful task", async () => {
-        let task = {
-            id: 12345,
-            stateId: constants.TASK_STATE_PENDING,
-            emailSent: false,
-            taskData: {
-                email: "test_email@test.com",
-            },
-        };
-
-        let taskServiceMock = {};
-        taskServiceMock.getTaskInProgress = getNoTaskInProgress;
-        taskServiceMock.getNextPendingTask = function () {
-            log("taskServiceMock:: getNextPendingTask => task");
-            return task;
-        };
-        taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
-        taskServiceMock.runTask = runNoTask;
-        taskServiceMock.updateSentEmailNotification = updateSentEmailNotification;
-
-        let emailServiceMock = {};
-        emailServiceMock.sendWorkSuccessMail = failSendingEmail;
-
-        const start = proxyquire("../../workers/taskAnalyzer", {
-            "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
-            "./../services/taskService": taskServiceMock,
-            "./../services/mail/mailService": emailServiceMock,
-        });
-
-        await start();
-
-        expect(task.emailSent).to.be.false;
-        expect(task.sentEmailDate).to.be.an("undefined");
+    const startWith = proxyquire("../../workers/taskExecutor", {
+      "./../services/taskService": taskServiceMock,
+      "./../services/notifier/notifyService": notifyServiceMock,
     });
 
-    it("should not mark email sent if updateSentEmailNotification fails for a successful task", async () => {
-        let task = {
-            id: 12345,
-            stateId: constants.TASK_STATE_PENDING,
-            emailSent: false,
-            taskData: {
-                email: "test_email@test.com",
-            },
-        };
+    await startWith(mockQueue);
 
-        let taskServiceMock = {};
-        taskServiceMock.getTaskInProgress = getNoTaskInProgress;
-        taskServiceMock.getNextPendingTask = function () {
-            log("taskServiceMock:: getNextPendingTask => task");
-            return task;
-        };
-        taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
-        taskServiceMock.runTask = runNoTask;
-        taskServiceMock.updateSentEmailNotification = failingUpdateSentEmailNotification;
+    expect(task.emailSent).to.be.true;
+    expect(task.sentEmailDate).to.be.an("Date");
+    expect(mockQueue.count()).to.be.equals(0);
+  }).timeout(10000);
 
-        let emailServiceMock = {};
-        emailServiceMock.sendWorkSuccessMail = sendWorkSuccessMail;
+  it("should not mark email sent if sendWorkSuccessMail fails for a successful task", async () => {
+    let task = {
+      id: TEST_TASK_ID,
+      stateId: constants.TASK_STATE_PENDING,
+      emailSent: false,
+      taskData: {
+        email: "test_email@test.com",
+      },
+    };
 
-        const start = proxyquire("../../workers/taskAnalyzer", {
-            "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
-            "./../services/taskService": taskServiceMock,
-            "./../services/mail/mailService": emailServiceMock,
-        });
+    let taskServiceMock = {};
+    taskServiceMock.getTaskInProgress = getNoTaskInProgress;
+    taskServiceMock.getNextPendingTask = function () {
+      mockLogger.log("taskServiceMock:: getNextPendingTask => task");
+      return task;
+    };
+    taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
+    taskServiceMock.runTask = runNoTask;
+    taskServiceMock.updateSentEmailNotification = updateSentEmailNotification;
 
-        await start();
+    let emailServiceMock = {};
+    emailServiceMock.sendWorkSuccessMail = failSendingEmail;
 
-        expect(task.emailSent).to.be.false;
-        expect(task.sentEmailDate).to.be.an("undefined");
+    let notifyServiceMock = proxyquire(
+      "./../../services/notifier/notifyService",
+      {
+        "./../mail/mailService": emailServiceMock,
+        "./../taskService": taskServiceMock,
+        "./../log/logService": { error: () => null },
+      }
+    );
+
+    const startWith = proxyquire("../../workers/taskExecutor", {
+      "./../services/taskService": taskServiceMock,
+      "./../services/notifier/notifyService": notifyServiceMock,
     });
 
-    it("should update a failing task by increasing its attempts and saving error message", async () => {
-        //TODO check if we retry it
+    const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
+    mockQueue.add(TEST_TASK_ID, task);
+    expect(mockQueue.count()).to.be.equals(1);
 
-        let task = {
-            stateId: constants.TASK_STATE_PENDING,
-            attempts: 0,
-        };
+    await startWith(mockQueue);
 
-        let taskServiceMock = {};
-        taskServiceMock.getTaskInProgress = getNoTaskInProgress;
-        taskServiceMock.getNextPendingTask = function () {
-            log("taskServiceMock:: getNextPendingTask => task");
-            return task;
-        };
-        taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
-        taskServiceMock.runTask = runFailingTask;
-        taskServiceMock.updateFailingTask = updateFailingTask;
-        taskServiceMock.taskIsCancelled = taskIsCancelledReturnFalse;
+    expect(task.emailSent).to.be.false;
+    expect(task.sentEmailDate).to.be.an("undefined");
+    expect(mockQueue.count()).to.be.equals(0);
+  });
 
-        const start = proxyquire("../../workers/taskAnalyzer", {
-            "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
-            "./../services/taskService": taskServiceMock,
-        });
+  it("should not mark email sent if updateSentEmailNotification fails for a successful task", async () => {
+    let task = {
+      id: TEST_TASK_ID,
+      stateId: constants.TASK_STATE_PENDING,
+      emailSent: false,
+      taskData: {
+        email: "test_email@test.com",
+      },
+    };
 
-        await start();
+    let taskServiceMock = {};
+    taskServiceMock.getTaskInProgress = getNoTaskInProgress;
+    taskServiceMock.getNextPendingTask = function () {
+      mockLogger.log("taskServiceMock:: getNextPendingTask => task");
+      return task;
+    };
+    taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
+    taskServiceMock.runTask = runNoTask;
+    taskServiceMock.updateSentEmailNotification = failingUpdateSentEmailNotification;
 
-        expect(task.attempts).to.be.equals(1);
-        expect(task.messageError).to.be.equals(genericErrorMessage);
+    let emailServiceMock = {};
+    emailServiceMock.sendWorkSuccessMail = sendWorkSuccessMail;
+
+    let notifyServiceMock = proxyquire(
+      "./../../services/notifier/notifyService",
+      {
+        "./../mail/mailService": emailServiceMock,
+        "./../taskService": taskServiceMock,
+        "./../log/logService": mockLogger,
+      }
+    );
+
+    const startWith = proxyquire("../../workers/taskExecutor", {
+      "./../services/taskService": taskServiceMock,
+      "./../services/notifier/notifyService": notifyServiceMock,
     });
 
-    it("should cancel a 3 times failing task", async () => {
-        let task = {
-            stateId: constants.TASK_STATE_PENDING,
-            attempts: 2,
-            taskData: {},
-        };
+    const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
+    mockQueue.add(TEST_TASK_ID, task);
+    expect(mockQueue.count()).to.be.equals(1);
 
-        let taskServiceMock = {};
-        taskServiceMock.getTaskInProgress = getNoTaskInProgress;
-        taskServiceMock.getNextPendingTask = function () {
-            log("taskServiceMock:: getNextPendingTask => task");
-            return task;
-        };
-        taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
-        taskServiceMock.runTask = runFailingTask;
-        taskServiceMock.updateFailingTask = updateFailingTaskCancellingTask;
+    await startWith(mockQueue);
 
-        const start = proxyquire("../../workers/taskAnalyzer", {
-            "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
-            "./../services/taskService": taskServiceMock,
-        });
+    expect(task.emailSent).to.be.false;
+    expect(task.sentEmailDate).to.be.an("undefined");
+    expect(mockQueue.count()).to.be.equals(0);
+  });
 
-        await start();
+  it("should update a failing task by increasing its attempts and saving error message", async () => {
+    let task = {
+      id: TEST_TASK_ID,
+      stateId: constants.TASK_STATE_PENDING,
+      attempts: 0,
+    };
 
-        expect(task.attempts).to.be.equals(3);
-        expect(task.stateId).to.be.equals(constants.TASK_STATE_CANCELLED);
+    let taskServiceMock = {};
+    taskServiceMock.getTaskInProgress = getNoTaskInProgress;
+    taskServiceMock.getNextPendingTask = function () {
+      mockLogger.log("taskServiceMock:: getNextPendingTask => task");
+      return task;
+    };
+    taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
+    taskServiceMock.runTask = runFailingTask;
+    taskServiceMock.updateFailingTask = updateFailingTask;
+    taskServiceMock.taskIsCancelled = taskIsCancelledReturnFalse;
+
+    let notifyServiceMock = proxyquire(
+      "./../../services/notifier/notifyService",
+      {
+        "./../taskService": taskServiceMock,
+      }
+    );
+
+    const startWith = proxyquire("../../workers/taskExecutor", {
+      "./../services/taskService": taskServiceMock,
+      "./../services/notifier/notifyService": notifyServiceMock,
     });
 
-    it("should notify a user that task is canceled", async () => {
-        let task = {
-            id: 12345,
-            stateId: constants.TASK_STATE_PENDING,
-            emailSent: false,
-            attempts: 2,
-            taskData: {
-                email: "test_email@test.com",
-            },
-        };
+    const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
+    mockQueue.add(TEST_TASK_ID, task);
+    expect(mockQueue.count()).to.be.equals(1);
 
-        let taskServiceMock = {};
-        taskServiceMock.getTaskInProgress = getNoTaskInProgress;
-        taskServiceMock.getNextPendingTask = function () {
-            log("taskServiceMock:: getNextPendingTask => task");
-            return task;
-        };
-        taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
-        taskServiceMock.runTask = runFailingTask;
-        taskServiceMock.updateFailingTask = updateFailingTaskCancellingTask;
-        taskServiceMock.updateSentEmailNotification = updateSentEmailNotification;
+    await startWith(mockQueue);
+    expect(task.attempts).to.be.equals(1);
+    expect(task.messageError).to.be.equals(genericErrorMessage);
+    expect(mockQueue.count()).to.be.equals(0);
+  });
 
-        let emailServiceMock = {};
-        emailServiceMock.sendWorkErrorMail = sendWorkErrorMail;
+  it("should cancel a 3 times failing task", async () => {
+    let task = {
+      id: TEST_TASK_ID,
+      stateId: constants.TASK_STATE_PENDING,
+      attempts: 2,
+      taskData: {},
+    };
 
-        const start = proxyquire("../../workers/taskAnalyzer", {
-            "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
-            "./../services/taskService": taskServiceMock,
-            "./../services/mail/mailService": emailServiceMock,
-        });
+    let taskServiceMock = {};
+    taskServiceMock.getTaskInProgress = getNoTaskInProgress;
+    taskServiceMock.getNextPendingTask = function () {
+      mockLogger.log("taskServiceMock:: getNextPendingTask => task");
+      return task;
+    };
+    taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
+    taskServiceMock.runTask = runFailingTask;
+    taskServiceMock.updateFailingTask = updateFailingTaskCancellingTask;
 
-        task = await start();
+    let notifyServiceMock = proxyquire(
+      "./../../services/notifier/notifyService",
+      {
+        "./../taskService": taskServiceMock,
+      }
+    );
 
-        expect(task.attempts).to.be.equals(3);
-        expect(task.stateId).to.be.equals(constants.TASK_STATE_CANCELLED);
-        expect(task.emailSent).to.be.true;
-        expect(task.sentEmailDate).to.be.an("Date");
+    const startWith = proxyquire("../../workers/taskExecutor", {
+      "./../services/taskService": taskServiceMock,
+      "./../services/notifier/notifyService": notifyServiceMock,
     });
 
-    it("should not notify a user that task is canceled if updateSentEmailNotification fails", async () => {
-        let task = {
-            id: 12345,
-            stateId: constants.TASK_STATE_PENDING,
-            emailSent: false,
-            attempts: 2,
-            taskData: {
-                email: "test_email@test.com",
-            },
-        };
+    const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
+    mockQueue.add(TEST_TASK_ID, task);
+    expect(mockQueue.count()).to.be.equals(1);
 
-        let taskServiceMock = {};
-        taskServiceMock.getTaskInProgress = getNoTaskInProgress;
-        taskServiceMock.getNextPendingTask = function () {
-            log("taskServiceMock:: getNextPendingTask => task");
-            return task;
-        };
-        taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
-        taskServiceMock.runTask = runFailingTask;
-        taskServiceMock.updateFailingTask = updateFailingTaskCancellingTask;
-        taskServiceMock.updateSentEmailNotification = failingUpdateSentEmailNotification;
+    await startWith(mockQueue);
 
-        let emailServiceMock = {};
-        emailServiceMock.sendWorkErrorMail = sendWorkErrorMail;
+    expect(task.attempts).to.be.equals(3);
+    expect(task.stateId).to.be.equals(constants.TASK_STATE_CANCELLED);
+    expect(mockQueue.count()).to.be.equals(0);
+  });
 
-        const start = proxyquire("../../workers/taskAnalyzer", {
-            "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
-            "./../services/taskService": taskServiceMock,
-            "./../services/mail/mailService": emailServiceMock,
-        });
+  it("should notify a user that task is canceled", async () => {
+    let task = {
+      id: TEST_TASK_ID,
+      stateId: constants.TASK_STATE_PENDING,
+      emailSent: false,
+      attempts: 2,
+      taskData: {
+        email: "test_email@test.com",
+      },
+    };
 
-        await start();
+    let taskServiceMock = {};
+    taskServiceMock.getTaskInProgress = getNoTaskInProgress;
+    taskServiceMock.getNextPendingTask = function () {
+      mockLogger.log("taskServiceMock:: getNextPendingTask => task");
+      return task;
+    };
+    taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
+    taskServiceMock.runTask = runFailingTask;
+    taskServiceMock.updateFailingTask = updateFailingTaskCancellingTask;
+    taskServiceMock.updateSentEmailNotification = updateSentEmailNotification;
 
-        expect(task.attempts).to.be.equals(3);
-        expect(task.stateId).to.be.equals(constants.TASK_STATE_CANCELLED);
-        expect(task.emailSent).to.be.false;
-        expect(task.sentEmailDate).to.be.an("undefined");
+    let emailServiceMock = {};
+    emailServiceMock.sendWorkErrorMail = sendWorkErrorMail;
+
+    let notifyServiceMock = proxyquire(
+      "./../../services/notifier/notifyService",
+      {
+        "./../mail/mailService": emailServiceMock,
+        "./../taskService": taskServiceMock,
+      }
+    );
+
+    const startWith = proxyquire("../../workers/taskExecutor", {
+      "./../services/taskService": taskServiceMock,
+      "./../services/notifier/notifyService": notifyServiceMock,
     });
 
-    it("should not notify a user that task is canceled  if sendWorkErrorMail fails", async () => {
-        let task = {
-            id: 12345,
-            stateId: constants.TASK_STATE_PENDING,
-            emailSent: false,
-            attempts: 2,
-            taskData: {
-                email: "test_email@test.com",
-            },
-        };
+    const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
+    mockQueue.add(TEST_TASK_ID, task);
+    expect(mockQueue.count()).to.be.equals(1);
 
-        let taskServiceMock = {};
-        taskServiceMock.getTaskInProgress = getNoTaskInProgress;
-        taskServiceMock.getNextPendingTask = function () {
-            log("taskServiceMock:: getNextPendingTask => task");
-            return task;
-        };
-        taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
-        taskServiceMock.runTask = runFailingTask;
-        taskServiceMock.updateFailingTask = updateFailingTaskCancellingTask;
-        taskServiceMock.updateSentEmailNotification = updateSentEmailNotification;
+    await startWith(mockQueue);
 
-        let emailServiceMock = {};
-        emailServiceMock.sendWorkErrorMail = failSendingEmail;
+    expect(task.attempts).to.be.equals(3);
+    expect(task.stateId).to.be.equals(constants.TASK_STATE_CANCELLED);
+    expect(task.emailSent).to.be.true;
+    expect(task.sentEmailDate).to.be.an("Date");
+    expect(mockQueue.count()).to.be.equals(0);
+  });
 
-        const start = proxyquire("../../workers/taskAnalyzer", {
-            "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
-            "./../services/taskService": taskServiceMock,
-            "./../services/mail/mailService": emailServiceMock,
-        });
+  it("should not notify a user that task is canceled if updateSentEmailNotification fails", async () => {
+    let task = {
+      id: TEST_TASK_ID,
+      stateId: constants.TASK_STATE_PENDING,
+      emailSent: false,
+      attempts: 2,
+      taskData: {
+        email: "test_email@test.com",
+      },
+    };
 
-        task = await start();
+    let taskServiceMock = {};
+    taskServiceMock.getTaskInProgress = getNoTaskInProgress;
+    taskServiceMock.getNextPendingTask = function () {
+      mockLogger.log("taskServiceMock:: getNextPendingTask => task");
+      return task;
+    };
+    taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
+    taskServiceMock.runTask = runFailingTask;
+    taskServiceMock.updateFailingTask = updateFailingTaskCancellingTask;
+    taskServiceMock.updateSentEmailNotification = failingUpdateSentEmailNotification;
 
-        expect(task.attempts).to.be.equals(3);
-        expect(task.stateId).to.be.equals(constants.TASK_STATE_CANCELLED);
-        expect(task.emailSent).to.be.false;
-        expect(task.sentEmailDate).to.be.an("undefined");
+    let emailServiceMock = {};
+    emailServiceMock.sendWorkErrorMail = sendWorkErrorMail;
+
+    let notifyServiceMock = proxyquire(
+      "./../../services/notifier/notifyService",
+      {
+        "./../mail/mailService": emailServiceMock,
+        "./../taskService": taskServiceMock,
+        "./../log/logService": mockLogger,
+      }
+    );
+
+    const startWith = proxyquire("../../workers/taskExecutor", {
+      "./../services/taskService": taskServiceMock,
+      "./../services/notifier/notifyService": notifyServiceMock,
     });
- */
+
+    const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
+    mockQueue.add(TEST_TASK_ID, task);
+    expect(mockQueue.count()).to.be.equals(1);
+
+    await startWith(mockQueue);
+
+    expect(task.attempts).to.be.equals(3);
+    expect(task.stateId).to.be.equals(constants.TASK_STATE_CANCELLED);
+    expect(task.emailSent).to.be.false;
+    expect(task.sentEmailDate).to.be.an("undefined");
+    expect(mockQueue.count()).to.be.equals(0);
+  });
+
+  it("should not notify a user that task is canceled  if sendWorkErrorMail fails", async () => {
+    let task = {
+      id: TEST_TASK_ID,
+      stateId: constants.TASK_STATE_PENDING,
+      emailSent: false,
+      attempts: 2,
+      taskData: {
+        email: "test_email@test.com",
+      },
+    };
+
+    let taskServiceMock = {};
+    taskServiceMock.getTaskInProgress = getNoTaskInProgress;
+    taskServiceMock.getNextPendingTask = function () {
+      mockLogger.log("taskServiceMock:: getNextPendingTask => task");
+      return task;
+    };
+    taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
+    taskServiceMock.runTask = runFailingTask;
+    taskServiceMock.updateFailingTask = updateFailingTaskCancellingTask;
+    taskServiceMock.updateSentEmailNotification = updateSentEmailNotification;
+
+    let emailServiceMock = {};
+    emailServiceMock.sendWorkErrorMail = failSendingEmail;
+
+    let notifyServiceMock = proxyquire(
+      "./../../services/notifier/notifyService",
+      {
+        "./../mail/mailService": emailServiceMock,
+        "./../taskService": taskServiceMock,
+        "./../log/logService": mockLogger,
+      }
+    );
+
+    const startWith = proxyquire("../../workers/taskExecutor", {
+      "./../services/taskService": taskServiceMock,
+      "./../services/notifier/notifyService": notifyServiceMock,
+    });
+
+    const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
+    mockQueue.add(TEST_TASK_ID, task);
+    expect(mockQueue.count()).to.be.equals(1);
+
+    await startWith(mockQueue);
+
+    expect(task.attempts).to.be.equals(3);
+    expect(task.stateId).to.be.equals(constants.TASK_STATE_CANCELLED);
+    expect(task.emailSent).to.be.false;
+    expect(task.sentEmailDate).to.be.an("undefined");
+    expect(mockQueue.count()).to.be.equals(0);
+  });
 });

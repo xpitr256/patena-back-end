@@ -51,7 +51,7 @@ module.exports = {
           required: true,
         },
         responses: {
-          "200": {
+          200: {
             description: "Return a order number",
             content: {
               "application/json": {
@@ -61,7 +61,7 @@ module.exports = {
               },
             },
           },
-          "400": {
+          400: {
             description: "Error: Bad Request",
             content: {
               "application/json": {
@@ -75,7 +75,7 @@ module.exports = {
               },
             },
           },
-          "403": {
+          403: {
             description: "Error: Forbidden",
             content: {
               "application/json": {
@@ -88,7 +88,7 @@ module.exports = {
               },
             },
           },
-          "500": {
+          500: {
             description: "Error: Internal Server Error",
             content: {
               "application/json": {
@@ -123,7 +123,7 @@ module.exports = {
           },
         ],
         responses: {
-          "200": {
+          200: {
             description: "return length associated to distance",
             content: {
               "application/json": {
@@ -133,7 +133,7 @@ module.exports = {
               },
             },
           },
-          "400": {
+          400: {
             description: "Error: Bad Request",
             content: {
               "application/json": {
@@ -146,7 +146,7 @@ module.exports = {
               },
             },
           },
-          "403": {
+          403: {
             description: "Error: Forbidden",
             content: {
               "application/json": {
@@ -159,7 +159,7 @@ module.exports = {
               },
             },
           },
-          "500": {
+          500: {
             description: "Error: Internal Server Error",
             content: {
               "application/json": {
@@ -194,7 +194,7 @@ module.exports = {
           required: true,
         },
         responses: {
-          "200": {
+          200: {
             description: "Contact form sent ok!",
             content: {
               "application/json": {
@@ -204,7 +204,7 @@ module.exports = {
               },
             },
           },
-          "400": {
+          400: {
             description: "Invalid contact information",
             content: {
               "application/json": {
@@ -218,7 +218,7 @@ module.exports = {
               },
             },
           },
-          "403": {
+          403: {
             description: "Error: Forbidden",
             content: {
               "application/json": {
@@ -231,7 +231,7 @@ module.exports = {
               },
             },
           },
-          "500": {
+          500: {
             description: "Error: Internal Server Error",
             content: {
               "application/json": {
@@ -266,7 +266,7 @@ module.exports = {
           },
         ],
         responses: {
-          "200": {
+          200: {
             description: "Return result by order number",
             content: {
               "application/json": {
@@ -276,7 +276,7 @@ module.exports = {
               },
             },
           },
-          "400": {
+          400: {
             description: "Error: Bad Request",
             content: {
               "application/json": {
@@ -289,7 +289,7 @@ module.exports = {
               },
             },
           },
-          "403": {
+          403: {
             description: "Error: Forbidden",
             content: {
               "application/json": {
@@ -302,7 +302,7 @@ module.exports = {
               },
             },
           },
-          "500": {
+          500: {
             description: "Error: Internal Server Error",
             content: {
               "application/json": {
@@ -336,7 +336,7 @@ module.exports = {
           required: true,
         },
         responses: {
-          "200": {
+          200: {
             description: "Contact form sent ok!",
             content: {
               "application/json": {
@@ -346,7 +346,7 @@ module.exports = {
               },
             },
           },
-          "400": {
+          400: {
             description: "Error: Bad Request",
             content: {
               "application/json": {
@@ -359,7 +359,7 @@ module.exports = {
               },
             },
           },
-          "403": {
+          403: {
             description: "Error: Forbidden",
             content: {
               "application/json": {
@@ -372,7 +372,7 @@ module.exports = {
               },
             },
           },
-          "500": {
+          500: {
             description: "Error: Internal Server Error",
             content: {
               "application/json": {

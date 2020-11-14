@@ -1,10 +1,10 @@
 const expect = require("chai").expect;
 const proxyquire = require("proxyquire");
-const MockLogger = require( './../mocks/MockLogger')
-const MockQueue = require( './../mocks/MockQueue')
+const MockLogger = require("./../mocks/MockLogger");
+const MockQueue = require("./../mocks/MockQueue");
 
-describe("Task worker", async () => {
-  const mockLogger = new MockLogger(false)
+describe("Task Analyzer worker", async () => {
+  const mockLogger = MockLogger.buildLogger(false);
 
   it("should finished ok for a success task run", async () => {
     const mockSuccessTaskRun = function () {
@@ -23,7 +23,7 @@ describe("Task worker", async () => {
       "./taskAnalyzer": mockSuccessTaskRun,
       "./workerFunctions": mockWorkerFunctions,
       "./../services/log/logService": mockLogger,
-      "bull": MockQueue,
+      bull: MockQueue,
     });
   });
 
@@ -44,7 +44,7 @@ describe("Task worker", async () => {
       "./taskAnalyzer": mockFailingTaskRun,
       "./workerFunctions": mockWorkerFunctions,
       "./../services/log/logService": mockLogger,
-      "bull": MockQueue,
+      bull: MockQueue,
     });
   });
 });

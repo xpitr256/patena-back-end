@@ -2,15 +2,15 @@ const expect = require("chai").expect;
 const proxyquire = require("proxyquire");
 const constants = require("../../services/constants");
 const translationService = require("../../services/translationService");
-const MockQueue = require( './../mocks/MockQueue')
-const MockDatabase = require("./../mocks/MockDatabase")
-const MockLogger = require("./../mocks/MockLogger")
+const MockQueue = require("./../mocks/MockQueue");
+const MockDatabase = require("./../mocks/MockDatabase");
+const MockLogger = require("./../mocks/MockLogger");
 const DEBUG_MODE = false;
-const TEST_QUEUE_NAME = "patena-test-job-queue"
-const TEST_REDIS_URL = "redis://127.0.0.1:6379"
-const TEST_TASK_ID = "47774471-b6d0-480e-b134-81578b044049"
+const TEST_QUEUE_NAME = "patena-test-job-queue";
+const TEST_REDIS_URL = "redis://127.0.0.1:6379";
+const TEST_TASK_ID = "47774471-b6d0-480e-b134-81578b044049";
 
-const mockLogger = new MockLogger(DEBUG_MODE)
+const mockLogger = MockLogger.buildLogger(DEBUG_MODE);
 
 //TASK SERVICE MOCK FUNCTIONS
 function getNoTaskInProgress(task) {
@@ -32,7 +32,6 @@ function promoteTaskToInProgress(task) {
 }
 
 describe("Task analyzer worker", () => {
-
   it("should do nothing when no task is pending ", async () => {
     let taskServiceMock = {};
     taskServiceMock.getTaskInProgress = getNoTaskInProgress;
@@ -45,7 +44,7 @@ describe("Task analyzer worker", () => {
 
     const result = await start(mockQueue);
     expect(result).to.be.equals(undefined);
-    expect(mockQueue.count()).to.be.equals(0)
+    expect(mockQueue.count()).to.be.equals(0);
   });
 
   it('should promote task to "in progress" for pending task and put it in the job Queue', async () => {
@@ -73,10 +72,9 @@ describe("Task analyzer worker", () => {
 
     await start(mockQueue);
     expect(task.stateId).to.be.equals(constants.TASK_STATE_IN_PROGRESS);
-    expect(mockQueue.count()).to.be.equals(1)
-    expect(mockQueue.getJob(TEST_TASK_ID)).not.to.be.undefined
+    expect(mockQueue.count()).to.be.equals(1);
+    expect(mockQueue.getJob(TEST_TASK_ID)).not.to.be.undefined;
   });
-
 
   it("should wait (do nothing) if a non overdue task is currently in progress", async () => {
     let taskInProgress = {
@@ -102,7 +100,7 @@ describe("Task analyzer worker", () => {
     expect(taskInProgress.stateId).to.be.equals(
       constants.TASK_STATE_IN_PROGRESS
     );
-    expect(mockQueue.count()).to.be.equals(0)
+    expect(mockQueue.count()).to.be.equals(0);
   });
 
   it("should cancel an overdue task", async () => {
@@ -136,7 +134,7 @@ describe("Task analyzer worker", () => {
     });
 
     const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
-    mockQueue.add(TEST_TASK_ID, taskInProgress)
+    mockQueue.add(TEST_TASK_ID, taskInProgress);
     expect(mockQueue.count()).to.be.equals(1);
 
     await start(mockQueue);

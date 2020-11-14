@@ -7,7 +7,8 @@ const getNextPendingTask = taskService.getNextPendingTask;
 const getTaskInProgress = taskService.getTaskInProgress;
 const promoteTaskToInProgress = taskService.promoteTaskToInProgress;
 const cancelTask = taskService.cancelTask;
-const notifyUserThatTaskWasCancelled = notifyService.notifyUserThatTaskWasCancelled;
+const notifyUserThatTaskWasCancelled =
+  notifyService.notifyUserThatTaskWasCancelled;
 
 function isTaskOverdue(task) {
   // If task exceeds 1 day processing => is overdue
@@ -24,10 +25,7 @@ async function promoteNextTask() {
 }
 
 async function abortTask(task, workQueue) {
-  const functions = [
-    cancelTask(task),
-    workQueue.removeJobs(task.id)
-  ];
+  const functions = [cancelTask(task), workQueue.removeJobs(task.id)];
   await Promise.all(functions);
   await notifyUserThatTaskWasCancelled(task);
 }
@@ -41,14 +39,14 @@ async function start(workQueue) {
 
   if (taskInProgress) {
     if (isTaskOverdue(taskInProgress)) {
-      await abortTask(taskInProgress, workQueue)
+      await abortTask(taskInProgress, workQueue);
     }
     return;
   }
 
   const task = await promoteNextTask();
   if (task) {
-    workQueue.add(task.id,{ task: task })
+    workQueue.add(task.id, { task: task });
   }
 }
 
