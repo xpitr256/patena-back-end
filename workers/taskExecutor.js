@@ -9,9 +9,9 @@ const notifyUserThatTaskWasCancelled = notifyService.notifyUserThatTaskWasCancel
 const maxJobsPerWorker = config.JOB_CONCURRENCY;
 const logger = require("../services/log/logService");
 
-async function startWith(workQueue) {
+function startWith(workQueue) {
   logger.log("[Task Executor] startWith with queue=[" + workQueue.name + "]");
-  await workQueue.process(maxJobsPerWorker, async (job) => {
+  workQueue.process(maxJobsPerWorker, async (job) => {
     logger.log("[Task Executor] workQueue is processing a job=[" + job + "]");
     const task = job.data;
     try {
@@ -21,7 +21,7 @@ async function startWith(workQueue) {
       logger.log("[Task Executor] calling notifyUserThatTaskIsReady");
       await notifyUserThatTaskIsReady(task);
       logger.log("[Task Executor] finished notifyUserThatTaskIsReady");
-      return { done: task.id };
+      return {done: task.id};
     } catch (error) {
       logger.log("[Task Executor] There was an error running task=[" + task.id + "]");
       logger.log("[Task Executor] calling updateFailingTask");
@@ -34,7 +34,7 @@ async function startWith(workQueue) {
         logger.log("[Task Executor] finished notifyUserThatTaskWasCancelled");
       }
       logger.log("[Task Executor] finished with error: " + error);
-      return { error: error };
+      return {error: error};
     }
   });
 }
