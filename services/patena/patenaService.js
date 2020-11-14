@@ -10,12 +10,14 @@ function runPatenaFor(args, workId) {
       mode: "text",
       args: args,
     };
+    logger.log("[Patena Service] before calling pythonRunner");
     pythonRunner.run("./mock/mockPatenaDesign.py", options, function (err, results) {
       if (err) {
         logger.error("There was an ERROR running PATENA for workId=" + workId);
         logger.error(err);
         reject(err);
       }
+      logger.log("[Patena Service] successfully ran PATENA, results=" + results);
       resolve();
     });
   });
@@ -148,7 +150,10 @@ function getPatenaArgumentsFor(task) {
 
 module.exports = {
   start: async function (task) {
+    logger.log("[Patena Service] calling getPatenaArgumentsFor=[" + task.id + "]");
     const args = getPatenaArgumentsFor(task);
+    logger.log("[Patena Service] after calling getPatenaArgumentsFor=[" + task.id + "], getting args: "+JSON.stringify(args));
     await runPatenaFor(args, task.id);
+    logger.log("[Patena Service] after calling runPatenaFor=[" + task.id + "]");
   },
 };

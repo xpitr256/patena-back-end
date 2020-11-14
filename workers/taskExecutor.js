@@ -12,13 +12,16 @@ const logger = require("../services/log/logService");
 
 function startWith(workQueue) {
   logger.log("[Task Executor] startWith with queue=[" + workQueue.name + "]");
+  // The '*' means that this process handler function will listen to all jobs added to the Queue
+  // Detailed explanation in: https://github.com/OptimalBits/bull/blob/develop/REFERENCE.md#queueprocess
   workQueue.process('*', maxJobsPerWorker, async (job) => {
     logger.log("[Task Executor] workQueue is processing a job=" + JSON.stringify(job) + "");
     const taskId = job.name;
-    logger.log("[Task Executor] running task=[" + taskId + "]");
     try {
+      logger.log("[Task Executor] getting task=[" + taskId + "]");
       const task = await getTask(taskId)
       try {
+        logger.log("[Task Executor] running task=[" + taskId + "]");
         await runTask(task);
         logger.log("[Task Executor] finished task running for task=[" + task.id + "]");
         logger.log("[Task Executor] calling notifyUserThatTaskIsReady");

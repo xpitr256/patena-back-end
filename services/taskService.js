@@ -15,14 +15,20 @@ async function updateTaskState(task, state) {
 
 async function addResultsTo(task) {
   const directory = "./workers/Output/" + task.id;
+  logger.log("[Task Service] addResultsTo directory: " + directory);
   const result = JSON.parse(fs.readFileSync(directory + "/results.json", "utf8"));
+  logger.log("[Task Service] addResultsTo result: " + result);
   if (result) {
     task.output = result;
     task.attempts = task.attempts + 1;
     task.stateId = constants.TASK_STATE_FINISHED;
+    logger.log("[Task Service] addResultsTo saving task: " + task.id);
     await task.save();
+    logger.log("[Task Service] addResultsTo after saving task: " + task.id);
     fse.removeSync(directory);
+    logger.log("[Task Service] addResultsTo after removeSync directory: " + directory);
   }
+  logger.log("[Task Service] exiting addResultsTo");
 }
 
 module.exports = {
@@ -93,6 +99,8 @@ module.exports = {
   },
   runTask: async function (task) {
     await patenaService.start(task);
+    logger.log("[Task Service] calling addResultsTo for: " + task.id);
     await addResultsTo(task);
+    logger.log("[Task Service] exiting runTask for: " + task.id);
   },
 };
