@@ -11,7 +11,7 @@ var connectionDB = require('../model/database');
 const Queue = require("bull");
 const config = require('../config/config')
 const constants = require('../services/constants')
-const workQueue = new Queue(constants.PATENA_QUEUE, config.REDIS_URL);
+const workQueue = new Queue(constants.PATENA_QUEUE_NAME, config.REDIS_URL);
 
 /**
  * Get port from environment and store in Express.
