@@ -54,7 +54,7 @@ async function start(workQueue) {
   const task = await promoteNextTask();
   if (task) {
     logger.log("[Task Analyzer] GOT a Next Task: " + task.id + " Adding task to Queue");
-    let job = await workQueue.add(task.id, { task: task });
+    let job = await workQueue.add(task.id);
     const jobCountAfter = await workQueue.getJobCounts();
     logger.log("[Task Analyzer] Obtained job from QUEUE: " + job.id);
     logger.log("[Task Analyzer] Queue size AFTER adding the task: " + JSON.stringify(jobCountAfter));
