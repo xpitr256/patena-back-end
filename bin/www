@@ -94,13 +94,16 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
-/**
- * Event open connection for Mongodb server.
- */
-
 connectionDB.connect();
 
-
 workQueue.on('global:completed', (jobId, result) => {
-  console.log(`Task ${jobId} completed with result ${result}`);
+  console.log(`[global:completed] Task ${jobId} completed with result ${result}`);
+});
+
+workQueue.on('global:error', function(error) {
+  console.error(`[global:error] ${error}`);
+});
+
+workQueue.on('global:stalled', function(job){
+  console.error(`[global:stalled] ${job}`);
 });

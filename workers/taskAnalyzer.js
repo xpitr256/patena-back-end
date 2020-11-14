@@ -34,6 +34,9 @@ async function start(workQueue) {
 
   await database.connect();
 
+  const jobCountBefore = await workQueue.getJobCounts();
+  logger.log("[Task Analyzer] Queue size BEFORE: " + JSON.stringify(jobCountBefore));
+
   logger.log("[Task Analyzer] GETTING Task In Progress...");
   const taskInProgress = await getTaskInProgress();
   if (taskInProgress) {
@@ -51,8 +54,6 @@ async function start(workQueue) {
   const task = await promoteNextTask();
   if (task) {
     logger.log("[Task Analyzer] GOT a Next Task: " + task.id + " Adding task to Queue");
-    const jobCountBefore = await workQueue.getJobCounts();
-    logger.log("[Task Analyzer] Queue size BEFORE adding the task: " + JSON.stringify(jobCountBefore));
     let job = await workQueue.add(task.id, { task: task });
     const jobCountAfter = await workQueue.getJobCounts();
     logger.log("[Task Analyzer] Obtained job from QUEUE: " + job.id);
