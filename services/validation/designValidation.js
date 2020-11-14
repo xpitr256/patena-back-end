@@ -1,40 +1,30 @@
 const utils = require("./validationUtils");
 
 function validateFlankingSequences(data) {
-  return (
-    isValidFasta(data.flankingSequence1) && isValidFasta(data.flankingSequence2)
-  );
+  return isValidFasta(data.flankingSequence1) && isValidFasta(data.flankingSequence2);
 }
 
 const noInitialSequenceDesign = {
   validate: function (data) {
-    return (
-      isValidOptionalEmail(data.email) && utils.isPositiveDecimal(data.distance)
-    );
+    return isValidOptionalEmail(data.email) && utils.isPositiveDecimal(data.distance);
   },
 };
 
 const initialSequenceDesign = {
   validate: function (data) {
-    return (
-      isValidOptionalEmail(data.email) && isValidFasta(data.initialSequence)
-    );
+    return isValidOptionalEmail(data.email) && isValidFasta(data.initialSequence);
   },
 };
 
 const flankingSequencesDesign = {
   validate: function (data) {
-    return (
-      noInitialSequenceDesign.validate(data) && validateFlankingSequences(data)
-    );
+    return noInitialSequenceDesign.validate(data) && validateFlankingSequences(data);
   },
 };
 
 const initialAndFlankingSequencesDesign = {
   validate: function (data) {
-    return (
-      initialSequenceDesign.validate(data) && validateFlankingSequences(data)
-    );
+    return initialSequenceDesign.validate(data) && validateFlankingSequences(data);
   },
 };
 
@@ -72,10 +62,7 @@ function isValidNetCharge(netCharge, initialSequence) {
     return true;
   }
 
-  return (
-    utils.isInt(netCharge) &&
-    Math.abs(netCharge) <= initialSequence.value.length
-  );
+  return utils.isInt(netCharge) && Math.abs(netCharge) <= initialSequence.value.length;
 }
 
 function areValidAlgorithms(algorithms) {

@@ -69,8 +69,7 @@ module.exports = {
                   $ref: "#/components/schemas/Error",
                 },
                 example: {
-                  message:
-                    "Invalid analyze information (wrong email or invalid sequence)",
+                  message: "Invalid analyze information (wrong email or invalid sequence)",
                 },
               },
             },
@@ -108,8 +107,7 @@ module.exports = {
       get: {
         tags: ["CRUD Operations Patena-API"],
         summary: "Get length",
-        description:
-          "get most likely length by specific distance between aminoacids",
+        description: "get most likely length by specific distance between aminoacids",
         operationId: "getLength",
         parameters: [
           {
@@ -212,8 +210,7 @@ module.exports = {
                   $ref: "#/components/schemas/Error",
                 },
                 example: {
-                  message:
-                    "Invalid analyze information (wrong email or invalid sequence)",
+                  message: "Invalid analyze information (wrong email or invalid sequence)",
                 },
               },
             },
@@ -251,8 +248,7 @@ module.exports = {
       get: {
         tags: ["CRUD Operations Patena-API"],
         summary: "Get result by order number",
-        description:
-          "You can get you can get the results of analyzing or designing a sequence",
+        description: "You can get you can get the results of analyzing or designing a sequence",
         operationId: "getResultsFor",
         security: [{ Bearer: [] }],
         parameters: [
@@ -451,8 +447,7 @@ module.exports = {
           designType: {
             type: "integer",
             description:
-              "The initialSequence is required all types design," +
-              "\n\nflankingSequence1 and flankingSequence2 are required for type design 3 or 4",
+              "The initialSequence is required all types design," + "\n\nflankingSequence1 and flankingSequence2 are required for type design 3 or 4",
             example: 4,
             required: true,
           },
@@ -470,8 +465,7 @@ module.exports = {
             properties: {
               netCharge: {
                 type: "integer",
-                description:
-                  "Range of values between negative and positive of the distance obtained from the length ",
+                description: "Range of values between negative and positive of the distance obtained from the length ",
                 example: 0,
                 required: false,
               },
@@ -544,8 +538,7 @@ module.exports = {
           message: {
             type: "string",
             description: "Your message",
-            example:
-              "Hello, my name John. I would like to contact a person in charge of the patena system for technical issues.",
+            example: "Hello, my name John. I would like to contact a person in charge of the patena system for technical issues.",
             minlength: 50,
             required: true,
           },
@@ -568,8 +561,7 @@ module.exports = {
         properties: {
           orderNumber: {
             type: "string",
-            description:
-              "This is order number for to check the status of the task ",
+            description: "This is order number for to check the status of the task ",
             example: "550e8400-e29b-41d4-a716-446655440000",
           },
         },
@@ -622,8 +614,7 @@ module.exports = {
           status: {
             type: "string",
             description: "Description status",
-            example:
-              "Your order is being processed right now. Results will be ready very soon.",
+            example: "Your order is being processed right now. Results will be ready very soon.",
           },
           orderNumber: {
             type: "string",
@@ -665,8 +656,7 @@ module.exports = {
           status: {
             type: "string",
             description: "Description status",
-            example:
-              "The requested order number was not found. Please try another one.",
+            example: "The requested order number was not found. Please try another one.",
           },
           orderNumber: {
             type: "string",

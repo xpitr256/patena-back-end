@@ -7,8 +7,7 @@ const getNextPendingTask = taskService.getNextPendingTask;
 const getTaskInProgress = taskService.getTaskInProgress;
 const promoteTaskToInProgress = taskService.promoteTaskToInProgress;
 const cancelTask = taskService.cancelTask;
-const notifyUserThatTaskWasCancelled =
-  notifyService.notifyUserThatTaskWasCancelled;
+const notifyUserThatTaskWasCancelled = notifyService.notifyUserThatTaskWasCancelled;
 
 function isTaskOverdue(task) {
   // If task exceeds 1 day processing => is overdue
@@ -31,23 +30,32 @@ async function abortTask(task, workQueue) {
 }
 
 async function start(workQueue) {
+  logger.log("[Task Analyzer] STARTING workerId=[" + process.pid + "]");
+
   await database.connect();
 
-  logger.log("STARTING workerId=[" + process.pid + "]");
-
+  logger.log("[Task Analyzer] GETTING Task In Progress...");
   const taskInProgress = await getTaskInProgress();
-
   if (taskInProgress) {
+    logger.log("[Task Analyzer] GOT a Task In Progress: " + taskInProgress.id);
     if (isTaskOverdue(taskInProgress)) {
+      logger.log("[Task Analyzer] Task In Progress " + taskInProgress.id + " is overdue: " + taskInProgress.lastExecutionDate);
       await abortTask(taskInProgress, workQueue);
+      logger.log("[Task Analyzer] Task In Progress " + taskInProgress.id + " was cancelled: ");
     }
+    logger.log("[Task Analyzer] EXITING workerId=[" + process.pid + "] for task : " + taskInProgress.id);
     return;
   }
 
+  logger.log("[Task Analyzer] PROMOTING Next Task...");
   const task = await promoteNextTask();
   if (task) {
+    logger.log("[Task Analyzer] GOT a Next Task: " + task.id + " Adding task to Queue");
+    logger.log("[Task Analyzer] Queue size BEFORE adding the task: " + workQueue.count());
     workQueue.add(task.id, { task: task });
+    logger.log("[Task Analyzer] Queue size AFTER adding the task: " + workQueue.count());
   }
+  logger.log("[Task Analyzer] EXITING workerId=[" + process.pid + "]");
 }
 
 module.exports = start;

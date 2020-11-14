@@ -6,8 +6,7 @@ module.exports = {
   },
   CONTACT_MAIL: process.env.CONTACT_MAIL || "nachoquique@gmail.com",
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
-  FRONT_END_BASE_URL:
-    process.env.FRONT_END_BASE_URL || "http://localhost:3000/",
+  FRONT_END_BASE_URL: process.env.FRONT_END_BASE_URL || "http://localhost:3000/",
   FRONT_END_NAME: process.env.FRONT_END_NAME || "patena-web-front-end",
   TOKEN_SECRET: process.env.TOKEN_SECRET || "patena-secret-token-value",
   REDIS_URL: process.env.REDIS_URL || "redis://127.0.0.1:6379",

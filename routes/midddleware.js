@@ -3,9 +3,7 @@ const config = require("./../config/config.js");
 
 exports.ensureAuthenticated = (req, res, next) => {
   if (!req.headers.authorization) {
-    return res
-      .status(403)
-      .send({ message: "There is no authorization headers" });
+    return res.status(403).send({ message: "There is no authorization headers" });
   }
 
   const token = req.headers.authorization.split(" ")[1];

@@ -14,12 +14,7 @@ module.exports = {
       await taskService.create(id, taskData, constants.TYPE_ANALYSIS);
       if (email) {
         const language = "en";
-        await mailService.sendWorkInProgressMail(
-          email,
-          language,
-          constants.TYPE_ANALYSIS,
-          id
-        );
+        await mailService.sendWorkInProgressMail(email, language, constants.TYPE_ANALYSIS, id);
       }
       return id;
     } catch (e) {

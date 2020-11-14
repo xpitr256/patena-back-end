@@ -10,10 +10,7 @@ function runPatenaFor(args, workId) {
       mode: "text",
       args: args,
     };
-    pythonRunner.run("./mock/mockPatenaDesign.py", options, function (
-      err,
-      results
-    ) {
+    pythonRunner.run("./mock/mockPatenaDesign.py", options, function (err, results) {
       if (err) {
         logger.error("There was an ERROR running PATENA for workId=" + workId);
         logger.error(err);
@@ -57,25 +54,15 @@ function getSequenceFrom(task) {
         constants.FLANKING_WINDOW_SIZE
       );
     case constants.DESIGN_TYPE_ONLY_FLANKING_SEQUENCES:
-      const randomSequence = generateRandomSequence(
-        lengthService.getLength(task.taskData.distance)
-      );
-      return combineSequences(
-        task.taskData.flankingSequence1.value,
-        randomSequence,
-        task.taskData.flankingSequence2.value,
-        constants.FLANKING_WINDOW_SIZE
-      );
+      const randomSequence = generateRandomSequence(lengthService.getLength(task.taskData.distance));
+      return combineSequences(task.taskData.flankingSequence1.value, randomSequence, task.taskData.flankingSequence2.value, constants.FLANKING_WINDOW_SIZE);
     default:
       return;
   }
 }
 
 function getSequenceLengthFrom(task) {
-  if (
-    task.taskData.designType &&
-    task.taskData.designType === constants.DESIGN_TYPE_NO_INITIAL_SEQUENCE
-  ) {
+  if (task.taskData.designType && task.taskData.designType === constants.DESIGN_TYPE_NO_INITIAL_SEQUENCE) {
     return lengthService.getLength(task.taskData.distance);
   }
 }
@@ -127,9 +114,7 @@ function getConfigParameters(task) {
       args.push("--net-charge=" + task.taskData.config.netCharge);
     }
 
-    const avoidedAlgorithms = task.taskData.config.algorithms
-      .filter((algorithm) => !algorithm.active)
-      .map((algorithm) => algorithm.name);
+    const avoidedAlgorithms = task.taskData.config.algorithms.filter((algorithm) => !algorithm.active).map((algorithm) => algorithm.name);
     avoidedAlgorithms.forEach((algorithm) => {
       if (patenaAvoidAlgorithmMap.has(algorithm)) {
         args.push(patenaAvoidAlgorithmMap.get(algorithm));

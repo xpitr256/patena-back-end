@@ -136,9 +136,7 @@ describe("Task Service", async () => {
         }
       };
 
-      createdTasks.push(
-        new taskMock({ id: id, stateId: constants.TASK_STATE_IN_PROGRESS })
-      );
+      createdTasks.push(new taskMock({ id: id, stateId: constants.TASK_STATE_IN_PROGRESS }));
 
       const taskService = proxyquire("../../services/taskService", {
         "../model/schema/Task": taskMock,
@@ -147,9 +145,7 @@ describe("Task Service", async () => {
       const retrievedTask = await taskService.getTaskInProgress();
       expect(retrievedTask).not.to.be.equals(undefined);
       expect(retrievedTask.id).to.be.equals(id);
-      expect(retrievedTask.stateId).to.be.equals(
-        constants.TASK_STATE_IN_PROGRESS
-      );
+      expect(retrievedTask.stateId).to.be.equals(constants.TASK_STATE_IN_PROGRESS);
     });
 
     it("should return nothing for non existent in progress task", async () => {
@@ -198,9 +194,7 @@ describe("Task Service", async () => {
 
       await taskService.promoteTaskToInProgress(createdTask);
       expect(createdTask.id).to.be.equals(id);
-      expect(createdTask.stateId).to.be.equals(
-        constants.TASK_STATE_IN_PROGRESS
-      );
+      expect(createdTask.stateId).to.be.equals(constants.TASK_STATE_IN_PROGRESS);
       expect(createdTask.lastExecutionDate).to.be.a("Number");
     });
   });
@@ -331,9 +325,7 @@ describe("Task Service", async () => {
       const taskService = proxyquire("../../services/taskService", {});
       const nextPendingTask = await taskService.getNextPendingTask();
       expect(nextPendingTask).not.to.be.equals(undefined);
-      expect(nextPendingTask.stateId).to.be.equals(
-        constants.TASK_STATE_PENDING
-      );
+      expect(nextPendingTask.stateId).to.be.equals(constants.TASK_STATE_PENDING);
       expect(nextPendingTask.id).to.be.equals("123");
     });
 
@@ -386,9 +378,7 @@ describe("Task Service", async () => {
       const taskService = proxyquire("../../services/taskService", {});
       const nextPendingTask = await taskService.getNextPendingTask();
       expect(nextPendingTask).not.to.be.equals(undefined);
-      expect(nextPendingTask.stateId).to.be.equals(
-        constants.TASK_STATE_PENDING
-      );
+      expect(nextPendingTask.stateId).to.be.equals(constants.TASK_STATE_PENDING);
       expect(nextPendingTask.id).to.be.equals("1");
       expect(nextPendingTask.typeId).to.be.equals(constants.TYPE_DESIGN);
     });
@@ -457,9 +447,7 @@ describe("Task Service", async () => {
         "./patena/patenaService": patenaServiceMock,
       });
       await expect(taskService.runTask(createdTask)).to.be.rejected;
-      expect(createdTask.stateId).to.be.equals(
-        constants.TASK_STATE_IN_PROGRESS
-      );
+      expect(createdTask.stateId).to.be.equals(constants.TASK_STATE_IN_PROGRESS);
     });
 
     it("should update a task with patena results", async () => {

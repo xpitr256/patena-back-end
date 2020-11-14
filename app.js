@@ -34,27 +34,17 @@ const options = {
   },
   // customCss: '.swagger-ui .topbar { display: none }'// Desactiva el la cabecera que dice swagguer ui
 };
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerDocument, options)
-);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 let handleCorsHeaders = function (req, res, next) {
   if (req.get("Origin") != null) {
     res.header("Access-Control-Allow-Origin", req.get("Origin"));
     res.header("Access-Control-Allow-Credentials", "true");
     if (req.get("Access-Control-Request-Method")) {
-      res.header(
-        "Access-Control-Allow-Methods",
-        req.get("Access-Control-Request-Method")
-      );
+      res.header("Access-Control-Allow-Methods", req.get("Access-Control-Request-Method"));
     }
     if (req.get("Access-Control-Request-Headers")) {
-      res.header(
-        "Access-Control-Allow-Headers",
-        req.get("Access-Control-Request-Headers")
-      );
+      res.header("Access-Control-Allow-Headers", req.get("Access-Control-Request-Headers"));
     }
     if (req.method === "OPTIONS") {
       res.status(200).send();

@@ -36,11 +36,7 @@ describe("Mail Service", async () => {
         "@sendgrid/mail": mailSenderMock,
       });
 
-      const result = await service.sendContactMail(
-        validTestMail,
-        "Name",
-        "MessageContent"
-      );
+      const result = await service.sendContactMail(validTestMail, "Name", "MessageContent");
       expect(result).to.be.equals(undefined);
     });
 
@@ -64,11 +60,7 @@ describe("Mail Service", async () => {
       });
 
       try {
-        await service.sendContactMail(
-          invalidTestMail,
-          "Name",
-          "MessageContent"
-        );
+        await service.sendContactMail(invalidTestMail, "Name", "MessageContent");
       } catch (e) {
         expect(e.message).to.be.equals(genericErrorMessage);
       }
@@ -94,12 +86,7 @@ describe("Mail Service", async () => {
         "@sendgrid/mail": mailSenderMock,
       });
 
-      const result = await service.sendWorkInProgressMail(
-        validTestMail,
-        "en",
-        constants.TYPE_DESIGN,
-        12345
-      );
+      const result = await service.sendWorkInProgressMail(validTestMail, "en", constants.TYPE_DESIGN, 12345);
       expect(result).to.be.equals(undefined);
     });
 
@@ -122,12 +109,7 @@ describe("Mail Service", async () => {
       });
 
       try {
-        await service.sendWorkInProgressMail(
-          invalidTestMail,
-          "en",
-          constants.TYPE_ANALYSIS,
-          12345
-        );
+        await service.sendWorkInProgressMail(invalidTestMail, "en", constants.TYPE_ANALYSIS, 12345);
       } catch (e) {
         expect(e.message).to.be.equals(genericErrorMessage);
       }
@@ -145,9 +127,7 @@ describe("Mail Service", async () => {
         expect(data).to.be.a("Object");
         expect(data.to).to.be.equals(validTestMail);
         expect(data.from).to.be.equals("no-reply@patena.herokuapp.com");
-        expect(data.subject).to.be.equals(
-          "PATENA - Linker Analysis job finished!"
-        );
+        expect(data.subject).to.be.equals("PATENA - Linker Analysis job finished!");
         cb();
       };
 
@@ -155,12 +135,7 @@ describe("Mail Service", async () => {
         "@sendgrid/mail": mailSenderMock,
       });
 
-      const result = await service.sendWorkSuccessMail(
-        validTestMail,
-        "en",
-        constants.TYPE_ANALYSIS,
-        12345
-      );
+      const result = await service.sendWorkSuccessMail(validTestMail, "en", constants.TYPE_ANALYSIS, 12345);
       expect(result).to.be.equals(undefined);
     });
 
@@ -174,9 +149,7 @@ describe("Mail Service", async () => {
         expect(data).to.be.a("Object");
         expect(data.to).to.be.equals(invalidTestMail);
         expect(data.from).to.be.equals("no-reply@patena.herokuapp.com");
-        expect(data.subject).to.be.equals(
-          "PATENA - Linker Design job finished!"
-        );
+        expect(data.subject).to.be.equals("PATENA - Linker Design job finished!");
         cb(new Error(genericErrorMessage));
       };
 
@@ -185,12 +158,7 @@ describe("Mail Service", async () => {
       });
 
       try {
-        await service.sendWorkSuccessMail(
-          invalidTestMail,
-          "en",
-          constants.TYPE_DESIGN,
-          12345
-        );
+        await service.sendWorkSuccessMail(invalidTestMail, "en", constants.TYPE_DESIGN, 12345);
       } catch (e) {
         expect(e.message).to.be.equals(genericErrorMessage);
       }
@@ -216,12 +184,7 @@ describe("Mail Service", async () => {
         "@sendgrid/mail": mailSenderMock,
       });
 
-      const result = await service.sendWorkErrorMail(
-        validTestMail,
-        "en",
-        constants.TYPE_DESIGN,
-        12345
-      );
+      const result = await service.sendWorkErrorMail(validTestMail, "en", constants.TYPE_DESIGN, 12345);
       expect(result).to.be.equals(undefined);
     });
 
@@ -244,12 +207,7 @@ describe("Mail Service", async () => {
       });
 
       try {
-        await service.sendWorkErrorMail(
-          invalidTestMail,
-          "en",
-          constants.TYPE_ANALYSIS,
-          12345
-        );
+        await service.sendWorkErrorMail(invalidTestMail, "en", constants.TYPE_ANALYSIS, 12345);
       } catch (e) {
         expect(e.message).to.be.equals(genericErrorMessage);
       }

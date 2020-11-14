@@ -16,17 +16,13 @@ describe("Patena Service", async () => {
         expect(options.mode).to.be.equals("text");
         expect(options.args).to.be.length.greaterThan(0);
 
-        const hasJobIdParameter = options.args.includes(
-          "--jobid=" + orderNumber
-        );
+        const hasJobIdParameter = options.args.includes("--jobid=" + orderNumber);
         expect(hasJobIdParameter).to.be.true;
 
         const hasJsonParameter = options.args.includes("--json");
         expect(hasJsonParameter).to.be.true;
 
-        const hasEvaluationOnlyParameter = options.args.includes(
-          "--evaluation-only"
-        );
+        const hasEvaluationOnlyParameter = options.args.includes("--evaluation-only");
         expect(hasEvaluationOnlyParameter).to.be.true;
 
         const hasSequenceParameter = options.args.includes("--seq=ABC");
@@ -57,9 +53,7 @@ describe("Patena Service", async () => {
         expect(options.mode).to.be.equals("text");
         expect(options.args).to.be.length.greaterThan(0);
 
-        const hasJobIdParameter = options.args.includes(
-          "--jobid=" + orderNumber
-        );
+        const hasJobIdParameter = options.args.includes("--jobid=" + orderNumber);
         expect(hasJobIdParameter).to.be.true;
 
         const hasJsonParameter = options.args.includes("--json");
@@ -94,17 +88,13 @@ describe("Patena Service", async () => {
         expect(options.mode).to.be.equals("text");
         expect(options.args).to.be.length.greaterThan(0);
 
-        const hasJobIdParameter = options.args.includes(
-          "--jobid=" + orderNumber
-        );
+        const hasJobIdParameter = options.args.includes("--jobid=" + orderNumber);
         expect(hasJobIdParameter).to.be.true;
 
         const hasJsonParameter = options.args.includes("--json");
         expect(hasJsonParameter).to.be.true;
 
-        const hasSequenceParameter = options.args.includes(
-          "--seq=BBBBBBBBBBCCCDDDDDDDDDD"
-        );
+        const hasSequenceParameter = options.args.includes("--seq=BBBBBBBBBBCCCDDDDDDDDDD");
         expect(hasSequenceParameter).to.be.true;
 
         callBack();
@@ -140,9 +130,7 @@ describe("Patena Service", async () => {
         expect(options.mode).to.be.equals("text");
         expect(options.args).to.be.length.greaterThan(0);
 
-        const hasJobIdParameter = options.args.includes(
-          "--jobid=" + orderNumber
-        );
+        const hasJobIdParameter = options.args.includes("--jobid=" + orderNumber);
         expect(hasJobIdParameter).to.be.true;
 
         const hasJsonParameter = options.args.includes("--json");
@@ -187,9 +175,7 @@ describe("Patena Service", async () => {
         expect(options.mode).to.be.equals("text");
         expect(options.args).to.be.length.greaterThan(0);
 
-        const hasJobIdParameter = options.args.includes(
-          "--jobid=" + orderNumber
-        );
+        const hasJobIdParameter = options.args.includes("--jobid=" + orderNumber);
         expect(hasJobIdParameter).to.be.true;
 
         const hasJsonParameter = options.args.includes("--json");

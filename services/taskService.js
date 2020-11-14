@@ -15,9 +15,7 @@ async function updateTaskState(task, state) {
 
 async function addResultsTo(task) {
   const directory = "./workers/Output/" + task.id;
-  const result = JSON.parse(
-    fs.readFileSync(directory + "/results.json", "utf8")
-  );
+  const result = JSON.parse(fs.readFileSync(directory + "/results.json", "utf8"));
   if (result) {
     task.output = result;
     task.attempts = task.attempts + 1;

@@ -23,9 +23,7 @@ function failingUpdateSentEmailNotification(task) {
 }
 
 function updateSentEmailNotification(task) {
-  mockLogger.log(
-    "taskServiceMock:: updateSentEmailNotification => updated task"
-  );
+  mockLogger.log("taskServiceMock:: updateSentEmailNotification => updated task");
   task.emailSent = true;
   task.sentEmailDate = new Date();
   return task;
@@ -38,9 +36,7 @@ function failingUpdateSentEmailNotification(task) {
 }
 
 function updateSentEmailNotification(task) {
-  mockLogger.log(
-    "taskServiceMock:: updateSentEmailNotification => updated task"
-  );
+  mockLogger.log("taskServiceMock:: updateSentEmailNotification => updated task");
   task.emailSent = true;
   task.sentEmailDate = new Date();
   return task;
@@ -101,9 +97,7 @@ function sendWorkErrorMail(email, language, workType, workId) {
 }
 
 function failSendingEmail(task) {
-  mockLogger.log(
-    "emailServiceMock:: sendWorkSuccessMail | sendWorkErrorMail => FAILED"
-  );
+  mockLogger.log("emailServiceMock:: sendWorkSuccessMail | sendWorkErrorMail => FAILED");
   return new Promise((resolve, reject) => {
     reject(genericErrorMessage);
   });
@@ -133,13 +127,10 @@ describe("Queue worker", () => {
     let emailServiceMock = {};
     emailServiceMock.sendWorkSuccessMail = sendWorkSuccessMail;
 
-    let notifyServiceMock = proxyquire(
-      "./../../services/notifier/notifyService",
-      {
-        "./../mail/mailService": emailServiceMock,
-        "./../taskService": taskServiceMock,
-      }
-    );
+    let notifyServiceMock = proxyquire("./../../services/notifier/notifyService", {
+      "./../mail/mailService": emailServiceMock,
+      "./../taskService": taskServiceMock,
+    });
 
     const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
     mockQueue.add(TEST_TASK_ID, task);
@@ -180,14 +171,11 @@ describe("Queue worker", () => {
     let emailServiceMock = {};
     emailServiceMock.sendWorkSuccessMail = failSendingEmail;
 
-    let notifyServiceMock = proxyquire(
-      "./../../services/notifier/notifyService",
-      {
-        "./../mail/mailService": emailServiceMock,
-        "./../taskService": taskServiceMock,
-        "./../log/logService": { error: () => null },
-      }
-    );
+    let notifyServiceMock = proxyquire("./../../services/notifier/notifyService", {
+      "./../mail/mailService": emailServiceMock,
+      "./../taskService": taskServiceMock,
+      "./../log/logService": { error: () => null },
+    });
 
     const startWith = proxyquire("../../workers/taskExecutor", {
       "./../services/taskService": taskServiceMock,
@@ -228,14 +216,11 @@ describe("Queue worker", () => {
     let emailServiceMock = {};
     emailServiceMock.sendWorkSuccessMail = sendWorkSuccessMail;
 
-    let notifyServiceMock = proxyquire(
-      "./../../services/notifier/notifyService",
-      {
-        "./../mail/mailService": emailServiceMock,
-        "./../taskService": taskServiceMock,
-        "./../log/logService": mockLogger,
-      }
-    );
+    let notifyServiceMock = proxyquire("./../../services/notifier/notifyService", {
+      "./../mail/mailService": emailServiceMock,
+      "./../taskService": taskServiceMock,
+      "./../log/logService": mockLogger,
+    });
 
     const startWith = proxyquire("../../workers/taskExecutor", {
       "./../services/taskService": taskServiceMock,
@@ -271,12 +256,9 @@ describe("Queue worker", () => {
     taskServiceMock.updateFailingTask = updateFailingTask;
     taskServiceMock.taskIsCancelled = taskIsCancelledReturnFalse;
 
-    let notifyServiceMock = proxyquire(
-      "./../../services/notifier/notifyService",
-      {
-        "./../taskService": taskServiceMock,
-      }
-    );
+    let notifyServiceMock = proxyquire("./../../services/notifier/notifyService", {
+      "./../taskService": taskServiceMock,
+    });
 
     const startWith = proxyquire("../../workers/taskExecutor", {
       "./../services/taskService": taskServiceMock,
@@ -311,12 +293,9 @@ describe("Queue worker", () => {
     taskServiceMock.runTask = runFailingTask;
     taskServiceMock.updateFailingTask = updateFailingTaskCancellingTask;
 
-    let notifyServiceMock = proxyquire(
-      "./../../services/notifier/notifyService",
-      {
-        "./../taskService": taskServiceMock,
-      }
-    );
+    let notifyServiceMock = proxyquire("./../../services/notifier/notifyService", {
+      "./../taskService": taskServiceMock,
+    });
 
     const startWith = proxyquire("../../workers/taskExecutor", {
       "./../services/taskService": taskServiceMock,
@@ -359,13 +338,10 @@ describe("Queue worker", () => {
     let emailServiceMock = {};
     emailServiceMock.sendWorkErrorMail = sendWorkErrorMail;
 
-    let notifyServiceMock = proxyquire(
-      "./../../services/notifier/notifyService",
-      {
-        "./../mail/mailService": emailServiceMock,
-        "./../taskService": taskServiceMock,
-      }
-    );
+    let notifyServiceMock = proxyquire("./../../services/notifier/notifyService", {
+      "./../mail/mailService": emailServiceMock,
+      "./../taskService": taskServiceMock,
+    });
 
     const startWith = proxyquire("../../workers/taskExecutor", {
       "./../services/taskService": taskServiceMock,
@@ -410,14 +386,11 @@ describe("Queue worker", () => {
     let emailServiceMock = {};
     emailServiceMock.sendWorkErrorMail = sendWorkErrorMail;
 
-    let notifyServiceMock = proxyquire(
-      "./../../services/notifier/notifyService",
-      {
-        "./../mail/mailService": emailServiceMock,
-        "./../taskService": taskServiceMock,
-        "./../log/logService": mockLogger,
-      }
-    );
+    let notifyServiceMock = proxyquire("./../../services/notifier/notifyService", {
+      "./../mail/mailService": emailServiceMock,
+      "./../taskService": taskServiceMock,
+      "./../log/logService": mockLogger,
+    });
 
     const startWith = proxyquire("../../workers/taskExecutor", {
       "./../services/taskService": taskServiceMock,
@@ -462,14 +435,11 @@ describe("Queue worker", () => {
     let emailServiceMock = {};
     emailServiceMock.sendWorkErrorMail = failSendingEmail;
 
-    let notifyServiceMock = proxyquire(
-      "./../../services/notifier/notifyService",
-      {
-        "./../mail/mailService": emailServiceMock,
-        "./../taskService": taskServiceMock,
-        "./../log/logService": mockLogger,
-      }
-    );
+    let notifyServiceMock = proxyquire("./../../services/notifier/notifyService", {
+      "./../mail/mailService": emailServiceMock,
+      "./../taskService": taskServiceMock,
+      "./../log/logService": mockLogger,
+    });
 
     const startWith = proxyquire("../../workers/taskExecutor", {
       "./../services/taskService": taskServiceMock,

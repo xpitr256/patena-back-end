@@ -14,10 +14,7 @@ async function postAnalyze(req, res) {
 
     if (validationService.isValidAnalyzeData(email, sequence)) {
       try {
-        const orderNumber = await analyzeService.createAnalysis(
-          email,
-          sequence
-        );
+        const orderNumber = await analyzeService.createAnalysis(email, sequence);
         res.json({
           orderNumber: orderNumber,
         });
@@ -26,8 +23,7 @@ async function postAnalyze(req, res) {
       }
     } else {
       res.status(400).send({
-        message:
-          "Invalid analyze information (wrong email or invalid sequence)",
+        message: "Invalid analyze information (wrong email or invalid sequence)",
       });
     }
   } else {

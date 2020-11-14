@@ -97,9 +97,7 @@ describe("Task analyzer worker", () => {
 
     await start(mockQueue);
 
-    expect(taskInProgress.stateId).to.be.equals(
-      constants.TASK_STATE_IN_PROGRESS
-    );
+    expect(taskInProgress.stateId).to.be.equals(constants.TASK_STATE_IN_PROGRESS);
     expect(mockQueue.count()).to.be.equals(0);
   });
 
@@ -139,9 +137,7 @@ describe("Task analyzer worker", () => {
 
     await start(mockQueue);
 
-    expect(taskInProgress.messageError).to.be.equals(
-      translations.taskService.cancelMessageError
-    );
+    expect(taskInProgress.messageError).to.be.equals(translations.taskService.cancelMessageError);
     expect(taskInProgress.stateId).to.be.equals(constants.TASK_STATE_CANCELLED);
     expect(mockQueue.count()).to.be.equals(0);
   });

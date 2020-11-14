@@ -113,12 +113,9 @@ describe("/results route", () => {
     const taskServiceMock = {
       getTask: async function (taskId) {},
     };
-    const resultServiceWithMockedTaskService = proxyquire(
-      "../../services/resultService",
-      {
-        "./taskService": taskServiceMock,
-      }
-    );
+    const resultServiceWithMockedTaskService = proxyquire("../../services/resultService", {
+      "./taskService": taskServiceMock,
+    });
 
     const resultWithMockedResultService = proxyquire("../../routes/results", {
       "../services/resultService": resultServiceWithMockedTaskService,

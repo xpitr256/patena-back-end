@@ -136,30 +136,19 @@ describe("/POST analyze route", () => {
 
     it("should save the analyze task", (done) => {
       const emailServiceMock = {
-        sendWorkInProgressMail: async function (
-          email,
-          language,
-          workType,
-          workId
-        ) {
+        sendWorkInProgressMail: async function (email, language, workType, workId) {
           expect(email).to.be.equals(validEmail);
           expect(language).to.be.equals("en");
         },
       };
 
-      const analyzeServiceWithMockedEmailService = proxyquire(
-        "../../services/analyzeService",
-        {
-          "./mail/mailService": emailServiceMock,
-        }
-      );
+      const analyzeServiceWithMockedEmailService = proxyquire("../../services/analyzeService", {
+        "./mail/mailService": emailServiceMock,
+      });
 
-      const analyzeWithMockedAnalyzeService = proxyquire(
-        "../../routes/analyze",
-        {
-          "../services/analyzeService": analyzeServiceWithMockedEmailService,
-        }
-      );
+      const analyzeWithMockedAnalyzeService = proxyquire("../../routes/analyze", {
+        "../services/analyzeService": analyzeServiceWithMockedEmailService,
+      });
 
       const application = proxyquire("../../app", {
         "./routes/analyze": analyzeWithMockedAnalyzeService,
@@ -194,12 +183,9 @@ describe("/POST analyze route", () => {
         },
       };
 
-      const analyzeWithFailingMockedAnalyzeService = proxyquire(
-        "../../routes/analyze",
-        {
-          "../services/analyzeService": analyzeServiceMock,
-        }
-      );
+      const analyzeWithFailingMockedAnalyzeService = proxyquire("../../routes/analyze", {
+        "../services/analyzeService": analyzeServiceMock,
+      });
 
       const application = proxyquire("../../app", {
         "./routes/analyze": analyzeWithFailingMockedAnalyzeService,

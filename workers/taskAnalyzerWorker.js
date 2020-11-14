@@ -6,16 +6,16 @@ const config = require("../config/config");
 const constants = require("../services/constants");
 
 const workQueue = new Queue(constants.PATENA_QUEUE_NAME, config.REDIS_URL);
-
+logger.log("[Task Analyzer Worker] STARTING Task Executor worker Id=[" + process.pid + "] and Queue name: " + workQueue.name);
 start(workQueue)
   .then(() => {
-    logger.log("Worker finished: " + new Date());
-    logger.log("FINISHING workerId=[" + process.pid + "]");
+    logger.log("[Task Analyzer Worker] Worker finished: " + new Date());
+    logger.log("[Task Analyzer Worker] FINISHING workerId=[" + process.pid + "]");
     functions.exit();
   })
   .catch((error) => {
-    logger.error("An error occurred running the taskWorker: " + new Date());
-    logger.log("FINISHING WITH ERROR workerId=[" + process.pid + "]");
+    logger.error("[Task Analyzer Worker] An error occurred running the taskWorker: " + new Date());
+    logger.log("[Task Analyzer Worker] FINISHING WITH ERROR workerId=[" + process.pid + "]");
     logger.error(error);
     functions.exit(1);
   });

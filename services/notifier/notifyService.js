@@ -9,27 +9,14 @@ module.exports = {
       const workType = task.typeId;
       const workId = task.id;
       try {
-        await mailService.sendWorkSuccessMail(
-          email,
-          task.language,
-          workType,
-          workId
-        );
+        await mailService.sendWorkSuccessMail(email, task.language, workType, workId);
         try {
           task = await taskService.updateSentEmailNotification(task);
         } catch (e) {
-          logger.error(
-            "Notify Service: Cannot Update Sent Email Notification for workId=" +
-              workId
-          );
+          logger.error("Notify Service: Cannot Update Sent Email Notification for workId=" + workId);
         }
       } catch (e) {
-        logger.error(
-          "Notify Service: Cannot send work success email to=" +
-            email +
-            " for workId=" +
-            workId
-        );
+        logger.error("Notify Service: Cannot send work success email to=" + email + " for workId=" + workId);
       }
     }
     return task;
@@ -40,27 +27,14 @@ module.exports = {
       const workType = task.typeId;
       const workId = task.id;
       try {
-        await mailService.sendWorkErrorMail(
-          email,
-          task.language,
-          workType,
-          workId
-        );
+        await mailService.sendWorkErrorMail(email, task.language, workType, workId);
         try {
           task = await taskService.updateSentEmailNotification(task);
         } catch (e) {
-          logger.error(
-            "Notify Service: Cannot Update Sent Email Notification for workId=" +
-              workId
-          );
+          logger.error("Notify Service: Cannot Update Sent Email Notification for workId=" + workId);
         }
       } catch (e) {
-        logger.error(
-          "Notify Service: Cannot send work error email to=" +
-            email +
-            " for workId=" +
-            workId
-        );
+        logger.error("Notify Service: Cannot send work error email to=" + email + " for workId=" + workId);
       }
     }
     return task;

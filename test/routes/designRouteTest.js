@@ -181,24 +181,16 @@ describe("/POST design route", () => {
 
     it("should save the design Task", (done) => {
       const emailServiceMock = {
-        sendWorkInProgressMail: async function (
-          email,
-          language,
-          workType,
-          workId
-        ) {
+        sendWorkInProgressMail: async function (email, language, workType, workId) {
           expect(email).to.be.equals(validEmail);
           expect(language).to.be.equals("en");
           expect(workType).to.be.equals(constants.TYPE_DESIGN);
         },
       };
 
-      const designServiceWithMockedEmailService = proxyquire(
-        "../../services/designService",
-        {
-          "./mail/mailService": emailServiceMock,
-        }
-      );
+      const designServiceWithMockedEmailService = proxyquire("../../services/designService", {
+        "./mail/mailService": emailServiceMock,
+      });
 
       const designWithMockedDesignService = proxyquire("../../routes/design", {
         "../services/designService": designServiceWithMockedEmailService,
@@ -238,12 +230,9 @@ describe("/POST design route", () => {
         },
       };
 
-      const designWithFailingMockedDesignService = proxyquire(
-        "../../routes/design",
-        {
-          "../services/designService": designServiceMock,
-        }
-      );
+      const designWithFailingMockedDesignService = proxyquire("../../routes/design", {
+        "../services/designService": designServiceMock,
+      });
 
       const application = proxyquire("../../app", {
         "./routes/design": designWithFailingMockedDesignService,

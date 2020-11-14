@@ -14,24 +14,15 @@ module.exports = {
     return utils.isPositiveDecimal(distance);
   },
   isValidContactData: function (email, name, message) {
-    return (
-      utils.isValidMail(email) &&
-      !utils.isEmpty(name) &&
-      utils.exceedsFiftyCharacters(message)
-    );
+    return utils.isValidMail(email) && !utils.isEmpty(name) && utils.exceedsFiftyCharacters(message);
   },
 
   isValidOrderNumber: function (orderNumber) {
-    return (
-      isValidOrderNumber(orderNumber) &&
-      utils.hasThirtySixCharacters(orderNumber)
-    );
+    return isValidOrderNumber(orderNumber) && utils.hasThirtySixCharacters(orderNumber);
   },
   isValidAnalyzeData: function (email, sequence) {
     if (email) {
-      return (
-        utils.isValidMail(email) && designValidation.isValidFasta(sequence)
-      );
+      return utils.isValidMail(email) && designValidation.isValidFasta(sequence);
     }
     return designValidation.isValidFasta(sequence);
   },

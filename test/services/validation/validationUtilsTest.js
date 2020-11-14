@@ -149,16 +149,12 @@ describe("Validation Utils", () => {
     });
 
     it("should return false for exactly 50 character text", () => {
-      const result = utils.exceedsFiftyCharacters(
-        "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwx"
-      );
+      const result = utils.exceedsFiftyCharacters("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwx");
       expect(result).to.be.false;
     });
 
     it("should return true for more than 50 character text", () => {
-      const result = utils.exceedsFiftyCharacters(
-        "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxy"
-      );
+      const result = utils.exceedsFiftyCharacters("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxy");
       expect(result).to.be.true;
     });
 
@@ -212,16 +208,12 @@ describe("Validation Utils", () => {
     });
 
     it("should return true for exactly 36 character text", () => {
-      const result = utils.hasThirtySixCharacters(
-        "abcdefghijklmnopqrstuvwxyzabcdefghij"
-      );
+      const result = utils.hasThirtySixCharacters("abcdefghijklmnopqrstuvwxyzabcdefghij");
       expect(result).to.be.true;
     });
 
     it("should return false for more than 36 character text", () => {
-      const result = utils.hasThirtySixCharacters(
-        "abcdefghijklmnopqrstuvwxyzabcdefghijk"
-      );
+      const result = utils.hasThirtySixCharacters("abcdefghijklmnopqrstuvwxyzabcdefghijk");
       expect(result).to.be.false;
     });
 

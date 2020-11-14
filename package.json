@@ -7,7 +7,7 @@
     "test-cv": "nyc --reporter=text --all mocha --recursive --timeout 60000",
     "start": "node ./bin/www",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "prettier": "prettier --write --print-width 80 '**/*.js'"
+    "prettier": "prettier --write --print-width 160 '**/*.js'"
   },
   "dependencies": {
     "@sendgrid/mail": "^6.5.5",
