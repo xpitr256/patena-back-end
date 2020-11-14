@@ -102,8 +102,20 @@ workQueue.on('global:completed', (jobId, result) => {
 
 workQueue.on('global:error', function(error) {
   console.error(`[global:error] ${error}`);
+  console.log(`[global:error] ${error}`);
 });
 
 workQueue.on('global:stalled', function(job){
   console.error(`[global:stalled] ${job}`);
+  console.log(`[global:stalled] ${job}`);
+});
+
+workQueue.on('global:failed', function(job, err){
+  console.error(`[global:failed] ${job} due tue ${err}`);
+  console.log(`[global:failed] ${job} due tue ${err}`);
+});
+
+workQueue.on('failed', function(job, err){
+  console.error(`[failed] ${job} due tue ${err}`);
+  console.log(`[failed] ${job} due tue ${err}`);
 });
