@@ -1,2 +1,2 @@
 web: node ./bin/www
-worker: node ./workers/taskExecutor.js
+worker: node ./workers/taskExecutorWorker.js
