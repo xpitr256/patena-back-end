@@ -16,7 +16,7 @@ async function startWith(workQueue) {
   await database.connect();
   // The '*' means that this process handler function will listen to all jobs added to the Queue
   // Detailed explanation in: https://github.com/OptimalBits/bull/blob/develop/REFERENCE.md#queueprocess
-  workQueue.process("*", maxJobsPerWorker, async (job) => {
+  await workQueue.process("*", maxJobsPerWorker, async (job) => {
     logger.log("[Task Executor] workQueue is processing a job=" + JSON.stringify(job) + "");
     const taskId = job.name;
     try {

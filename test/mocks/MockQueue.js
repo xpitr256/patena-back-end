@@ -2,36 +2,34 @@ class MockQueue {
   constructor(name, url) {
     this.name = name;
     this.url = url;
-    this.jobs = new Map();
+    this.jobs = [];
   }
 
-  add(jobId, data) {
-    this.jobs.set(jobId, data);
-    return {id: jobId};
+  add(jobId) {
+    this.jobs.push(jobId);
+    return { id: jobId };
   }
 
   getJob(jobId) {
-    return this.jobs.get(jobId);
+    return this.jobs.find((id) => id === jobId);
   }
 
   removeJobs(jobId) {
-    return this.jobs.delete(jobId);
+    return (this.jobs = this.jobs.filter((id) => id !== jobId));
   }
 
   count() {
-    return this.jobs.size;
+    return this.jobs.length;
   }
   getJobCounts() {
     return this.count();
   }
 
-  async process(concurrency, handler) {
+  async process(name, concurrency, handler) {
     if (this.count() > 0) {
-      const iterator = this.jobs.values();
-      const task = iterator.next().value;
-      const taskId = task.id;
+      const taskId = this.jobs[0];
       const job = {
-        data: task,
+        name: taskId,
       };
       await handler(job);
       this.removeJobs(taskId);

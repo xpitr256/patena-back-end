@@ -28,19 +28,6 @@ function updateSentEmailNotification(task) {
   task.sentEmailDate = new Date();
   return task;
 }
-function failingUpdateSentEmailNotification(task) {
-  mockLogger.log("taskServiceMock:: updateSentEmailNotification => FAILED");
-  return new Promise((resolve, reject) => {
-    reject(genericErrorMessage);
-  });
-}
-
-function updateSentEmailNotification(task) {
-  mockLogger.log("taskServiceMock:: updateSentEmailNotification => updated task");
-  task.emailSent = true;
-  task.sentEmailDate = new Date();
-  return task;
-}
 
 function getNoTaskInProgress(task) {
   mockLogger.log("taskServiceMock:: getTaskInProgress => undefined");
@@ -123,6 +110,9 @@ describe("Queue worker", () => {
     taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
     taskServiceMock.runTask = runNoTask;
     taskServiceMock.updateSentEmailNotification = updateSentEmailNotification;
+    taskServiceMock.getTask = async (taskId) => {
+      return task;
+    };
 
     let emailServiceMock = {};
     emailServiceMock.sendWorkSuccessMail = sendWorkSuccessMail;
@@ -133,12 +123,14 @@ describe("Queue worker", () => {
     });
 
     const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
-    mockQueue.add(TEST_TASK_ID, task);
+    mockQueue.add(TEST_TASK_ID);
     expect(mockQueue.count()).to.be.equals(1);
 
     const startWith = proxyquire("../../workers/taskExecutor", {
       "./../services/taskService": taskServiceMock,
       "./../services/notifier/notifyService": notifyServiceMock,
+      "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
+      "./../services/log/logService": mockLogger,
     });
 
     await startWith(mockQueue);
@@ -146,7 +138,7 @@ describe("Queue worker", () => {
     expect(task.emailSent).to.be.true;
     expect(task.sentEmailDate).to.be.an("Date");
     expect(mockQueue.count()).to.be.equals(0);
-  }).timeout(10000);
+  });
 
   it("should not mark email sent if sendWorkSuccessMail fails for a successful task", async () => {
     let task = {
@@ -167,7 +159,9 @@ describe("Queue worker", () => {
     taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
     taskServiceMock.runTask = runNoTask;
     taskServiceMock.updateSentEmailNotification = updateSentEmailNotification;
-
+    taskServiceMock.getTask = async (taskId) => {
+      return task;
+    };
     let emailServiceMock = {};
     emailServiceMock.sendWorkSuccessMail = failSendingEmail;
 
@@ -178,8 +172,10 @@ describe("Queue worker", () => {
     });
 
     const startWith = proxyquire("../../workers/taskExecutor", {
+      "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
       "./../services/taskService": taskServiceMock,
       "./../services/notifier/notifyService": notifyServiceMock,
+      "./../services/log/logService": mockLogger,
     });
 
     const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
@@ -209,6 +205,9 @@ describe("Queue worker", () => {
       mockLogger.log("taskServiceMock:: getNextPendingTask => task");
       return task;
     };
+    taskServiceMock.getTask = async (taskId) => {
+      return task;
+    };
     taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
     taskServiceMock.runTask = runNoTask;
     taskServiceMock.updateSentEmailNotification = failingUpdateSentEmailNotification;
@@ -223,12 +222,14 @@ describe("Queue worker", () => {
     });
 
     const startWith = proxyquire("../../workers/taskExecutor", {
+      "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
       "./../services/taskService": taskServiceMock,
       "./../services/notifier/notifyService": notifyServiceMock,
+      "./../services/log/logService": mockLogger,
     });
 
     const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
-    mockQueue.add(TEST_TASK_ID, task);
+    mockQueue.add(TEST_TASK_ID);
     expect(mockQueue.count()).to.be.equals(1);
 
     await startWith(mockQueue);
@@ -255,14 +256,18 @@ describe("Queue worker", () => {
     taskServiceMock.runTask = runFailingTask;
     taskServiceMock.updateFailingTask = updateFailingTask;
     taskServiceMock.taskIsCancelled = taskIsCancelledReturnFalse;
-
+    taskServiceMock.getTask = async (taskId) => {
+      return task;
+    };
     let notifyServiceMock = proxyquire("./../../services/notifier/notifyService", {
       "./../taskService": taskServiceMock,
     });
 
     const startWith = proxyquire("../../workers/taskExecutor", {
+      "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
       "./../services/taskService": taskServiceMock,
       "./../services/notifier/notifyService": notifyServiceMock,
+      "./../services/log/logService": mockLogger,
     });
 
     const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
@@ -292,14 +297,18 @@ describe("Queue worker", () => {
     taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
     taskServiceMock.runTask = runFailingTask;
     taskServiceMock.updateFailingTask = updateFailingTaskCancellingTask;
-
+    taskServiceMock.getTask = async (taskId) => {
+      return task;
+    };
     let notifyServiceMock = proxyquire("./../../services/notifier/notifyService", {
       "./../taskService": taskServiceMock,
     });
 
     const startWith = proxyquire("../../workers/taskExecutor", {
+      "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
       "./../services/taskService": taskServiceMock,
       "./../services/notifier/notifyService": notifyServiceMock,
+      "./../services/log/logService": mockLogger,
     });
 
     const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
@@ -330,6 +339,9 @@ describe("Queue worker", () => {
       mockLogger.log("taskServiceMock:: getNextPendingTask => task");
       return task;
     };
+    taskServiceMock.getTask = async (taskId) => {
+      return task;
+    };
     taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
     taskServiceMock.runTask = runFailingTask;
     taskServiceMock.updateFailingTask = updateFailingTaskCancellingTask;
@@ -344,8 +356,10 @@ describe("Queue worker", () => {
     });
 
     const startWith = proxyquire("../../workers/taskExecutor", {
+      "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
       "./../services/taskService": taskServiceMock,
       "./../services/notifier/notifyService": notifyServiceMock,
+      "./../services/log/logService": mockLogger,
     });
 
     const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
@@ -378,6 +392,9 @@ describe("Queue worker", () => {
       mockLogger.log("taskServiceMock:: getNextPendingTask => task");
       return task;
     };
+    taskServiceMock.getTask = async (taskId) => {
+      return task;
+    };
     taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
     taskServiceMock.runTask = runFailingTask;
     taskServiceMock.updateFailingTask = updateFailingTaskCancellingTask;
@@ -393,8 +410,10 @@ describe("Queue worker", () => {
     });
 
     const startWith = proxyquire("../../workers/taskExecutor", {
+      "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
       "./../services/taskService": taskServiceMock,
       "./../services/notifier/notifyService": notifyServiceMock,
+      "./../services/log/logService": mockLogger,
     });
 
     const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
@@ -431,7 +450,9 @@ describe("Queue worker", () => {
     taskServiceMock.runTask = runFailingTask;
     taskServiceMock.updateFailingTask = updateFailingTaskCancellingTask;
     taskServiceMock.updateSentEmailNotification = updateSentEmailNotification;
-
+    taskServiceMock.getTask = async (taskId) => {
+      return task;
+    };
     let emailServiceMock = {};
     emailServiceMock.sendWorkErrorMail = failSendingEmail;
 
@@ -442,8 +463,10 @@ describe("Queue worker", () => {
     });
 
     const startWith = proxyquire("../../workers/taskExecutor", {
+      "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
       "./../services/taskService": taskServiceMock,
       "./../services/notifier/notifyService": notifyServiceMock,
+      "./../services/log/logService": mockLogger,
     });
 
     const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);

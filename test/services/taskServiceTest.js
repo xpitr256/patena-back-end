@@ -5,12 +5,10 @@ const constants = require("../../services/constants");
 const chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 
-describe("Task Service", async () => {
-  const mockLogger = {
-    log: function () {},
-    error: function () {},
-  };
+const MockLogger = require("./../mocks/MockLogger");
+const mockLogger = MockLogger.buildLogger(false);
 
+describe("Task Service", async () => {
   describe("when create a new Task", async () => {
     it("should successfully persist a new Task", () => {
       const id = "123345";
@@ -86,10 +84,11 @@ describe("Task Service", async () => {
         }
       };
 
-      createdTasks.push({ _doc: new taskMock({ id: id }) });
+      createdTasks.push(new taskMock({ id: id }));
 
       const taskService = proxyquire("../../services/taskService", {
         "../model/schema/Task": taskMock,
+        "./log/logService": mockLogger,
       });
 
       const retrievedTask = await taskService.getTask(id);
@@ -113,6 +112,7 @@ describe("Task Service", async () => {
 
       const taskService = proxyquire("../../services/taskService", {
         "../model/schema/Task": taskMock,
+        "./log/logService": mockLogger,
       });
 
       const retrievedTask = await taskService.getTask(id);
@@ -163,6 +163,7 @@ describe("Task Service", async () => {
 
       const taskService = proxyquire("../../services/taskService", {
         "../model/schema/Task": taskMock,
+        "./log/logService": mockLogger,
       });
 
       const retrievedTask = await taskService.getTaskInProgress();
@@ -190,6 +191,7 @@ describe("Task Service", async () => {
 
       const taskService = proxyquire("../../services/taskService", {
         "../model/schema/Task": taskMock,
+        "./log/logService": mockLogger,
       });
 
       await taskService.promoteTaskToInProgress(createdTask);
@@ -218,6 +220,7 @@ describe("Task Service", async () => {
 
       const taskService = proxyquire("../../services/taskService", {
         "../model/schema/Task": taskMock,
+        "./log/logService": mockLogger,
       });
 
       await taskService.updateFailingTask(createdTask, errorMessage);
@@ -244,6 +247,7 @@ describe("Task Service", async () => {
 
       const taskService = proxyquire("../../services/taskService", {
         "../model/schema/Task": taskMock,
+        "./log/logService": mockLogger,
       });
 
       await taskService.updateFailingTask(createdTask, errorMessage);
@@ -276,6 +280,7 @@ describe("Task Service", async () => {
       const taskService = proxyquire("../../services/taskService", {
         "../model/schema/Task": taskMock,
         "./translationService": translationServiceMock,
+        "./log/logService": mockLogger,
       });
 
       await taskService.cancelTask(createdTask);
@@ -415,6 +420,7 @@ describe("Task Service", async () => {
 
       const taskService = proxyquire("../../services/taskService", {
         "../model/schema/Task": taskMock,
+        "./log/logService": mockLogger,
       });
 
       await taskService.updateSentEmailNotification(createdTask);
@@ -445,6 +451,7 @@ describe("Task Service", async () => {
       const taskService = proxyquire("../../services/taskService", {
         "../model/schema/Task": taskMock,
         "./patena/patenaService": patenaServiceMock,
+        "./log/logService": mockLogger,
       });
       await expect(taskService.runTask(createdTask)).to.be.rejected;
       expect(createdTask.stateId).to.be.equals(constants.TASK_STATE_IN_PROGRESS);
@@ -478,6 +485,7 @@ describe("Task Service", async () => {
         "./patena/patenaService": patenaServiceMock,
         fs: fsMock,
         "fs-extra": fseMock,
+        "./log/logService": mockLogger,
       });
       await taskService.runTask(createdTask);
       expect(createdTask.stateId).to.be.equals(constants.TASK_STATE_FINISHED);

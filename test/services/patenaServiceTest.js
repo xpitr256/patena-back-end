@@ -5,6 +5,9 @@ chai.use(chaiAsPromised);
 const proxyquire = require("proxyquire");
 const constants = require("./../../services/constants");
 
+const MockLogger = require("./../mocks/MockLogger");
+const mockLogger = MockLogger.buildLogger(false);
+
 describe("Patena Service", async () => {
   const orderNumber = "550e8400-e29b-41d4-a716-446655440000";
 
@@ -32,6 +35,7 @@ describe("Patena Service", async () => {
     };
     const patenaService = proxyquire("../../services/patena/patenaService", {
       "./pythonRunner": pythonRunnerMock,
+      "../log/logService": mockLogger,
     });
     const task = {
       id: orderNumber,
@@ -66,6 +70,7 @@ describe("Patena Service", async () => {
     };
     const patenaService = proxyquire("../../services/patena/patenaService", {
       "./pythonRunner": pythonRunnerMock,
+      "../log/logService": mockLogger,
     });
     const task = {
       id: orderNumber,
@@ -102,6 +107,7 @@ describe("Patena Service", async () => {
     };
     const patenaService = proxyquire("../../services/patena/patenaService", {
       "./pythonRunner": pythonRunnerMock,
+      "../log/logService": mockLogger,
     });
     const task = {
       id: orderNumber,
@@ -149,6 +155,7 @@ describe("Patena Service", async () => {
     };
     const patenaService = proxyquire("../../services/patena/patenaService", {
       "./pythonRunner": pythonRunnerMock,
+      "../log/logService": mockLogger,
     });
     const task = {
       id: orderNumber,
@@ -189,6 +196,7 @@ describe("Patena Service", async () => {
     };
     const patenaService = proxyquire("../../services/patena/patenaService", {
       "./pythonRunner": pythonRunnerMock,
+      "../log/logService": mockLogger,
     });
     const task = {
       id: orderNumber,
@@ -252,6 +260,7 @@ describe("Patena Service", async () => {
     };
     const patenaService = proxyquire("../../services/patena/patenaService", {
       "./pythonRunner": pythonRunnerMock,
+      "../log/logService": mockLogger,
     });
     const task = {
       id: orderNumber,

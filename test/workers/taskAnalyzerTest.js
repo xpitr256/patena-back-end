@@ -40,6 +40,7 @@ describe("Task analyzer worker", () => {
     const start = proxyquire("../../workers/taskAnalyzer", {
       "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
       "./../services/taskService": taskServiceMock,
+      "./../services/log/logService": mockLogger,
     });
 
     const result = await start(mockQueue);
@@ -56,7 +57,7 @@ describe("Task analyzer worker", () => {
 
     let taskServiceMock = {};
     taskServiceMock.getTaskInProgress = getNoTaskInProgress;
-    taskServiceMock.getNextPendingTask = function () {
+    taskServiceMock.getNextPendingTask = () => {
       mockLogger.log("taskServiceMock:: getNextPendingTask => task");
       return task;
     };
@@ -68,6 +69,7 @@ describe("Task analyzer worker", () => {
     const start = proxyquire("../../workers/taskAnalyzer", {
       "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
       "./../services/taskService": taskServiceMock,
+      "./../services/log/logService": mockLogger,
     });
 
     await start(mockQueue);
@@ -92,6 +94,7 @@ describe("Task analyzer worker", () => {
     const start = proxyquire("../../workers/taskAnalyzer", {
       "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
       "./../services/taskService": taskServiceMock,
+      "./../services/log/logService": mockLogger,
     });
     const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
 
@@ -129,6 +132,7 @@ describe("Task analyzer worker", () => {
     const start = proxyquire("../../workers/taskAnalyzer", {
       "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
       "./../services/taskService": taskServiceMock,
+      "./../services/log/logService": mockLogger,
     });
 
     const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);

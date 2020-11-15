@@ -25,7 +25,7 @@ describe("Task Analyzer worker", async () => {
       "./../services/log/logService": mockLogger,
       bull: MockQueue,
     });
-  });
+  }).timeout(10000);
 
   it("should fail for a failing task run", async () => {
     const mockFailingTaskRun = function () {
