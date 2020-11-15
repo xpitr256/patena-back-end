@@ -8,10 +8,8 @@ var app = require('../app');
 var debug = require('debug')('test:server');
 var http = require('http');
 var connectionDB = require('../model/database');
-const Queue = require("bull");
-const config = require('../config/config')
-const constants = require('../services/constants')
-const workQueue = new Queue(constants.PATENA_QUEUE_NAME, config.REDIS_URL);
+const Queue = require("../model/Queue");
+const workQueue = Queue.getQueue();
 
 /**
  * Get port from environment and store in Express.
@@ -102,20 +100,12 @@ workQueue.on('global:completed', (jobId, result) => {
 
 workQueue.on('global:error', function(error) {
   console.error(`[global:error] ${error}`);
-  console.log(`[global:error] ${error}`);
 });
 
 workQueue.on('global:stalled', function(job){
   console.error(`[global:stalled] ${job}`);
-  console.log(`[global:stalled] ${job}`);
 });
 
 workQueue.on('global:failed', function(job, err){
   console.error(`[global:failed] ${job} due tue ${err}`);
-  console.log(`[global:failed] ${job} due tue ${err}`);
-});
-
-workQueue.on('failed', function(job, err){
-  console.error(`[failed] ${job} due tue ${err}`);
-  console.log(`[failed] ${job} due tue ${err}`);
 });

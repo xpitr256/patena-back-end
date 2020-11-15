@@ -27,7 +27,7 @@ function startWith(workQueue) {
         logger.log("[Task Executor] calling notifyUserThatTaskIsReady");
         await notifyUserThatTaskIsReady(task);
         logger.log("[Task Executor] finished notifyUserThatTaskIsReady");
-        return {done: task.id};
+        return { success: true };
       } catch (error) {
         logger.log("[Task Executor] There was an error running task=[" + task.id + "]");
         logger.log("[Task Executor] calling updateFailingTask");
