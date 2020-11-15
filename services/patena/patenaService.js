@@ -152,7 +152,7 @@ module.exports = {
   start: async function (task) {
     logger.log("[Patena Service] calling getPatenaArgumentsFor=[" + task.id + "]");
     const args = getPatenaArgumentsFor(task);
-    logger.log("[Patena Service] after calling getPatenaArgumentsFor=[" + task.id + "], getting args: "+JSON.stringify(args));
+    logger.log("[Patena Service] after calling getPatenaArgumentsFor=[" + task.id + "], getting args: " + JSON.stringify(args));
     await runPatenaFor(args, task.id);
     logger.log("[Patena Service] after calling runPatenaFor=[" + task.id + "]");
   },

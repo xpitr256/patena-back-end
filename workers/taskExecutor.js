@@ -13,15 +13,15 @@ const database = require("./../model/database");
 
 async function startWith(workQueue) {
   logger.log("[Task Executor] startWith with queue=[" + workQueue.name + "]");
-  await database.connect()
+  await database.connect();
   // The '*' means that this process handler function will listen to all jobs added to the Queue
   // Detailed explanation in: https://github.com/OptimalBits/bull/blob/develop/REFERENCE.md#queueprocess
-  workQueue.process('*', maxJobsPerWorker, async (job) => {
+  workQueue.process("*", maxJobsPerWorker, async (job) => {
     logger.log("[Task Executor] workQueue is processing a job=" + JSON.stringify(job) + "");
     const taskId = job.name;
     try {
       logger.log("[Task Executor] getting task=[" + taskId + "]");
-      const task = await getTask(taskId)
+      const task = await getTask(taskId);
       try {
         logger.log("[Task Executor] running task=[" + taskId + "]");
         await runTask(task);
@@ -42,11 +42,11 @@ async function startWith(workQueue) {
           logger.log("[Task Executor] finished notifyUserThatTaskWasCancelled");
         }
         logger.log("[Task Executor] finished with error: " + error);
-        return {error: error};
+        return { error: error };
       }
     } catch (error) {
-      logger.log("[Task Executor] Cannot retrieve TaskId=["+taskId+"] due to error: " + error);
-      return {error: error};
+      logger.log("[Task Executor] Cannot retrieve TaskId=[" + taskId + "] due to error: " + error);
+      return { error: error };
     }
   });
 }

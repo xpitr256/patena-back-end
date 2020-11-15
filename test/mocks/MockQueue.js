@@ -7,6 +7,7 @@ class MockQueue {
 
   add(jobId, data) {
     this.jobs.set(jobId, data);
+    return {id: jobId};
   }
 
   getJob(jobId) {
@@ -19,6 +20,9 @@ class MockQueue {
 
   count() {
     return this.jobs.size;
+  }
+  getJobCounts() {
+    return this.count();
   }
 
   async process(concurrency, handler) {

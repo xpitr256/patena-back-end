@@ -17,7 +17,7 @@ async function addResultsTo(task) {
   const directory = "./workers/Output/" + task.id;
   logger.log("[Task Service] addResultsTo directory: " + directory);
   const result = JSON.parse(fs.readFileSync(directory + "/results.json", "utf8"));
-  logger.log("[Task Service] addResultsTo result: " + result);
+  logger.log("[Task Service] addResultsTo result: " + JSON.stringify(result));
   if (result) {
     task.output = result;
     task.attempts = task.attempts + 1;
@@ -53,7 +53,7 @@ module.exports = {
     const tasks = await Task.find({
       id: taskId,
     });
-    return tasks.length > 0 ? tasks[0]["_doc"] : undefined;
+    return tasks.length > 0 ? tasks[0] : undefined;
   },
   getTaskInProgress: async function () {
     const tasks = await Task.find({

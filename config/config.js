@@ -12,5 +12,5 @@ module.exports = {
   REDIS_URL: process.env.REDIS_URL || "redis://127.0.0.1:6379",
   WEB_CONCURRENCY: process.env.WEB_CONCURRENCY || 1,
   JOB_CONCURRENCY: process.env.JOB_CONCURRENCY || 1,
-  PATENA_QUEUE_NAME: process.env.PATENA_QUEUE_NAME || "patena-v1"
+  PATENA_QUEUE_NAME: process.env.PATENA_QUEUE_NAME || "patena-v1",
 };

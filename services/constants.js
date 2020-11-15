@@ -14,7 +14,7 @@ const DESIGN_TYPE_INITIAL_AND_FLANKING_SEQUENCES = 4;
 // This represents the amount of amino acids we take before and after the flanking sequences.
 const FLANKING_WINDOW_SIZE = 10;
 
-const PATENA_QUEUE_NAME = "patena";
+const PATENA_QUEUE_NAME = "patena-v1";
 
 module.exports = {
   TYPE_ANALYSIS,
