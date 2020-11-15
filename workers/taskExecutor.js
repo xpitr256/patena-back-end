@@ -9,9 +9,11 @@ const notifyUserThatTaskIsReady = notifyService.notifyUserThatTaskIsReady;
 const notifyUserThatTaskWasCancelled = notifyService.notifyUserThatTaskWasCancelled;
 const maxJobsPerWorker = config.JOB_CONCURRENCY;
 const logger = require("../services/log/logService");
+const database = require("./../model/database");
 
-function startWith(workQueue) {
+async function startWith(workQueue) {
   logger.log("[Task Executor] startWith with queue=[" + workQueue.name + "]");
+  await database.connect()
   // The '*' means that this process handler function will listen to all jobs added to the Queue
   // Detailed explanation in: https://github.com/OptimalBits/bull/blob/develop/REFERENCE.md#queueprocess
   workQueue.process('*', maxJobsPerWorker, async (job) => {
