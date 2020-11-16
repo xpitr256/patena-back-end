@@ -2,9 +2,9 @@ const expect = require("chai").expect;
 const proxyquire = require("proxyquire");
 const constants = require("../../services/constants");
 const translationService = require("../../services/translationService");
-const MockQueue = require("./../mocks/MockQueue");
-const MockDatabase = require("./../mocks/MockDatabase");
-const MockLogger = require("./../mocks/MockLogger");
+const MockQueue = require("../mocks/MockQueue");
+const MockDatabase = require("../mocks/MockDatabase");
+const MockLogger = require("../mocks/MockLogger");
 const DEBUG_MODE = false;
 const TEST_QUEUE_NAME = "patena-test-job-queue";
 const TEST_REDIS_URL = "redis://127.0.0.1:6379";
@@ -31,7 +31,7 @@ function promoteTaskToInProgress(task) {
   return task;
 }
 
-describe("Task analyzer worker", () => {
+describe("Task analyzer", () => {
   it("should do nothing when no task is pending ", async () => {
     let taskServiceMock = {};
     taskServiceMock.getTaskInProgress = getNoTaskInProgress;

@@ -90,7 +90,7 @@ function failSendingEmail(task) {
   });
 }
 
-describe("Queue worker", () => {
+describe("Task Executor", () => {
   it("should mark email sent and sent email date for a successful task run with email and remove task from queue jobs", async () => {
     let task = {
       id: TEST_TASK_ID,

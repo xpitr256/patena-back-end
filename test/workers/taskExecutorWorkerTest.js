@@ -29,5 +29,5 @@ describe("Task Executor worker", async () => {
       "./taskExecutor": mockStartWith,
       "../services/log/logService": mockLogger,
     });
-  }).timeout(10000);
+  });
 });

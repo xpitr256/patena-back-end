@@ -2,6 +2,7 @@ const expect = require("chai").expect;
 const proxyquire = require("proxyquire");
 const MockLogger = require("./../mocks/MockLogger");
 const MockQueue = require("./../mocks/MockQueue");
+const config = require("../../config/config");
 
 describe("Task Analyzer worker", async () => {
   const mockLogger = MockLogger.buildLogger(false);
@@ -11,6 +12,12 @@ describe("Task Analyzer worker", async () => {
       return new Promise((resolve) => {
         resolve();
       });
+    };
+
+    const mock = {
+      getQueue: () => {
+        return new MockQueue(config.PATENA_QUEUE_NAME, config.REDIS_URL);
+      },
     };
 
     const mockWorkerFunctions = {
@@ -23,9 +30,9 @@ describe("Task Analyzer worker", async () => {
       "./taskAnalyzer": mockSuccessTaskRun,
       "./workerFunctions": mockWorkerFunctions,
       "./../services/log/logService": mockLogger,
-      bull: MockQueue,
+      "../model/Queue": mock,
     });
-  }).timeout(10000);
+  });
 
   it("should fail for a failing task run", async () => {
     const mockFailingTaskRun = function () {
@@ -40,11 +47,17 @@ describe("Task Analyzer worker", async () => {
       },
     };
 
+    const mock = {
+      getQueue: () => {
+        return new MockQueue(config.PATENA_QUEUE_NAME, config.REDIS_URL);
+      },
+    };
+
     await proxyquire("../../workers/taskAnalyzerWorker", {
       "./taskAnalyzer": mockFailingTaskRun,
       "./workerFunctions": mockWorkerFunctions,
       "./../services/log/logService": mockLogger,
-      bull: MockQueue,
+      "../model/Queue": mock,
     });
   });
 });
