@@ -11,7 +11,7 @@ function runPatenaFor(args, workId) {
       args: args,
     };
     logger.log("[Patena Service] before calling pythonRunner");
-    pythonRunner.run("./mock/mockPatenaDesign.py", options, function (err, results) {
+    pythonRunner.run("./patena/patena.py", options, function (err, results) {
       if (err) {
         logger.error("There was an ERROR running PATENA for workId=" + workId);
         logger.error(err);
