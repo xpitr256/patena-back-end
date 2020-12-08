@@ -1,0 +1,63 @@
+# Matrix NRU616bitSGppr5sn20wfx	
+# Thresh 10.8 # 8.4=84@92 9.0=77@94 9.5=69@96 10.0=65@97 10.8=48@98 11.8=32@99
+# 
+# Input file: lastamy+.alfa_jack50_0.616.alfa
+# Number of sequences: 91
+# Alignment length: 6
+# Method = logodd_pcmi
+# Pcmi = 0.001
+# Pseudozero = false
+# Weight by relshantropy = bitSG
+# positional weights:
+#	1	0.578456387316864
+#	2	0.661801821023752
+#	3	0.889324994408262
+#	4	0.968010194512628
+#	5	1.42266006033219
+#	6	0.591540545266733
+# 36 instances of pseudocounts calculated
+#
+# Input file: lastamy-.alfa_jack50_0.616.alfa
+# Number of sequences: 122
+# Alignment length: 6
+# Method = logodd_pcmi
+# Pcmi = 0.001
+# Pseudozero = true
+# Weight by relshantropy = bitSG
+# positional weights:
+#	1	0.701229720455106
+#	2	0.673812248606356
+#	3	0.383970779384823
+#	4	0.387327347074489
+#	5	0.554463181829865
+#	6	0.643199455967526
+# 7 instances of pseudocounts set to zero logodd score
+#
+# ppr5sn20w+0.2*fx
+#	1.00	NOZY710101	4,5	Transfer energy, organic solvent/water (Nozaki-Tanford, 1971)
+#	1.00	VASM830103	5	Relative population of conformational state E (Vasquez et al., 1983)
+#	1.00	PALJ810104	2,3	Normalized frequency of beta-sheet from CF (Palau et al., 1981)
+#	0.62	WIM_HYD_R2	6	Hydrophobicity at membrane interfaces: deltaG_residue pH=2
+#	0.62	CHOP780206	1	Normalized frequency of N-terminal non helical region (Chou-Fasman, 1978b)
+#	0.62	ROBB760102	2	Information measure for N-terminal helix (Robson-Suzuki, 1976)
+#	0.62	GEIM800107	1,2,3	Beta-strand indices for alpha/beta-proteins (Geisow-Roberts, 1980)
+#	0.38	GARJ730101	3	Partition coefficient (Garel et al., 1973)
+#	0.38	FAUJ880110	1,2,3,4,5,6	Number of full nonbonding orbitals (Fauchere et al., 1988)
+#	0.23	VENT840101	1	Bitterness (Venanzi, 1984)
+#	0.08	RACS820114	1,3,5	Value of theta(i-1) (Rackovsky-Scheraga, 1982)
+#	-0.08	ONEK900102	4,5,6	Helix formation parameters (delta delta G) (O'Neil and DeGrado, 1990)
+#	-0.08	PTIO830102	2,3	Beta-coil equilibrium constant (Ptitsyn-Finkelstein, 1983)
+#	-0.15	FINA910102	4	Helix initiation parameter at posision i,i+1,i+2 (Finkelstein et al., 1991)
+#	-0.23	MAXF760104	6	Normalized frequency of left-handed alpha-helix (Maxfield-Scheraga, 1976)
+#	-0.31	ZIMJ680103	1,6	Polarity (Zimmerman et al., 1968)
+#	-0.62	QIAN880123	2	Weights for beta-sheet at the window position of 3 (Qian-Sejnowski, 1988)
+#	-0.69	AURR980106	6	Normalized positional residue frequency at helix termini N1 (Aurora and Rose, 1998)
+#	-1.00	FINA910102	1,2,3,4,5	Helix initiation parameter at posision i,i+1,i+2 (Finkelstein et al., 1991)
+#
+#	A	C	D	E	F	G	H	I	K	L	M	N	P	Q	R	S	T	V	W	Y	
+1	2.1671	-1.3163	0.1483	0.0057	1.2157	1.6309	1.1232	0.999	0.6324	1.4542	1.0994	1.6454	-2.1717	1.1442	-0.3236	0.5399	1.1964	1.4704	1.4116	1.5469	
+2	1.5643	0.9746	1.5522	0.9047	3.074	-0.2338	-0.3338	2.5541	-2.0294	1.9554	0.4076	0.0129	-2.2989	2.5902	-1.8662	-0.5284	0.2823	1.5332	-0.3446	2.2343	
+3	-0.0939	0.3142	-3.1181	0.1234	2.7776	-0.915	-2.0423	0.6419	-2.9242	0.9052	-1.4485	0.5438	-4.2581	1.094	-2.4074	0.3892	-2.1245	2.7667	3.224	0.9098	
+4	0.3589	-2.5414	-4.6093	-0.5893	1.3895	-4.368	-0.7273	2.183	-1.2908	1.7984	-1.8157	1.4952	-4.9713	-2.8866	-3.3598	-1.5522	0.1786	-0.6526	2.9946	2.3075	
+5	-4.6584	-4.0564	-5.295	-2.1854	3.5199	-5.12	-3.9752	3.9273	-5.2636	-0.9969	-3.1183	-4.5022	-6.0359	-4.1222	-4.4818	-1.5991	-0.9397	-4.8096	1.5864	4.4397	
+6	1.1304	0.2111	0.2357	-0.107	1.4828	-0.2799	-1.954	0.337	-1.1399	0.902	1.3736	1.9325	-1.6326	0.4322	-1.5377	0.7432	0.5071	1.5992	-0.2953	1.2484	

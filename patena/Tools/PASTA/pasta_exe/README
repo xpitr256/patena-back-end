@@ -1,0 +1,89 @@
+
+Author: Ian Walsh
+Date 25th Feb 2014
+
+############################################################################################
+
+			QUICK PASTA 2.0 help
+
+############################################################################################
+
+
+
+REQUIREMENTS: tested on linux. Requires perl and R instalations
+
+IMPORTANT: change $curdir in PastaPairs.pl to the current loction of PASTA2 (i.e. this README's location)
+
+
+
+
+This executable works with a directory of fasta protein sequences (See http://en.wikipedia.org/wiki/FASTA_format)
+
+PASTA can be run in 3 modes: 
+(1)
+all-against-all: all sequences in the directory are paired against the others
+
+Example: "perl ./PastaPairs.pl pot_pasta.dat exampledir/ 10 1 all -5.5"
+
+all fasta sequences in exampledir/ will be paired. 
+
+(2)
+one-against-all: A given sequence is paired against the rest. 
+Example: "perl ./PastaPairs.pl pot_pasta.dat exampledir/ 10 1 het -5.5"
+
+where het is the basename of the fasta file in exampledir/
+it will be paired with all other fasta sequences in exampledir/
+
+(3)
+self pairings: The sequence is paired against itself. 
+Example: "perl ./PastaPairs.pl pot_pasta.dat exampledir/ 10 1 self -5.5"
+
+
+############################################################################################
+
+The rest of this file describes in more detail the input parameters and the PASTA 2.0 output
+
+The best way to describe it is with an example. Consider the following 3 proteins located in exampledir/: 
+
+>human_amyloid
+DAEFRHDSGYEVHHQKLVFFAEDVGSNKGAIIGLMVGGVV
+
+>het
+MKIDAIVGRNSAKDIRTEERARVQLGNVVTAAALHGGIRISDQTTNSVETVVGKGESRVLIGNEYGGKGFWDNHHHHHH
+
+>spP37840
+MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQDYEPEA
+
+and assume we want to pair het with the rest (one-against-all option). You would execute the following command: "perl ./PastaPairs.pl pot_pasta.dat exampledir/ 10 1 het -5.5"
+1st argument: the pasta energy potential file
+2nd argument: the working directory with fasta sequences
+3rd argument: the top X energy pairings
+4th argument: Graphics flag, 1 for graphics output, 0 for none (faster)
+5th argument: the "het" basename of the fasta file
+6th argument: the energy cut-off
+
+
+The following files are output: 
+
+DATA:
+HETs_prion-human_amyloid.aggr_profile1.pair.dat			: The aggregation probability profile of HETs_prion (relative to human_amyloid)
+HETs_prion-human_amyloid.aggr_profile2.pair.dat			: The aggregation probability profile of human_amyloid (relative to HETs_prion)
+HETs_prion-human_amyloid.best_pairings_list.pair.dat		: The best pairings between HETs_prion and human_amyloid
+HETs_prion-human_amyloid.free_energy1.dat.pair.dat		: The aggregation free energy profile of HETs_prion (relative to human_amyloid)
+HETs_prion-human_amyloid.free_energy2.dat.pair.dat		: The aggregation free energy profile of human_amyloid (relative to HETs_prion)
+HETs_prion-human_amyloid.pairing_free_energy.pair.dat		: The free energy pairing matrix between HETs_prion and human_amyloid
+HETs_prion-human_amyloid.pairing_mat.pair.dat			: The probability pairing matrix between HETs_prion and human_amyloid
+
+HETs_prion-spP37840.aggr_profile1.pair.dat			: The aggregation probability profile of HETs_prion (relative to spP37840)
+HETs_prion-spP37840.aggr_profile2.pair.dat			: The aggregation probability profile of spP37840 (relative to HETs_prion)
+HETs_prion-spP37840.best_pairings_list.pair.dat			: The best pairings between HETs_prion and spP37840
+HETs_prion-spP37840.free_energy1.dat.pair.dat			: The aggregation free energy profile of HETs_prion (relative to spP37840)
+HETs_prion-spP37840.free_energy2.dat.pair.dat			: The aggregation free energy profile of spP37840 (relative to HETs_prion)
+HETs_prion-spP37840.pairing_free_energy.pair.dat		: The free energy pairing matrix between HETs_prion and spP37840
+HETs_prion-spP37840.pairing_mat.pair.dat			: The probability pairing matrix between HETs_prion and spP37840
+
+
+GRAPHS:
+In addition, the above data is visualized in png and pdf graphs. 
+
+
