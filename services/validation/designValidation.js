@@ -54,7 +54,7 @@ function isValidNetCharge(netCharge, initialSequence) {
     return false;
   }
 
-  if (isNotDefined(netCharge) && !initialSequence) {
+  if (isNotDefined(netCharge)) {
     return true;
   }
 

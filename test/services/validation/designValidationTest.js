@@ -189,12 +189,22 @@ describe("Design Validation", () => {
         expect(result).to.be.true;
       });
 
-      it("should return false for net charge and no initial sequence", () => {
+      it("should return true for no net charge and an empty sequence", () => {
         let data = Object.assign({}, designData);
         data.config = Object.assign({}, validConfig);
         data.initialSequence = {};
         const result = designValidation.isValidDesign(data);
-        expect(result).to.be.false;
+        expect(result).to.be.true;
+      });
+
+      it("should return true for no net charge and valid initial sequence value", () => {
+        let data = Object.assign({}, designData);
+        data.config = Object.assign({}, validConfig);
+        data.initialSequence = {
+          value: "AC",
+        };
+        const result = designValidation.isValidDesign(data);
+        expect(result).to.be.true;
       });
 
       it("should return true for valid positive net charge value with valid initial sequence value", () => {
