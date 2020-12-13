@@ -112,8 +112,8 @@ def print_execution_params(exe_id,beta,length,composition,sequence,evaluate_netc
     print('Id=' + str(exe_id)) 
     print('Beta= '+ str(beta))
     print("Length=" + str(length)) 
-    print("Composition=" + composition)
-    print("Sequence=" + sequence)
+    print("Composition=" + str(composition))
+    print("Sequence=" + str(sequence))
     if evaluate_netcharge:
         print("Target net charge=" + str(config_params['targetNetCharge']))
     print("************************************************")
