@@ -46,10 +46,6 @@ function isValidNetCharge(netCharge, initialSequence) {
     return value === undefined || value === null;
   }
 
-  if (isNotDefined(netCharge) && initialSequence) {
-    return false;
-  }
-
   if (netCharge && !initialSequence) {
     return false;
   }

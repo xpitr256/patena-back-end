@@ -92,7 +92,7 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
-connectionDB.connect();
+connectionDB.connect().then(r => console.log(r)).catch(e => console.error(e));
 
 workQueue.on('global:completed', (jobId, result) => {
   console.log(`[global:completed] Task ${jobId} completed with result ${result}`);
