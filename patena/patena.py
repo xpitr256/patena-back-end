@@ -645,7 +645,8 @@ def main():
         sequence=[]
         for x in range(0,length):
             sequence.append(weighted_choice(aaFrequencies))
-        sequence=''.join(sequence)
+
+    sequence=''.join(sequence)
 
     print_execution_params(exeId,beta,length,composition,sequence,evaluateNetCharge,config_params)
 
