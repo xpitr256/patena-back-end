@@ -521,7 +521,7 @@ def main():
 
     #FILES AND PATHS
     logFileName='mutations' + str(exeId) + '.log'
-    base_path=get_script_path() + '/'
+    base_path=get_script_path()
     inputsPath=base_path + "/inputs/"+ str(exeId) + "/" #SET PATH TO SAVE INPUTS FILES
     job_out_path=base_path + "/Output/" + str(exeId) + "/"
     testOutputPath=job_out_path   # DEFAULT OUTPUT FOR TESTs 
