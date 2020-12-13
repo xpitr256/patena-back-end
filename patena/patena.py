@@ -27,6 +27,7 @@ import tool_functions
 #PASTA_PATH=$DIR/Tools/PASTA/pasta_exe
 #PROSITE=$DIR/Tools/Prosite/ps_scan
 
+os.environ["IUPred_PATH"] = "/app/patena/Tools/iupred"
 
 #****************************************
 
