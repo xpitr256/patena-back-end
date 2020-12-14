@@ -28,6 +28,10 @@ import tool_functions
 #PROSITE=$DIR/Tools/Prosite/ps_scan
 
 os.environ["IUPred_PATH"] = "/app/patena/Tools/iupred"
+os.environ["ANCHOR_PATH"] = "/app/patena/Tools/ANCHOR"
+os.environ["PASTA_PATH"] = "/app/patena/Tools/PASTA/pasta_exe"
+os.environ["PROSITE"] = "/app/patena/Tools/Prosite/ps_scan"
+os.environ["HEMO"] = "MVLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDLSHGSAQVKGHGKKVADALTNAVAHVDDMPNALSALSDLHAHKLRVDPVNFKLLSHCLLVTLAAHLPAEFTPAVHASLDKFLASVSTVLTSKYR"
 
 #****************************************
 
