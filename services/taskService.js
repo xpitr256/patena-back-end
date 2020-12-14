@@ -14,7 +14,7 @@ async function updateTaskState(task, state) {
 }
 
 async function addResultsTo(task) {
-  const directory = "./workers/Output/" + task.id;
+  const directory = "./patena/Output/" + task.id;
   logger.log("[Task Service] addResultsTo directory: " + directory);
   const result = JSON.parse(fs.readFileSync(directory + "/results.json", "utf8"));
   logger.log("[Task Service] addResultsTo result: " + JSON.stringify(result));
