@@ -1099,7 +1099,7 @@ def main():
         if testTimes:
             print_evaluation_time(total_elapsed_time,times_dict)
     if json_out:
-        with open('result.json', 'w') as fp:
+        with open('results.json', 'w') as fp:
             json.dump(json_dict, fp)
 
 if __name__ == '__main__':
