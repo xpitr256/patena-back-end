@@ -182,7 +182,7 @@ def firstPartialEvaluation(sequence, config_params,position_scores,execution_set
 
 
 
-def secondPartialEvaluation(sequence, position_scores, verbose, inputsPath, database, detailed_output):
+def secondPartialEvaluation(sequence, position_scores, verbose, inputsPath, outputsPath, database, detailed_output):
     #SAVE SEQUENCE TO EVALUATE(FASTA FORMAT) IN A FILE
     input=open(inputsPath + "sequenceFASTA"  , "w")
     input.write(">gi" + endl)
@@ -196,7 +196,7 @@ def secondPartialEvaluation(sequence, position_scores, verbose, inputsPath, data
         print(indent + "*************************************")
         #print indent + "STARTING BLAST SEARCH"
     timePrev=time.time()
-    tool_functions.blastIt(sequence,position_scores,database,inputsPath, verbose,detailed_output)
+    tool_functions.blastIt(sequence,position_scores,database,inputsPath, outputsPath, verbose,detailed_output)
     #blastTime+=(time.time() - timePrev)
     #if step_by_step:
       #raw_input(indent + "Hit enter to continue with next evaluation")
@@ -708,7 +708,7 @@ def main():
     secondPartialScore = 0
     if runBlast:
         #SECOND PART OF EVALUATION
-        secondPartialEvaluation(sequence, partialScores,verbose, inputsPath, database, detailed_output)
+        secondPartialEvaluation(sequence, partialScores,verbose, inputsPath, job_out_path, database, detailed_output)
         secondPartialScore=get_global_score(partialScores)
 
         #ADD THE SCORE TO THE GLOBAL SCORE AND RESET PARTIAL LIST
@@ -913,7 +913,7 @@ def main():
             ##### SECOND ROUND OF EVALUATION - MUTATION  #######
             ####################################################
 
-            secondPartialEvaluation(sequence,partialScores, verbose, inputsPath, database, detailed_output)
+            secondPartialEvaluation(sequence,partialScores, verbose, inputsPath, job_out_path, database, detailed_output)
             partialScore=get_global_score(partialScores)
             while partialScore > 0 and iteration <= max_iterations:
                 timePrev=time.time()
@@ -939,7 +939,7 @@ def main():
                         input("...Hit enter to start evaluation")
                     if verbose:
                         print(str(iteration) + tab + str(mutation_attempts) +tab+ "EVAL2" + tab + "START MUT EVAL")
-                    secondPartialEvaluation(mutation.sequence, mutatedScores, verbose, inputsPath, database, detailed_output)
+                    secondPartialEvaluation(mutation.sequence, mutatedScores, verbose, inputsPath, job_out_path, database, detailed_output)
                     mutatedScore=get_global_score(mutatedScores)
                     #if step_by_step:
                       #raw_input(indent + "Hit enter to continue with mutation acceptance")
