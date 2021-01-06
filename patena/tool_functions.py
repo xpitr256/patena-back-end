@@ -2,6 +2,9 @@ import os
 import sys
 import re
 import subprocess
+from Bio.Blast.Applications import NcbiblastpCommandline
+from Bio.Blast import NCBIXML
+from Bio.Blast import NCBIWWW
 
 #  OUTPUT FORMATTING
 endl = "\n"
