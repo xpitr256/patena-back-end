@@ -327,7 +327,7 @@ def main():
     #  CUTOFFS, THRESHOLDS, LIMITS , DEFAULTS
     targetScore = 0.0 ### not working????
     composition = "average"
-    database = "uniprot_sprot.fasta"
+    database = "./patena/uniprot_sprot.fasta"
     # sequence="RANDOM"
 
 
