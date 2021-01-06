@@ -584,7 +584,7 @@ def chargedSearch(sequence, positionScores,config_params,inputsPath,outputsPath,
 
 
 
-def blastIt(sequence, positionScores, database, inputsPath, outputsPath, verbose, detailed_output):
+def blastIt(sequence, positionScores, database, inputsPath, outputsPath, verbose, detailed_output, blastWeb):
         global match
         ##BLAST SEARCH
         inputBlast=inputsPath+"inputBlast"
