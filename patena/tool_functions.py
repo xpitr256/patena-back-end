@@ -604,7 +604,8 @@ def blastIt(sequence, positionScores, database, inputsPath, outputsPath, verbose
             input=open(inputBlast, 'w')
             input.write(sequence)
             input.close()
-            commandLine=NcbiblastpCommandline(query=inputBlast, db=database, evalue=0.001, outfmt=5, out=outputBlast)
+            blastp_path = './patena/Tools/ncbi-blast/bin/blastp'
+            commandLine=NcbiblastpCommandline(cmd=blastp_path, query=inputBlast, db=database, evalue=0.001, outfmt=5, out=outputBlast)
             #print commandLine
             stdout, stderr = commandLine()
             result_handle = open(outputBlast)
