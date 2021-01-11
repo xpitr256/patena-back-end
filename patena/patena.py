@@ -202,8 +202,6 @@ def secondPartialEvaluation(sequence, position_scores, verbose, inputsPath, outp
       #raw_input(indent + "Hit enter to continue with next evaluation")
     if detailed_output:
         details_out.write('\n\n***********\n\n' )
-    if step_by_step:
-        input(indent + "Press enter to see final results...")
     ##PRINT SCORE
     if verbose:
         print(indent + "*************************************")
@@ -212,8 +210,6 @@ def secondPartialEvaluation(sequence, position_scores, verbose, inputsPath, outp
         print_formatted_scores(sequence,position_scores)
         print(indent + "SCORE:" + str(get_global_score(position_scores)))
         print(indent + "*************************************")
-    if step_by_step:
-        input(indent + "....hit enter to continue")
 
 
 
