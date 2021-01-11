@@ -996,7 +996,7 @@ def main():
                 if mutation_attempts < 10000:
                     #print "Sequence after mutation:    " + mutatedSequence
                     ##NOW THE SEQUENCE IS THE MUTATED SEQUENCE
-                    sequence=mutatedSequence
+                    sequence=mutation.sequence
                     #AND THE SCORES ARE THE ONES CORRESPONDING TO THE MUTATED SEQUENCE
                     partialScores=mutatedScores
                     #AND THE GLOBAL SEQUENCE SCORE IS THE ONE CORRESPONDING TO THIS NEW SEQUENCE
