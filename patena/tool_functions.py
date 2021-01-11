@@ -591,6 +591,7 @@ def chargedSearch(sequence, positionScores,config_params,inputsPath,outputsPath,
 def blastIt(sequence, positionScores, database, inputsPath, outputsPath, verbose, detailed_output, blastWeb):
         global match
         ##BLAST SEARCH
+        cutoff = 0.001
         inputBlast=inputsPath+"inputBlast"
         outputBlast=outputsPath+"outputBlast"
         if blastWeb:       # WEB BLAST SEARCH
@@ -607,7 +608,6 @@ def blastIt(sequence, positionScores, database, inputsPath, outputsPath, verbose
             input.write(sequence)
             input.close()
             blastp_path = './patena/Tools/ncbi-blast/bin/blastp'
-            cutoff = 0.001
             commandLine=NcbiblastpCommandline(cmd=blastp_path, query=inputBlast, db=database, evalue=cutoff, outfmt=5, out=outputBlast)
             #print commandLine
             stdout, stderr = commandLine()
