@@ -5,6 +5,7 @@ import subprocess
 from Bio.Blast.Applications import NcbiblastpCommandline
 from Bio.Blast import NCBIXML
 from Bio.Blast import NCBIWWW
+import time
 
 #  OUTPUT FORMATTING
 endl = "\n"
@@ -593,11 +594,12 @@ def blastIt(sequence, positionScores, database, inputsPath, outputsPath, verbose
         inputBlast=inputsPath+"inputBlast"
         outputBlast=outputsPath+"outputBlast"
         if blastWeb:       # WEB BLAST SEARCH
-            if verbose:
-                print(indent + "WEB BLAST SEARCH IN PROGRESS...")
-            result = NCBIWWW.qblast("blastp", database , sequence)
+            start = time.time()
+            print(indent + "WEB BLAST SEARCH IN PROGRESS...")
+            result = NCBIWWW.qblast("blastp", "swissprot" , sequence)
             records = NCBIXML.parse(result)
             first = next(records)
+            print("WEB BLAST SEARCH TOOK", time.time() - start, "seconds.")
         else:     # LOCAL BLAST SEARCH
             if verbose:
                 print(indent + "LOCAL BLAST SEARCH IN PROGRESS...")
@@ -605,7 +607,8 @@ def blastIt(sequence, positionScores, database, inputsPath, outputsPath, verbose
             input.write(sequence)
             input.close()
             blastp_path = './patena/Tools/ncbi-blast/bin/blastp'
-            commandLine=NcbiblastpCommandline(cmd=blastp_path, query=inputBlast, db=database, evalue=0.001, outfmt=5, out=outputBlast)
+            cutoff = 0.001
+            commandLine=NcbiblastpCommandline(cmd=blastp_path, query=inputBlast, db=database, evalue=cutoff, outfmt=5, out=outputBlast)
             #print commandLine
             stdout, stderr = commandLine()
             result_handle = open(outputBlast)
@@ -616,6 +619,8 @@ def blastIt(sequence, positionScores, database, inputsPath, outputsPath, verbose
             detailedOutFile.write('e-value cutoff: ' + str(cutoff)+ '\n')
             detailedOutFile.write('Database: Uniprot/Swissprot\n')
             detailedOutFile.write('Hits are shown as: E-value - match - subject - query start - query end\n')
+
+        match=False
         #first.alignments contains all de alignments found
         if len(first.alignments) > 0:
         #get first alignment
@@ -647,18 +652,12 @@ def blastIt(sequence, positionScores, database, inputsPath, outputsPath, verbose
                         print(indent + "Query Length:", len(sequence))
                         print(indent + "Query Start: ", hsp.query_start)
                         print(indent + "Query end:   ", hsp.query_end)
-            else:
-                if verbose:
-                    print(indent + "No hits found")
-                match=False
-        else:
-            if verbose:
-                print(indent + "No hits found")
-            match=False
 
-        if detailed_output:
-            if not match:
-               	detailedOutFile.write('NO hits found\n') 
+        if verbose and not match:
+            print(indent + "No hits found")
+        if detailed_output and not match:
+            detailedOutFile.write('NO hits found\n')
+
         blastScores=[]
         for p in range(len(sequence)):
             blastScores.append(0)
