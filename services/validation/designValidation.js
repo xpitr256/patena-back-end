@@ -1,4 +1,5 @@
 const utils = require("./validationUtils");
+const lengthService = require("../linkerLengthService");
 
 function validateFlankingSequences(data) {
   return isValidFasta(data.flankingSequence1) && isValidFasta(data.flankingSequence2);
@@ -41,16 +42,12 @@ function isValidOptionalEmail(email) {
   return true; // if there is no email then the validation is Ok.
 }
 
-function isValidNetCharge(netCharge, initialSequence) {
+function isValidNetCharge(netCharge, sequenceLength) {
   function isNotDefined(value) {
     return value === undefined || value === null;
   }
 
-  if (netCharge && !initialSequence) {
-    return false;
-  }
-
-  if (netCharge && initialSequence && !initialSequence.value) {
+  if (netCharge && isNotDefined(sequenceLength)) {
     return false;
   }
 
@@ -58,8 +55,10 @@ function isValidNetCharge(netCharge, initialSequence) {
     return true;
   }
 
-  return utils.isInt(netCharge) && Math.abs(netCharge) <= initialSequence.value.length;
+  return utils.isInt(netCharge) && Math.abs(netCharge) <= sequenceLength;
 }
+
+
 
 function areValidAlgorithms(algorithms) {
   if (!algorithms) {
@@ -78,21 +77,42 @@ function areValidFrequencies(frequencies) {
   }
   return result.toFixed(1) === "100.0";
 }
+
+
+function getSequenceLength(data) {
+  if (data.initialSequence && data.initialSequence.value) {
+    return data.initialSequence.value.length
+  }
+
+  if (data.distance) {
+    return lengthService.getLength(data.distance)
+  }
+}
+
 function isValidCustomConfig(data) {
   if (data.config) {
     return (
       areValidFrequencies(data.config.frequencies) &&
-      isValidNetCharge(data.config.netCharge, data.initialSequence) &&
+      isValidNetCharge(data.config.netCharge, getSequenceLength(data)) &&
       areValidAlgorithms(data.config.algorithms)
     );
   }
   return true; // if no config then we use default Patena's settings.
 }
 
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
+
 function isValidFasta(sequence) {
   if (!sequence) {
     return false;
   }
+
+  if (isEmpty(sequence)) {
+    return false;
+  }
+
   const lines = sequence.value.toString().split("\n");
   const linesWithoutComments = lines.filter((line) => !line.startsWith(">"));
   const allContent = linesWithoutComments.join("").trim();
