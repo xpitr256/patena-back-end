@@ -58,8 +58,6 @@ function isValidNetCharge(netCharge, sequenceLength) {
   return utils.isInt(netCharge) && Math.abs(netCharge) <= sequenceLength;
 }
 
-
-
 function areValidAlgorithms(algorithms) {
   if (!algorithms) {
     return false;
@@ -78,14 +76,13 @@ function areValidFrequencies(frequencies) {
   return result.toFixed(1) === "100.0";
 }
 
-
 function getSequenceLength(data) {
   if (data.initialSequence && data.initialSequence.value) {
-    return data.initialSequence.value.length
+    return data.initialSequence.value.length;
   }
 
   if (data.distance) {
-    return lengthService.getLength(data.distance)
+    return lengthService.getLength(data.distance);
   }
 }
 

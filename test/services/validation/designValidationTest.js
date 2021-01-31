@@ -246,61 +246,61 @@ describe("Design Validation", () => {
         expect(result).to.be.true;
       });
 
-      it("should return false for net charge bigger than sequence length calculated from distance",() => {
+      it("should return false for net charge bigger than sequence length calculated from distance", () => {
         let data = Object.assign({}, designData);
         data.config = Object.assign({}, validConfig);
         data.distance = 10;
         data.config.netCharge = 4;
         const result = designValidation.isValidDesign(data);
         expect(result).to.be.false;
-      })
+      });
 
-      it("should return false for net charge bigger than sequence length calculated from invalid distance",() => {
+      it("should return false for net charge bigger than sequence length calculated from invalid distance", () => {
         let data = Object.assign({}, designData);
         data.config = Object.assign({}, validConfig);
         data.distance = -10;
         data.config.netCharge = 3;
         const result = designValidation.isValidDesign(data);
         expect(result).to.be.false;
-      })
+      });
 
-      it("should return true for net charge equals to sequence length calculated from invalid distance",() => {
+      it("should return true for net charge equals to sequence length calculated from invalid distance", () => {
         let data = Object.assign({}, designData);
         data.config = Object.assign({}, validConfig);
         data.distance = 10;
         data.config.netCharge = 3;
         const result = designValidation.isValidDesign(data);
         expect(result).to.be.true;
-      })
+      });
 
-      it("should return true for negative net charge but equals in ABS to sequence length calculated from invalid distance",() => {
+      it("should return true for negative net charge but equals in ABS to sequence length calculated from invalid distance", () => {
         let data = Object.assign({}, designData);
         data.config = Object.assign({}, validConfig);
         data.distance = 10;
         data.config.netCharge = -3;
         const result = designValidation.isValidDesign(data);
         expect(result).to.be.true;
-      })
+      });
 
-      it("should return true for zero net charge for sequence length calculated from invalid distance",() => {
+      it("should return true for zero net charge for sequence length calculated from invalid distance", () => {
         let data = Object.assign({}, designData);
         data.config = Object.assign({}, validConfig);
         data.distance = 10;
         data.config.netCharge = 0;
         const result = designValidation.isValidDesign(data);
         expect(result).to.be.true;
-      })
+      });
 
-      it("should return true for positive net charge value smaller than sequence length calculated from invalid distance",() => {
+      it("should return true for positive net charge value smaller than sequence length calculated from invalid distance", () => {
         let data = Object.assign({}, designData);
         data.config = Object.assign({}, validConfig);
         data.distance = 10;
         data.config.netCharge = 2;
         const result = designValidation.isValidDesign(data);
         expect(result).to.be.true;
-      })
+      });
 
-      it("should return true for negative net charge value and smaller in ABS than sequence length calculated from invalid distance",() => {
+      it("should return true for negative net charge value and smaller in ABS than sequence length calculated from invalid distance", () => {
         let data = Object.assign({}, designData);
         data.config = Object.assign({}, validConfig);
         data.distance = 10;

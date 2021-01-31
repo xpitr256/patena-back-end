@@ -124,8 +124,8 @@ function getConfigParameters(task) {
     });
 
     //Add Blast web
-    if (task.taskData.config.algorithms.some((algorithm) => algorithm.active && algorithm.name === 'BLAST')) {
-      args.push("--blast-web")
+    if (task.taskData.config.algorithms.some((algorithm) => algorithm.active && algorithm.name === "BLAST")) {
+      args.push("--blast-web");
     }
 
     const frequencies = task.taskData.config.frequencies.map((frequency) => {

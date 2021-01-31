@@ -448,6 +448,12 @@ def main():
     beta = args.beta
     json_out = args.json_out
 
+    if isinstance(length, list):
+        length = length[0]
+
+    if isinstance(args.net_charge, list):
+        args.net_charge = args.net_charge[0]
+
     ### TODO:check sequence with re
     ## (ARNDCQEGHILKMFPSTWYV)
     sequence=args.seq  #sequence could be None if it was not defined by user
@@ -466,8 +472,6 @@ def main():
         evaluateNetCharge=True
         config_params['targetNetCharge'] = args.net_charge
         execution_set.add('Net charge')  # 'Net charge' is not in the execution_set by default, only included by user request
-
-
 
 
 
@@ -513,7 +517,7 @@ def main():
 
     #CHECK IF TARGET NET CHARGE IS POSSIBLE BASED ON SEQUENCE LENGTH (AND PH??)
     if evaluateNetCharge:
-        if abs(config_params['targetNetCharge'][0]) > length:
+        if abs(config_params['targetNetCharge']) > length:
             print('Net charge is impossible to reach with the specified sequence length')
             exit()
 
