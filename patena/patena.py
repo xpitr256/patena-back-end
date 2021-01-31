@@ -513,7 +513,7 @@ def main():
 
     #CHECK IF TARGET NET CHARGE IS POSSIBLE BASED ON SEQUENCE LENGTH (AND PH??)
     if evaluateNetCharge:
-        if abs(config_params['targetNetCharge']) > length:
+        if abs(config_params['targetNetCharge'][0]) > length:
             print('Net charge is impossible to reach with the specified sequence length')
             exit()
 
