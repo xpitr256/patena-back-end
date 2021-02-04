@@ -120,7 +120,7 @@ describe("Task Service", async () => {
     });
   });
 
-  describe("getTaskInProgress", async () => {
+  describe("getTasksInProgress", async () => {
     it("should return the existent task in progress ", async () => {
       const id = "123345";
       let createdTasks = [];
@@ -142,10 +142,11 @@ describe("Task Service", async () => {
         "../model/schema/Task": taskMock,
       });
 
-      const retrievedTask = await taskService.getTaskInProgress();
-      expect(retrievedTask).not.to.be.equals(undefined);
-      expect(retrievedTask.id).to.be.equals(id);
-      expect(retrievedTask.stateId).to.be.equals(constants.TASK_STATE_IN_PROGRESS);
+      const retrievedTasks = await taskService.getTasksInProgress();
+      expect(retrievedTasks).not.to.be.equals(undefined);
+      expect(retrievedTasks).to.has.length.valueOf(1);
+      expect(retrievedTasks[0].id).to.be.equals(id);
+      expect(retrievedTasks[0].stateId).to.be.equals(constants.TASK_STATE_IN_PROGRESS);
     });
 
     it("should return nothing for non existent in progress task", async () => {
@@ -166,7 +167,7 @@ describe("Task Service", async () => {
         "./log/logService": mockLogger,
       });
 
-      const retrievedTask = await taskService.getTaskInProgress();
+      const retrievedTask = await taskService.getTasksInProgress();
       expect(retrievedTask).to.be.equals(undefined);
     });
   });

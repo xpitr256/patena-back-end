@@ -55,11 +55,11 @@ module.exports = {
     });
     return tasks.length > 0 ? tasks[0] : undefined;
   },
-  getTaskInProgress: async function () {
+  getTasksInProgress: async function () {
     const tasks = await Task.find({
       stateId: constants.TASK_STATE_IN_PROGRESS,
     });
-    return tasks.length > 0 ? tasks[0] : undefined;
+    return tasks.length > 0 ? tasks : undefined;
   },
   promoteTaskToInProgress: async function (task) {
     return updateTaskState(task, constants.TASK_STATE_IN_PROGRESS);

@@ -9,12 +9,13 @@ const DEBUG_MODE = false;
 const TEST_QUEUE_NAME = "patena-test-job-queue";
 const TEST_REDIS_URL = "redis://127.0.0.1:6379";
 const TEST_TASK_ID = "47774471-b6d0-480e-b134-81578b044049";
+const config = require("../../config/config");
 
 const mockLogger = MockLogger.buildLogger(DEBUG_MODE);
 
 //TASK SERVICE MOCK FUNCTIONS
 function getNoTaskInProgress(task) {
-  mockLogger.log("taskServiceMock:: getTaskInProgress => undefined");
+  mockLogger.log("taskServiceMock:: getTasksInProgress => undefined");
 }
 
 function getNoNextPendingTask(task) {
@@ -34,7 +35,7 @@ function promoteTaskToInProgress(task) {
 describe("Task analyzer", () => {
   it("should do nothing when no task is pending ", async () => {
     let taskServiceMock = {};
-    taskServiceMock.getTaskInProgress = getNoTaskInProgress;
+    taskServiceMock.getTasksInProgress = getNoTaskInProgress;
     taskServiceMock.getNextPendingTask = getNoNextPendingTask;
     const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
     const start = proxyquire("../../workers/taskAnalyzer", {
@@ -56,7 +57,7 @@ describe("Task analyzer", () => {
     };
 
     let taskServiceMock = {};
-    taskServiceMock.getTaskInProgress = getNoTaskInProgress;
+    taskServiceMock.getTasksInProgress = getNoTaskInProgress;
     taskServiceMock.getNextPendingTask = () => {
       mockLogger.log("taskServiceMock:: getNextPendingTask => task");
       return task;
@@ -78,7 +79,7 @@ describe("Task analyzer", () => {
     expect(mockQueue.getJob(TEST_TASK_ID)).not.to.be.undefined;
   });
 
-  it("should wait (do nothing) if a non overdue task is currently in progress", async () => {
+  it("should continue adding tasks if a non overdue task is currently in progress and max tasks in parallel is not reached", async () => {
     let taskInProgress = {
       stateId: constants.TASK_STATE_IN_PROGRESS,
       lastExecutionDate: new Date(),
@@ -86,10 +87,20 @@ describe("Task analyzer", () => {
     };
 
     let taskServiceMock = {};
-    taskServiceMock.getTaskInProgress = function () {
-      mockLogger.log("taskServiceMock:: getTaskInProgress => taskInProgress");
-      return taskInProgress;
+    taskServiceMock.getTasksInProgress = function () {
+      mockLogger.log("taskServiceMock:: getTasksInProgress => taskInProgress");
+      return [taskInProgress];
     };
+    let task = {
+      stateId: constants.TASK_STATE_PENDING,
+      taskData: {},
+      id: TEST_TASK_ID,
+    };
+    taskServiceMock.getNextPendingTask = () => {
+      mockLogger.log("taskServiceMock:: getNextPendingTask => task");
+      return task;
+    };
+    taskServiceMock.promoteTaskToInProgress = promoteTaskToInProgress;
 
     const start = proxyquire("../../workers/taskAnalyzer", {
       "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
@@ -101,7 +112,40 @@ describe("Task analyzer", () => {
     await start(mockQueue);
 
     expect(taskInProgress.stateId).to.be.equals(constants.TASK_STATE_IN_PROGRESS);
-    expect(mockQueue.count()).to.be.equals(0);
+    expect(mockQueue.count()).to.be.equals(1);
+  });
+
+  it("should NOT continue adding tasks if the amount of tasks in progress is equals to max tasks in parallel value", async () => {
+    const mockQueue = new MockQueue(TEST_QUEUE_NAME, TEST_REDIS_URL);
+    const maxTasksExecutionInParallel = config.JOB_CONCURRENCY;
+    for (let i = 0; i < maxTasksExecutionInParallel; i++) {
+      mockQueue.add(i);
+    }
+
+    let taskInProgress = {
+      stateId: constants.TASK_STATE_IN_PROGRESS,
+      lastExecutionDate: new Date(),
+      taskData: {},
+    };
+
+    let taskServiceMock = {};
+    taskServiceMock.getTasksInProgress = function () {
+      mockLogger.log("taskServiceMock:: getTasksInProgress => taskInProgress");
+      const result = [];
+      for (let i = 0; i < maxTasksExecutionInParallel; i++) {
+        result.push(taskInProgress);
+      }
+      return result;
+    };
+
+    const start = proxyquire("../../workers/taskAnalyzer", {
+      "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),
+      "./../services/taskService": taskServiceMock,
+      "./../services/log/logService": mockLogger,
+    });
+
+    await start(mockQueue);
+    expect(mockQueue.count()).to.be.equals(maxTasksExecutionInParallel);
   });
 
   it("should cancel an overdue task", async () => {
@@ -117,9 +161,9 @@ describe("Task analyzer", () => {
       id: TEST_TASK_ID,
     };
     let taskServiceMock = {};
-    taskServiceMock.getTaskInProgress = function () {
-      mockLogger.log("taskServiceMock:: getTaskInProgress => taskInProgress");
-      return taskInProgress;
+    taskServiceMock.getTasksInProgress = function () {
+      mockLogger.log("taskServiceMock:: getTasksInProgress => taskInProgress");
+      return [taskInProgress];
     };
 
     taskServiceMock.cancelTask = function (task) {
@@ -128,6 +172,8 @@ describe("Task analyzer", () => {
       task.stateId = constants.TASK_STATE_CANCELLED;
       return task;
     };
+
+    taskServiceMock.getNextPendingTask = getNoNextPendingTask;
 
     const start = proxyquire("../../workers/taskAnalyzer", {
       "./../model/database": MockDatabase.buildDatabaseWith(mockLogger),

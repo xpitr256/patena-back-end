@@ -2,12 +2,14 @@ const taskService = require("./../services/taskService");
 const database = require("./../model/database");
 const notifyService = require("./../services/notifier/notifyService");
 const logger = require("./../services/log/logService");
+const config = require("../config/config");
 
 const getNextPendingTask = taskService.getNextPendingTask;
-const getTaskInProgress = taskService.getTaskInProgress;
+const getTasksInProgress = taskService.getTasksInProgress;
 const promoteTaskToInProgress = taskService.promoteTaskToInProgress;
 const cancelTask = taskService.cancelTask;
 const notifyUserThatTaskWasCancelled = notifyService.notifyUserThatTaskWasCancelled;
+const maxTasksExecutionInParallel = config.JOB_CONCURRENCY;
 
 function isTaskOverdue(task) {
   // If task exceeds 1 day processing => is overdue
@@ -37,17 +39,39 @@ async function start(workQueue) {
   const jobCountBefore = await workQueue.getJobCounts();
   logger.log("[Task Analyzer] Queue size BEFORE: " + JSON.stringify(jobCountBefore));
 
-  logger.log("[Task Analyzer] GETTING Task In Progress...");
-  const taskInProgress = await getTaskInProgress();
-  if (taskInProgress) {
-    logger.log("[Task Analyzer] GOT a Task In Progress: " + taskInProgress.id);
-    if (isTaskOverdue(taskInProgress)) {
-      logger.log("[Task Analyzer] Task In Progress " + taskInProgress.id + " is overdue: " + taskInProgress.lastExecutionDate);
-      await abortTask(taskInProgress, workQueue);
-      logger.log("[Task Analyzer] Task In Progress " + taskInProgress.id + " was cancelled: ");
+  logger.log("[Task Analyzer] GETTING Tasks In Progress...");
+  const tasksInProgress = await getTasksInProgress();
+  if (tasksInProgress) {
+    logger.log("[Task Analyzer] GOT an amount of " + tasksInProgress.length + "  tasks In Progress.");
+    let promises = [];
+    tasksInProgress.forEach((taskInProgress) => {
+      logger.log("[Task Analyzer] GOT a Task In Progress: " + taskInProgress.id);
+      if (isTaskOverdue(taskInProgress)) {
+        logger.log("[Task Analyzer] Task In Progress " + taskInProgress.id + " is overdue: " + taskInProgress.lastExecutionDate);
+        promises.push(abortTask(taskInProgress, workQueue));
+      }
+    });
+    if (promises.length > 0) {
+      logger.log("[Task Analyzer] Waiting for task(s) to be cancelled.");
+      try {
+        await Promise.all(promises);
+        logger.log("[Task Analyzer] Task(s) were successfully cancelled.");
+      } catch (error) {
+        logger.error("[Task Analyzer ERROR] There was and error trying to cancel overdue tasks: " + error);
+        return;
+      }
     }
-    logger.log("[Task Analyzer] EXITING workerId=[" + process.pid + "] for task : " + taskInProgress.id);
-    return;
+    if (tasksInProgress.length >= maxTasksExecutionInParallel) {
+      logger.log(
+        "[Task Analyzer] EXITING workerId=[" +
+          process.pid +
+          "] There are " +
+          tasksInProgress.length +
+          " tasks In Progress and max allowed is " +
+          maxTasksExecutionInParallel
+      );
+      return;
+    }
   }
 
   logger.log("[Task Analyzer] PROMOTING Next Task...");
