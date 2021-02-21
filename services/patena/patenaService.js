@@ -141,6 +141,9 @@ function getConfigParameters(task) {
     frequencies.forEach((frequency) => {
       args.push("-" + frequency.name + "=" + frequency.value);
     });
+  } else {
+    // If no config is specified => default config will be applied, and that includes running blast.
+    args.push("--blast-web");
   }
 
   return args;
