@@ -458,6 +458,12 @@ def main():
     ## (ARNDCQEGHILKMFPSTWYV)
     sequence=args.seq  #sequence could be None if it was not defined by user
 
+    if sequence:
+        if isinstance(sequence, list):
+            length = len(sequence[0])
+        else:
+            length = len(sequence)
+
     if args.job_id:
         exeId = args.job_id
     if step_by_step:
@@ -519,7 +525,7 @@ def main():
     if evaluateNetCharge:
         if abs(config_params['targetNetCharge']) > length:
             print('Net charge is impossible to reach with the specified sequence length')
-            exit()
+            exit(1)
 
 
 
