@@ -669,8 +669,9 @@ def blastIt(sequence, positionScores, database, inputsPath, outputsPath, verbose
                     positionScores[j]+=1
                 else:
                     print("#################")
-                    print("j: " + j)
-                    print("start: " + start)
+                    print("j: " + str(j))
+                    print("start: " + str(start))
+                    print(str(j-start+1))
                     print("hsp.match: ")
                     print(hsp.match)
                     print("#################")
