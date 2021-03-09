@@ -668,14 +668,8 @@ def blastIt(sequence, positionScores, database, inputsPath, outputsPath, verbose
                     #print sequence[j]
                     positionScores[j]+=1
                 else:
-                    print("#################")
-                    print("j: " + str(j))
-                    print("start: " + str(start))
-                    print(str(j-start+1))
-                    print("hsp.match: ")
-                    print(hsp.match)
-                    print("#################")
-                    if hsp.match[j-start+1] != "+" and hsp.match[j-start+1] != " ":
+                    index = j-start+1
+                    if index < len(hsp.match) and hsp.match[index] != "+" and hsp.match[index] != " ":
                         positionScores[j] += 1
                         blastScores[j]+=1
         if verbose:
