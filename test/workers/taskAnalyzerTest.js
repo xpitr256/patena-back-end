@@ -152,7 +152,7 @@ describe("Task analyzer", () => {
     const translations = translationService.getTranslationsIn("en");
 
     let yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setDate(yesterday.getDate() - 2);
 
     let taskInProgress = {
       stateId: constants.TASK_STATE_IN_PROGRESS,
