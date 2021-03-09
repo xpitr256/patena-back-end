@@ -12,5 +12,6 @@ module.exports = {
   REDIS_URL: process.env.REDIS_URL || "redis://127.0.0.1:6379",
   WEB_CONCURRENCY: process.env.WEB_CONCURRENCY || 1,
   JOB_CONCURRENCY: process.env.JOB_CONCURRENCY || 5,
+  MAX_JOB_EXECUTION_TIME_IN_MS_SECONDS: process.env.MAX_JOB_EXECUTION_TIME_IN_MS_SECONDS || 172800000, // 2 days
   PATENA_QUEUE_NAME: process.env.PATENA_QUEUE_NAME || "patena-v2",
 };

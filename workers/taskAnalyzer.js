@@ -10,12 +10,12 @@ const promoteTaskToInProgress = taskService.promoteTaskToInProgress;
 const cancelTask = taskService.cancelTask;
 const notifyUserThatTaskWasCancelled = notifyService.notifyUserThatTaskWasCancelled;
 const maxTasksExecutionInParallel = config.JOB_CONCURRENCY;
+const maxExecutionTimeInMs = config.MAX_JOB_EXECUTION_TIME_IN_MS_SECONDS;
 
 function isTaskOverdue(task) {
-  // If task exceeds 1 day processing => is overdue
-  const oneDayInMs = 86400000;
+  // If task exceeds max time execution processing => is overdue
   const dateDifferenceInMs = Date.now() - task.lastExecutionDate;
-  return dateDifferenceInMs > oneDayInMs;
+  return dateDifferenceInMs > maxExecutionTimeInMs;
 }
 
 async function promoteNextTask() {
