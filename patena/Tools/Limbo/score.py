@@ -117,6 +117,7 @@ def score(fastafile,matrixscores,peptide_length):
 	averageseqs = []
 	allallseqs = []
 	allboltz = []
+	results = []
 
 	for line in fastafile:
 
