@@ -13,6 +13,11 @@ async function updateTaskState(task, state) {
   return task;
 }
 
+function getMinutesBetweenDates(startDate, endDate) {
+  const diff = endDate.getTime() - startDate.getTime();
+  return Math.round(diff / 60000);
+}
+
 async function addResultsTo(task) {
   const directory = "./patena/Output/" + task.id;
   logger.log("[Task Service] addResultsTo directory: " + directory);
@@ -22,6 +27,7 @@ async function addResultsTo(task) {
     task.output = result;
     task.attempts = task.attempts + 1;
     task.stateId = constants.TASK_STATE_FINISHED;
+    task.executionMinutesElapsed = getMinutesBetweenDates(new Date(task.lastExecutionDate), new Date());
     logger.log("[Task Service] addResultsTo saving task: " + task.id);
     await task.save();
     logger.log("[Task Service] addResultsTo after saving task: " + task.id);

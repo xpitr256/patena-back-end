@@ -10,6 +10,7 @@ let TaskSchema = new Schema({
   creationDate: { type: Date, default: Date.now },
   attempts: { type: Number, default: 0 },
   lastExecutionDate: { type: Date, default: null },
+  executionMinutesElapsed: { type: Number, default: 0 },
   output: { type: Object, default: null },
   emailSent: { type: Boolean, default: false },
   sentEmailDate: { type: Date, default: null },
