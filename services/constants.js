@@ -14,6 +14,17 @@ const DESIGN_TYPE_INITIAL_AND_FLANKING_SEQUENCES = 4;
 // This represents the amount of amino acids we take before and after the flanking sequences.
 const FLANKING_WINDOW_SIZE = 10;
 
+const taskStates = new Map()
+taskStates.set(TASK_STATE_NOT_FOUND,"Not Found")
+taskStates.set(TASK_STATE_PENDING,"Pending")
+taskStates.set(TASK_STATE_IN_PROGRESS,"In Progress")
+taskStates.set(TASK_STATE_FINISHED,"Finished")
+taskStates.set(TASK_STATE_CANCELLED,"Cancelled")
+
+function getTaskStatusAsString(stateId) {
+  return taskStates.has(stateId) ? taskStates.get(stateId) : '';
+}
+
 module.exports = {
   TYPE_ANALYSIS,
   TYPE_DESIGN,
@@ -27,4 +38,5 @@ module.exports = {
   DESIGN_TYPE_ONLY_FLANKING_SEQUENCES,
   DESIGN_TYPE_INITIAL_AND_FLANKING_SEQUENCES,
   FLANKING_WINDOW_SIZE,
+  getTaskStatusAsString,
 };

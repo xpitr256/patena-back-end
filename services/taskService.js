@@ -61,6 +61,17 @@ module.exports = {
     });
     return tasks.length > 0 ? tasks[0] : undefined;
   },
+  getTaskForAdmin: async function (taskId) {
+    let task = await this.getTask(taskId)
+    if (task) {
+      delete task.output.mutationsHistory
+      delete task._doc._id
+      delete task._doc.__v
+      task._doc.status = task.status()
+      //TODO add duration to task
+    }
+    return task
+  },
   getTasksInProgress: async function () {
     const tasks = await Task.find({
       stateId: constants.TASK_STATE_IN_PROGRESS,

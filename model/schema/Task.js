@@ -18,4 +18,8 @@ let TaskSchema = new Schema({
   language: { type: String, default: "en" },
 });
 
+TaskSchema.methods.status = function() {
+  return constants.getTaskStatusAsString(this.stateId);
+};
+
 module.exports = mongoose.model("TaskSchema", TaskSchema);
