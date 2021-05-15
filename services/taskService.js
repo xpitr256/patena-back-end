@@ -5,6 +5,7 @@ const constants = require("./constants");
 const logger = require("./log/logService");
 const fse = require("fs-extra");
 const fs = require("fs");
+const moment = require("moment");
 
 async function updateTaskState(task, state) {
   task.stateId = state;
@@ -37,6 +38,27 @@ async function addResultsTo(task) {
   logger.log("[Task Service] exiting addResultsTo");
 }
 
+function formatAdminTask(task) {
+  if (task.output) {
+    delete task.output.mutationsHistory;
+  }
+  delete task._doc._id;
+  delete task._doc.__v;
+
+  task._doc.status = task.status();
+  delete task._doc.stateId;
+
+  task._doc.duration = task.executionMinutesElapsed === 0 ? "-" : task.executionMinutesElapsed;
+  delete task._doc.executionMinutesElapsed;
+
+  task._doc.type = task.type();
+  delete task._doc.typeId;
+
+  task._doc.date = moment(task.creationDate).format("DD/MM/YYYY HH:mm") + " hs";
+
+  return task;
+}
+
 module.exports = {
   create: async function (id, taskData, typeId) {
     let task;
@@ -62,15 +84,11 @@ module.exports = {
     return tasks.length > 0 ? tasks[0] : undefined;
   },
   getTaskForAdmin: async function (taskId) {
-    let task = await this.getTask(taskId)
+    let task = await this.getTask(taskId);
     if (task) {
-      delete task.output.mutationsHistory
-      delete task._doc._id
-      delete task._doc.__v
-      task._doc.status = task.status()
-      //TODO add duration to task
+      task = formatAdminTask(task);
     }
-    return task
+    return task;
   },
   getTasksInProgress: async function () {
     const tasks = await Task.find({

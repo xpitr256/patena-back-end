@@ -1,5 +1,5 @@
 module.exports = {
-  MONGODB_URI: process.env.MONGO_URI || "mongodb://localhost/test",
+  MONGODB_URI: process.env.MONGO_URI || "mongodb://127.0.0.1:27017/patena",
   MONGODB_CONFIG: {
     useNewUrlParser: true,
     useUnifiedTopology: true,

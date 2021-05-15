@@ -14,15 +14,25 @@ const DESIGN_TYPE_INITIAL_AND_FLANKING_SEQUENCES = 4;
 // This represents the amount of amino acids we take before and after the flanking sequences.
 const FLANKING_WINDOW_SIZE = 10;
 
-const taskStates = new Map()
-taskStates.set(TASK_STATE_NOT_FOUND,"Not Found")
-taskStates.set(TASK_STATE_PENDING,"Pending")
-taskStates.set(TASK_STATE_IN_PROGRESS,"In Progress")
-taskStates.set(TASK_STATE_FINISHED,"Finished")
-taskStates.set(TASK_STATE_CANCELLED,"Cancelled")
+const taskStates = new Map();
+taskStates.set(TASK_STATE_NOT_FOUND, "Not Found");
+taskStates.set(TASK_STATE_PENDING, "Pending");
+taskStates.set(TASK_STATE_IN_PROGRESS, "In Progress");
+taskStates.set(TASK_STATE_FINISHED, "Finished");
+taskStates.set(TASK_STATE_CANCELLED, "Cancelled");
 
 function getTaskStatusAsString(stateId) {
-  return taskStates.has(stateId) ? taskStates.get(stateId) : '';
+  return taskStates.has(stateId) ? taskStates.get(stateId) : "";
+}
+
+const designTypes = new Map();
+designTypes.set(DESIGN_TYPE_NO_INITIAL_SEQUENCE, "No initial data");
+designTypes.set(DESIGN_TYPE_ONLY_INITIAL_SEQUENCE, "Initial Sequence");
+designTypes.set(DESIGN_TYPE_ONLY_FLANKING_SEQUENCES, "Only flanking");
+designTypes.set(DESIGN_TYPE_INITIAL_AND_FLANKING_SEQUENCES, "Flanking + initial sequence");
+
+function getDesignTypeAsString(designTypeId) {
+  return designTypes.has(designTypeId) ? designTypes.get(designTypeId) : "";
 }
 
 module.exports = {
@@ -39,4 +49,5 @@ module.exports = {
   DESIGN_TYPE_INITIAL_AND_FLANKING_SEQUENCES,
   FLANKING_WINDOW_SIZE,
   getTaskStatusAsString,
+  getDesignTypeAsString,
 };

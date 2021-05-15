@@ -495,4 +495,49 @@ describe("Task Service", async () => {
       expect(createdTask.output.result.sequence).to.be.equals("ABC");
     });
   });
+
+  describe("getTaskForAdmin", async () => {
+    const mockLogger = {
+      log: function () {},
+      error: function () {},
+    };
+    const databaseWithMockLogger = proxyquire("../../model/database", {
+      "../services/log/logService": mockLogger,
+    });
+    const Task = require("../../model/schema/Task");
+    const mockDatabase = proxyquire("../model/databaseTestHelper", {
+      "./../../model/database": databaseWithMockLogger,
+    });
+    beforeEach(async () => {
+      await mockDatabase.createInMemoryDataBase();
+    });
+
+    afterEach(async () => {
+      await mockDatabase.destroyInMemoryDataBase();
+    });
+    it("should return undefined for non invalid taskIds", async () => {
+      const taskService = proxyquire("../../services/taskService", {});
+      const task = await taskService.getTaskForAdmin("1234");
+      expect(task).to.be.equals(undefined);
+    });
+
+    it("should return a  task from valid taskIds", async () => {
+      const task = new Task({
+        id: 123,
+        stateId: constants.TASK_STATE_PENDING,
+        typeId: constants.TYPE_DESIGN,
+        taskData: {
+          designType: 1,
+        },
+        language: "en",
+      });
+      await task.save();
+      const taskService = proxyquire("../../services/taskService", {});
+      const adminTask = await taskService.getTaskForAdmin(123);
+      expect(adminTask).to.be.not.equals(undefined);
+      expect(adminTask._doc.status).to.be.equals("Pending");
+      expect(adminTask._doc.duration).to.be.equals("-");
+      expect(adminTask._doc.type).to.be.equals("No initial data");
+    });
+  });
 });
