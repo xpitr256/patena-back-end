@@ -72,16 +72,17 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
+
+// User front endpoints
 app.use("/linkerLength", linkerLength);
 app.use("/results", middleware.ensureAuthenticated, results);
-
 app.route("/contact").post(contact.postContact);
-
 app.route("/analyze").post(middleware.ensureAuthenticated, analyze.postAnalyze);
-
 app.route("/design").post(middleware.ensureAuthenticated, design.postDesign);
 
+// Admin
 app.route("/tasks/:id").get(middleware.ensureAuthenticated, tasks.getTask);
+app.route("/tasks/:id/retry").put(middleware.ensureAuthenticated, tasks.retryTask);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

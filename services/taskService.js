@@ -90,6 +90,23 @@ module.exports = {
     }
     return task;
   },
+  retryCancelledTask: async function (taskId) {
+    let task = await this.getTask(taskId);
+    if (task) {
+      if (task.stateId === constants.TASK_STATE_CANCELLED) {
+        await updateTaskState(task, constants.TASK_STATE_PENDING);
+        return {
+          taskUpdated: true,
+        };
+      }
+      return {
+        taskUpdated: false,
+      };
+    }
+    return {
+      taskNotFound: true,
+    };
+  },
   getTasksInProgress: async function () {
     const tasks = await Task.find({
       stateId: constants.TASK_STATE_IN_PROGRESS,
