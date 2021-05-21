@@ -44,17 +44,6 @@ describe("/tasks/:id route", () => {
       });
   });
 
-  it("should return a 404 error for no taskId", (done) => {
-    chai
-      .request(application)
-      .get("/tasks/")
-      .set("Authorization", "Bearer " + validToken)
-      .end((err, res) => {
-        expect(res).to.have.status(404);
-        done();
-      });
-  });
-
   beforeEach(async () => {
     await mockDatabase.createInMemoryDataBase();
   });

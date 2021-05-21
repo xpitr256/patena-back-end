@@ -55,6 +55,7 @@ function formatAdminTask(task) {
   delete task._doc.typeId;
 
   task._doc.date = moment(task.creationDate).format("DD/MM/YYYY HH:mm") + " hs";
+  delete task._doc.creationDate;
 
   return task;
 }
@@ -82,6 +83,17 @@ module.exports = {
       id: taskId,
     });
     return tasks.length > 0 ? tasks[0] : undefined;
+  },
+  getTasks: async function (limit, offset, stateId) {
+    let filterOptions = {};
+    if (stateId) {
+      filterOptions.stateId = stateId;
+    }
+    let tasks = Task.find(filterOptions)
+      .sort({ stateId: 1, creationDate: "desc" })
+      .skip(limit * offset)
+      .limit(limit);
+    return tasks.map((result) => result.map(formatAdminTask));
   },
   getTaskForAdmin: async function (taskId) {
     let task = await this.getTask(taskId);

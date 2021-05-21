@@ -35,6 +35,10 @@ function getDesignTypeAsString(designTypeId) {
   return designTypes.has(designTypeId) ? designTypes.get(designTypeId) : "";
 }
 
+function isValidTaskState(taskState) {
+  return taskStates.has(taskState) && taskState !== 0;
+}
+
 module.exports = {
   TYPE_ANALYSIS,
   TYPE_DESIGN,
@@ -50,4 +54,5 @@ module.exports = {
   FLANKING_WINDOW_SIZE,
   getTaskStatusAsString,
   getDesignTypeAsString,
+  isValidTaskState,
 };

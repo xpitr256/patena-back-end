@@ -81,6 +81,7 @@ app.route("/analyze").post(middleware.ensureAuthenticated, analyze.postAnalyze);
 app.route("/design").post(middleware.ensureAuthenticated, design.postDesign);
 
 // Admin
+app.route("/tasks").get(middleware.ensureAuthenticated, tasks.getTasks);
 app.route("/tasks/:id").get(middleware.ensureAuthenticated, tasks.getTask);
 app.route("/tasks/:id/retry").put(middleware.ensureAuthenticated, tasks.retryTask);
 
