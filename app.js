@@ -25,6 +25,7 @@ var analyze = require("./routes/analyze");
 var design = require("./routes/design");
 var middleware = require("./routes/midddleware");
 const tasks = require("./routes/admin/tasks");
+const statistics = require("./routes/admin/statistics");
 
 var app = express();
 
@@ -84,6 +85,9 @@ app.route("/design").post(middleware.ensureAuthenticated, design.postDesign);
 app.route("/tasks").get(middleware.ensureAuthenticated, tasks.getTasks);
 app.route("/tasks/:id").get(middleware.ensureAuthenticated, tasks.getTask);
 app.route("/tasks/:id/retry").put(middleware.ensureAuthenticated, tasks.retryTask);
+
+//Admin statistics
+app.route("/statistics/rate").get(middleware.ensureAuthenticated, statistics.getSuccessRate);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
