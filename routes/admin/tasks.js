@@ -1,5 +1,6 @@
 const taskService = require("../../services/taskService");
 const isValidTaskState = require("../../services/constants").isValidTaskState;
+const logger = require("../../services/log/logService");
 
 async function getTask(req, res) {
   const taskId = req.params.id;
@@ -11,7 +12,7 @@ async function getTask(req, res) {
       res.status(404).send({ message: "There is no task with id: " + taskId });
     }
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     res.status(500).send(error);
   }
 }
@@ -28,7 +29,7 @@ async function retryTask(req, res) {
       res.status(400).send({ message: "Invalid task status. The task is not cancelled to be retried" });
     }
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     res.status(500).send(error);
   }
 }
@@ -47,7 +48,7 @@ async function getTasks(req, res) {
     const tasks = await taskService.getTasks(limit, offset, state);
     res.json(tasks);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     res.status(500).send(error);
   }
 }

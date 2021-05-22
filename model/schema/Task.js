@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const constants = require("../../services/constants");
 
 let TaskSchema = new Schema({
-  id: String,
+  id: {type: String, unique: true },
   stateId: { type: Number, default: constants.TASK_STATE_PENDING },
   messageError: { type: String, default: "" },
   typeId: Number, // 1-analyze, 2-design

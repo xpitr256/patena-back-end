@@ -7,6 +7,7 @@ module.exports = {
     const connectionString = database ? database : config.MONGODB_URI;
     try {
       await mongoose.connect(connectionString, config.MONGODB_CONFIG);
+      mongoose.set('useCreateIndex', true)
       logger.log("Successfully connected to the DB");
     } catch (err) {
       logger.error("Error connecting to DB: " + err);

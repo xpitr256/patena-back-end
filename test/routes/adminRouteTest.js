@@ -2,6 +2,8 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const expect = require("chai").expect;
 chai.use(chaiHttp);
+const assertArrays = require('chai-arrays');
+chai.use(assertArrays);
 const application = require("../../app");
 const proxyquire = require("proxyquire");
 const constants = require("./../../services/constants");
@@ -19,6 +21,10 @@ const mockDatabase = proxyquire("../model/databaseTestHelper", {
 });
 const Task = require("../../model/schema/Task");
 const validTaskId = "550e8400-e29b-41d4-a716-446655440000";
+const validTaskId1 = "550e8400-e29b-41d4-a716-446655440001";
+const validTaskId2 = "550e8400-e29b-41d4-a716-446655440002";
+const validTaskId3 = "550e8400-e29b-41d4-a716-446655440003";
+
 const invalidToken = tokenService.createTokenFor("fake");
 const validToken = tokenService.createTokenFor(config.FRONT_END_NAME);
 
@@ -73,6 +79,7 @@ describe("/tasks/:id route", () => {
     };
     const taskWithMockedResultService = proxyquire("../../routes/admin/tasks", {
       "../../services/taskService": taskServiceMock,
+        "../../services/log/logService" : mockLogger,
     });
 
     const application = proxyquire("../../app", {
@@ -192,6 +199,7 @@ describe("/tasks/:id/retry route", () => {
     };
     const taskWithMockedResultService = proxyquire("../../routes/admin/tasks", {
       "../../services/taskService": taskServiceMock,
+        "../../services/log/logService" : mockLogger,
     });
 
     const application = proxyquire("../../app", {
@@ -287,4 +295,189 @@ describe("/tasks/:id/retry route", () => {
       await mockDatabase.destroyInMemoryDataBase();
     });
   });
+});
+
+
+describe("/tasks route", () => {
+    it("should return a 403 error due to lack of request token", (done) => {
+        chai
+            .request(application)
+            .get("/tasks")
+            .end((err, res) => {
+                expect(res).to.have.status(403);
+                done();
+            });
+    });
+
+    it("should return a 401 error for invalid token", (done) => {
+        chai
+            .request(application)
+            .get("/tasks")
+            .set("Authorization", "Bearer " + invalidToken)
+            .end((err, res) => {
+                expect(res).to.have.status(401);
+                done();
+            });
+    });
+
+    beforeEach(async () => {
+        await mockDatabase.createInMemoryDataBase();
+    });
+
+    afterEach(async () => {
+        await mockDatabase.destroyInMemoryDataBase();
+    });
+    it("should return a 400 error for invalid task state", (done) => {
+        chai
+            .request(application)
+            .get("/tasks?state=invalid")
+            .set("Authorization", "Bearer " + validToken)
+            .end((err, res) => {
+                expect(res.body).to.have.property("message").to.be.equal("Invalid task state: invalid");
+                expect(res).to.have.status(400);
+                done();
+            });
+    });
+
+    it("should return 500 for internal error", (done) => {
+        const taskServiceMock = {
+            getTasks: async function () {
+                return new Promise((resolve, reject) => {
+                    reject("getTaskForAdmin: Failing on purpose");
+                });
+            },
+        };
+        const taskWithMockedResultService = proxyquire("../../routes/admin/tasks", {
+            "../../services/taskService": taskServiceMock,
+            "../../services/log/logService" : mockLogger,
+        });
+
+        const application = proxyquire("../../app", {
+            "./routes/admin/tasks": taskWithMockedResultService,
+        });
+
+        chai
+            .request(application)
+            .get("/tasks")
+            .set("Authorization", "Bearer " + validToken)
+            .end((err, res) => {
+                expect(res).to.have.status(500);
+                done();
+            });
+    });
+
+    describe("with already created task", () => {
+        beforeEach(async () => {
+            await mockDatabase.createInMemoryDataBase();
+
+            const task = new Task({
+                id: validTaskId,
+                stateId: constants.TASK_STATE_PENDING,
+                typeId: constants.TYPE_DESIGN,
+                taskData: {
+                    designType: 1,
+                },
+                language: "en",
+            });
+            await task.save();
+        });
+
+        it("should get the task", (done) => {
+            const application = proxyquire("../../app", {});
+
+            chai
+                .request(application)
+                .get("/tasks")
+                .set("Authorization", "Bearer " + validToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.not.null;
+                    expect(res.body).to.be.array();
+                    expect(res.body).to.be.ofSize(1);
+                    expect(res.body[0].status).to.be.equals("Pending");
+                    expect(res.body[0].duration).to.be.equals("-");
+                    expect(res.body[0].type).to.be.equals("No initial data");
+                    done();
+                });
+        });
+
+        afterEach(async () => {
+            await mockDatabase.destroyInMemoryDataBase();
+        });
+    });
+
+
+    describe("with created tasks", () => {
+        beforeEach(async () => {
+            await mockDatabase.createInMemoryDataBase();
+
+            const finishedTask = new Task({
+                id: validTaskId,
+                stateId: constants.TASK_STATE_FINISHED,
+                typeId: constants.TYPE_DESIGN,
+                taskData: {
+                    designType: 1,
+                },
+                language: "en",
+            });
+            await finishedTask.save();
+
+            const inProgressTask = new Task({
+                id: validTaskId1,
+                stateId: constants.TASK_STATE_IN_PROGRESS,
+                typeId: constants.TYPE_DESIGN,
+                taskData: {
+                    designType: 1,
+                },
+                language: "en",
+            });
+            await inProgressTask.save();
+
+            const firstPendingTask = new Task({
+                id: validTaskId2,
+                stateId: constants.TASK_STATE_PENDING,
+                typeId: constants.TYPE_DESIGN,
+                taskData: {
+                    designType: 1,
+                },
+                language: "en",
+            });
+            await firstPendingTask.save();
+
+            const secondPendingTask = new Task({
+                id: validTaskId3,
+                stateId: constants.TASK_STATE_PENDING,
+                typeId: constants.TYPE_DESIGN,
+                taskData: {
+                    designType: 1,
+                },
+                language: "en",
+            });
+            await secondPendingTask.save();
+        });
+
+        it("should get the task order by state and creation date from new to oldest one", (done) => {
+            const application = proxyquire("../../app", {});
+
+            chai
+                .request(application)
+                .get("/tasks")
+                .set("Authorization", "Bearer " + validToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.not.null;
+                    expect(res.body).to.be.array();
+                    expect(res.body).to.be.ofSize(4);
+                    expect(res.body[0].status).to.be.equals("Pending");
+                    expect(res.body[1].status).to.be.equals("Pending");
+                    expect(res.body[2].status).to.be.equals("In Progress");
+                    expect(res.body[3].status).to.be.equals("Finished");
+                    done();
+                });
+        });
+
+        afterEach(async () => {
+            await mockDatabase.destroyInMemoryDataBase();
+        });
+    });
 });
