@@ -88,6 +88,7 @@ app.route("/tasks/:id/retry").put(middleware.ensureAuthenticated, tasks.retryTas
 
 //Admin statistics
 app.route("/statistics/rate").get(middleware.ensureAuthenticated, statistics.getSuccessRate);
+app.route("/statistics/time/average").get(middleware.ensureAuthenticated, statistics.getAverageProcessingTime);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

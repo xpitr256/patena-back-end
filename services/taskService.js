@@ -48,7 +48,7 @@ function formatAdminTask(task) {
   task._doc.status = task.status();
   delete task._doc.stateId;
 
-  task._doc.duration = task.executionMinutesElapsed === 0 ? "-" : task.executionMinutesElapsed;
+  task._doc.duration = task.executionMinutesElapsed === null ? "-" : task.executionMinutesElapsed;
   delete task._doc.executionMinutesElapsed;
 
   task._doc.type = task.type();
