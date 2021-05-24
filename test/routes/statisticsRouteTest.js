@@ -536,3 +536,260 @@ describe("/statistics/time/average route", () => {
     });
   });
 });
+
+describe("/statistics/time/fastest route", () => {
+  it("should return a 403 error due to lack of request token", (done) => {
+    chai
+      .request(application)
+      .get("/statistics/time/fastest")
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        done();
+      });
+  });
+
+  it("should return a 401 error for invalid token", (done) => {
+    chai
+      .request(application)
+      .get("/statistics/time/fastest")
+      .set("Authorization", "Bearer " + invalidToken)
+      .end((err, res) => {
+        expect(res).to.have.status(401);
+        done();
+      });
+  });
+
+  it("should return 500 for internal error", (done) => {
+    const statisticsServiceMock = {
+      getFastestProcessingTime: async function () {
+        return new Promise((resolve, reject) => {
+          reject("getAverageProcessingTime: Failing on purpose");
+        });
+      },
+    };
+    const statisticsWithStatisticsMockedService = proxyquire("../../routes/admin/statistics", {
+      "../../services/statisticsService": statisticsServiceMock,
+      "../../services/log/logService": mockLogger,
+    });
+
+    const application = proxyquire("../../app", {
+      "./routes/admin/statistics": statisticsWithStatisticsMockedService,
+    });
+
+    chai
+      .request(application)
+      .get("/statistics/time/fastest")
+      .set("Authorization", "Bearer " + validToken)
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        done();
+      });
+  });
+
+  describe("with no finished task", () => {
+    beforeEach(async () => {
+      await mockDatabase.createInMemoryDataBase();
+    });
+
+    it("should get a 0 as fastest time", (done) => {
+      const application = proxyquire("../../app", {});
+
+      chai
+        .request(application)
+        .get("/statistics/time/fastest")
+        .set("Authorization", "Bearer " + validToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.not.null;
+          expect(res.body.time_minutes).to.be.equals(0);
+          done();
+        });
+    });
+
+    afterEach(async () => {
+      await mockDatabase.destroyInMemoryDataBase();
+    });
+  });
+
+  describe("with 1 cancelled task", () => {
+    beforeEach(async () => {
+      await mockDatabase.createInMemoryDataBase();
+
+      const task = new Task({
+        id: validTaskId,
+        stateId: constants.TASK_STATE_CANCELLED,
+        typeId: constants.TYPE_DESIGN,
+        taskData: {
+          designType: 1,
+        },
+        language: "en",
+      });
+      await task.save();
+    });
+
+    it("should get a 0 fastest time", (done) => {
+      const application = proxyquire("../../app", {});
+
+      chai
+        .request(application)
+        .get("/statistics/time/fastest")
+        .set("Authorization", "Bearer " + validToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.not.null;
+          expect(res.body.time_minutes).to.be.equals(0);
+          done();
+        });
+    });
+
+    afterEach(async () => {
+      await mockDatabase.destroyInMemoryDataBase();
+    });
+  });
+
+  describe("with only 1 finished task of 5 minutes", () => {
+    beforeEach(async () => {
+      await mockDatabase.createInMemoryDataBase();
+
+      const task = new Task({
+        id: validTaskId,
+        stateId: constants.TASK_STATE_FINISHED,
+        typeId: constants.TYPE_DESIGN,
+        executionMinutesElapsed: 5,
+        taskData: {
+          designType: 1,
+        },
+        language: "en",
+      });
+      await task.save();
+    });
+
+    it("should get a 5 fastest time", (done) => {
+      const application = proxyquire("../../app", {});
+
+      chai
+        .request(application)
+        .get("/statistics/time/fastest")
+        .set("Authorization", "Bearer " + validToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.not.null;
+          expect(res.body.time_minutes).to.be.equals(5);
+          done();
+        });
+    });
+
+    afterEach(async () => {
+      await mockDatabase.destroyInMemoryDataBase();
+    });
+  });
+
+  describe("with 2 finished task with 10 and 2 minutes", () => {
+    beforeEach(async () => {
+      await mockDatabase.createInMemoryDataBase();
+
+      const task = new Task({
+        id: validTaskId,
+        stateId: constants.TASK_STATE_FINISHED,
+        typeId: constants.TYPE_DESIGN,
+        executionMinutesElapsed: 10,
+        taskData: {
+          designType: 1,
+        },
+        language: "en",
+      });
+      await task.save();
+
+      const cancelledTask = new Task({
+        id: validTaskId1,
+        stateId: constants.TASK_STATE_FINISHED,
+        typeId: constants.TYPE_DESIGN,
+        executionMinutesElapsed: 2,
+        taskData: {
+          designType: 1,
+        },
+        language: "en",
+      });
+      await cancelledTask.save();
+    });
+
+    it("should get a fastest time of 2 minutes ", (done) => {
+      const application = proxyquire("../../app", {});
+
+      chai
+        .request(application)
+        .get("/statistics/time/fastest")
+        .set("Authorization", "Bearer " + validToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.not.null;
+          expect(res.body.time_minutes).to.be.equals(2);
+          done();
+        });
+    });
+
+    afterEach(async () => {
+      await mockDatabase.destroyInMemoryDataBase();
+    });
+  });
+
+  describe("with 2 finished task + 1 pending task", () => {
+    beforeEach(async () => {
+      await mockDatabase.createInMemoryDataBase();
+
+      const task = new Task({
+        id: validTaskId,
+        stateId: constants.TASK_STATE_FINISHED,
+        typeId: constants.TYPE_DESIGN,
+        executionMinutesElapsed: 25,
+        taskData: {
+          designType: 1,
+        },
+        language: "en",
+      });
+      await task.save();
+
+      const cancelledTask = new Task({
+        id: validTaskId1,
+        stateId: constants.TASK_STATE_PENDING,
+        typeId: constants.TYPE_DESIGN,
+        taskData: {
+          designType: 1,
+        },
+        language: "en",
+      });
+      await cancelledTask.save();
+
+      const otherFinishedTask = new Task({
+        id: validTaskId2,
+        stateId: constants.TASK_STATE_FINISHED,
+        typeId: constants.TYPE_DESIGN,
+        executionMinutesElapsed: 15,
+        taskData: {
+          designType: 1,
+        },
+        language: "en",
+      });
+      await otherFinishedTask.save();
+    });
+
+    it("should avoid pending task and get fastest time between 2 finished tasks", (done) => {
+      const application = proxyquire("../../app", {});
+
+      chai
+        .request(application)
+        .get("/statistics/time/fastest")
+        .set("Authorization", "Bearer " + validToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.not.null;
+          expect(res.body.time_minutes).to.be.equals(15);
+          done();
+        });
+    });
+
+    afterEach(async () => {
+      await mockDatabase.destroyInMemoryDataBase();
+    });
+  });
+});

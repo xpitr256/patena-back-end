@@ -21,7 +21,18 @@ async function getAverageProcessingTime(req, res) {
   }
 }
 
+async function getFastestProcessingTime(req, res) {
+  try {
+    const timeInMinutes = await statisticsService.getFastestProcessingTime();
+    res.json({ time_minutes: timeInMinutes });
+  } catch (error) {
+    logger.error(error);
+    res.status(500).send(error);
+  }
+}
+
 module.exports = {
   getSuccessRate,
   getAverageProcessingTime,
+  getFastestProcessingTime,
 };
