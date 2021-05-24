@@ -12,7 +12,14 @@ async function getProcessingTime(sortCriteria) {
   return tasks.length !== 0 && tasks[0].executionMinutesElapsed !== null ? tasks[0].executionMinutesElapsed : 0;
 }
 
-async function getTaskCount(state) {
+async function getTaskCountByDesignType(type) {
+  return Task.countDocuments({
+    typeId: constants.TYPE_DESIGN,
+    "taskData.designType": type,
+  });
+}
+
+async function getTaskCountByState(state) {
   return Task.countDocuments({
     stateId: state,
   });
@@ -21,8 +28,8 @@ async function getTaskCount(state) {
 module.exports = {
   getSuccessRate: async () => {
     let [finishedTaskCount, cancelledTaskCount] = await Promise.all([
-      getTaskCount(constants.TASK_STATE_FINISHED),
-      getTaskCount(constants.TASK_STATE_CANCELLED),
+      getTaskCountByState(constants.TASK_STATE_FINISHED),
+      getTaskCountByState(constants.TASK_STATE_CANCELLED),
     ]);
     const totalCount = finishedTaskCount + cancelledTaskCount;
     if (totalCount > 0) {
@@ -51,10 +58,10 @@ module.exports = {
 
   getQueueStatus: async () => {
     let [finished, cancelled, pending, inProgress] = await Promise.all([
-      getTaskCount(constants.TASK_STATE_FINISHED),
-      getTaskCount(constants.TASK_STATE_CANCELLED),
-      getTaskCount(constants.TASK_STATE_PENDING),
-      getTaskCount(constants.TASK_STATE_IN_PROGRESS),
+      getTaskCountByState(constants.TASK_STATE_FINISHED),
+      getTaskCountByState(constants.TASK_STATE_CANCELLED),
+      getTaskCountByState(constants.TASK_STATE_PENDING),
+      getTaskCountByState(constants.TASK_STATE_IN_PROGRESS),
     ]);
 
     return [
@@ -73,6 +80,34 @@ module.exports = {
       {
         name: constants.getTaskStatusAsString(constants.TASK_STATE_CANCELLED),
         value: cancelled,
+      },
+    ];
+  },
+
+  getQueueDesignTaskComposition: async () => {
+    let [noInitialSequence, onlyInitial, onlyFlanking, all] = await Promise.all([
+      getTaskCountByDesignType(constants.DESIGN_TYPE_NO_INITIAL_SEQUENCE),
+      getTaskCountByDesignType(constants.DESIGN_TYPE_ONLY_INITIAL_SEQUENCE),
+      getTaskCountByDesignType(constants.DESIGN_TYPE_ONLY_FLANKING_SEQUENCES),
+      getTaskCountByDesignType(constants.DESIGN_TYPE_INITIAL_AND_FLANKING_SEQUENCES),
+    ]);
+
+    return [
+      {
+        name: constants.getDesignTypeAsString(constants.DESIGN_TYPE_NO_INITIAL_SEQUENCE),
+        value: noInitialSequence,
+      },
+      {
+        name: constants.getDesignTypeAsString(constants.DESIGN_TYPE_ONLY_INITIAL_SEQUENCE),
+        value: onlyInitial,
+      },
+      {
+        name: constants.getDesignTypeAsString(constants.DESIGN_TYPE_ONLY_FLANKING_SEQUENCES),
+        value: onlyFlanking,
+      },
+      {
+        name: constants.getDesignTypeAsString(constants.DESIGN_TYPE_INITIAL_AND_FLANKING_SEQUENCES),
+        value: all,
       },
     ];
   },

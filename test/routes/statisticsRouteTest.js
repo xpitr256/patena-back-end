@@ -25,6 +25,7 @@ const validTaskId1 = "550e8400-e29b-41d4-a716-446655440001";
 const validTaskId2 = "550e8400-e29b-41d4-a716-446655440002";
 const validTaskId3 = "550e8400-e29b-41d4-a716-446655440003";
 const validTaskId4 = "550e8400-e29b-41d4-a716-446655440004";
+const validTaskId5 = "550e8400-e29b-41d4-a716-446655440005";
 
 const invalidToken = tokenService.createTokenFor("fake");
 const validToken = tokenService.createTokenFor(config.FRONT_END_NAME);
@@ -1207,6 +1208,182 @@ describe("/statistics/queue/status route", () => {
           expect(res.body[0].value).to.be.equals(1);
           expect(res.body[1].value).to.be.equals(1);
           expect(res.body[2].value).to.be.equals(2);
+          expect(res.body[3].value).to.be.equals(1);
+          done();
+        });
+    });
+
+    afterEach(async () => {
+      await mockDatabase.destroyInMemoryDataBase();
+    });
+  });
+});
+
+describe("/statistics/queue/composition route", () => {
+  it("should return a 403 error due to lack of request token", (done) => {
+    chai
+      .request(application)
+      .get("/statistics/queue/composition")
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        done();
+      });
+  });
+
+  it("should return a 401 error for invalid token", (done) => {
+    chai
+      .request(application)
+      .get("/statistics/queue/composition")
+      .set("Authorization", "Bearer " + invalidToken)
+      .end((err, res) => {
+        expect(res).to.have.status(401);
+        done();
+      });
+  });
+
+  it("should return 500 for internal error", (done) => {
+    const statisticsServiceMock = {
+      getQueueDesignTaskComposition: async function () {
+        return new Promise((resolve, reject) => {
+          reject("getAverageProcessingTime: Failing on purpose");
+        });
+      },
+    };
+    const statisticsWithStatisticsMockedService = proxyquire("../../routes/admin/statistics", {
+      "../../services/statisticsService": statisticsServiceMock,
+      "../../services/log/logService": mockLogger,
+    });
+
+    const application = proxyquire("../../app", {
+      "./routes/admin/statistics": statisticsWithStatisticsMockedService,
+    });
+
+    chai
+      .request(application)
+      .get("/statistics/queue/composition")
+      .set("Authorization", "Bearer " + validToken)
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        done();
+      });
+  });
+
+  describe("with no task", () => {
+    beforeEach(async () => {
+      await mockDatabase.createInMemoryDataBase();
+    });
+
+    it("should get a 0 value for 4 design types", (done) => {
+      const application = proxyquire("../../app", {});
+
+      chai
+        .request(application)
+        .get("/statistics/queue/composition")
+        .set("Authorization", "Bearer " + validToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.not.null;
+          expect(res.body).to.be.an.array();
+          expect(res.body).to.be.ofSize(4);
+          expect(res.body[0].value).to.be.equals(0);
+          expect(res.body[1].value).to.be.equals(0);
+          expect(res.body[2].value).to.be.equals(0);
+          expect(res.body[3].value).to.be.equals(0);
+          done();
+        });
+    });
+
+    afterEach(async () => {
+      await mockDatabase.destroyInMemoryDataBase();
+    });
+  });
+
+  describe("with 2 task for initial sequence design type and 1 for others", () => {
+    beforeEach(async () => {
+      await mockDatabase.createInMemoryDataBase();
+
+      const noInitialSequenceTask = new Task({
+        id: validTaskId,
+        stateId: constants.TASK_STATE_PENDING,
+        typeId: constants.TYPE_DESIGN,
+        taskData: {
+          designType: constants.DESIGN_TYPE_NO_INITIAL_SEQUENCE,
+        },
+        language: "en",
+      });
+      await noInitialSequenceTask.save();
+
+      const onlyInitialTask = new Task({
+        id: validTaskId1,
+        stateId: constants.TASK_STATE_IN_PROGRESS,
+        typeId: constants.TYPE_DESIGN,
+        taskData: {
+          designType: constants.DESIGN_TYPE_ONLY_INITIAL_SEQUENCE,
+        },
+        language: "en",
+      });
+      await onlyInitialTask.save();
+
+      const onlyInitialTask2 = new Task({
+        id: validTaskId2,
+        stateId: constants.TASK_STATE_CANCELLED,
+        typeId: constants.TYPE_DESIGN,
+        taskData: {
+          designType: constants.DESIGN_TYPE_ONLY_INITIAL_SEQUENCE,
+        },
+        language: "en",
+      });
+      await onlyInitialTask2.save();
+
+      const onlyFlankingTask = new Task({
+        id: validTaskId3,
+        stateId: constants.TASK_STATE_FINISHED,
+        typeId: constants.TYPE_DESIGN,
+        executionMinutesElapsed: 5,
+        taskData: {
+          designType: constants.DESIGN_TYPE_ONLY_FLANKING_SEQUENCES,
+        },
+        language: "en",
+      });
+      await onlyFlankingTask.save();
+
+      const allTask = new Task({
+        id: validTaskId4,
+        stateId: constants.TASK_STATE_FINISHED,
+        typeId: constants.TYPE_DESIGN,
+        executionMinutesElapsed: 5,
+        taskData: {
+          designType: constants.DESIGN_TYPE_INITIAL_AND_FLANKING_SEQUENCES,
+        },
+        language: "en",
+      });
+      await allTask.save();
+
+      const analyseTask = new Task({
+        id: validTaskId5,
+        stateId: constants.TASK_STATE_FINISHED,
+        typeId: constants.TYPE_ANALYSIS,
+        executionMinutesElapsed: 5,
+        language: "en",
+      });
+      await analyseTask.save();
+    });
+
+    it("should retrieve 1 for each one but 2 for finished", (done) => {
+      const application = proxyquire("../../app", {});
+
+      chai
+        .request(application)
+        .get("/statistics/queue/composition")
+        .set("Authorization", "Bearer " + validToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.not.null;
+          expect(res.body).to.be.an.array();
+          expect(res.body).to.be.ofSize(4);
+          expect(res.body[0].value).to.be.equals(1);
+          expect(res.body[1].value).to.be.equals(2);
+          expect(res.body[2].value).to.be.equals(1);
           expect(res.body[3].value).to.be.equals(1);
           done();
         });

@@ -51,10 +51,21 @@ async function getQueueStatus(req, res) {
   }
 }
 
+async function getQueueDesignTaskComposition(req, res) {
+  try {
+    const status = await statisticsService.getQueueDesignTaskComposition();
+    res.json(status);
+  } catch (error) {
+    logger.error(error);
+    res.status(500).send(error);
+  }
+}
+
 module.exports = {
   getSuccessRate,
   getAverageProcessingTime,
   getFastestProcessingTime,
   getSlowestProcessingTime,
   getQueueStatus,
+  getQueueDesignTaskComposition,
 };
