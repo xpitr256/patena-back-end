@@ -24,6 +24,7 @@ const validTaskId = "550e8400-e29b-41d4-a716-446655440000";
 const validTaskId1 = "550e8400-e29b-41d4-a716-446655440001";
 const validTaskId2 = "550e8400-e29b-41d4-a716-446655440002";
 const validTaskId3 = "550e8400-e29b-41d4-a716-446655440003";
+const validTaskId4 = "550e8400-e29b-41d4-a716-446655440004";
 
 const invalidToken = tokenService.createTokenFor("fake");
 const validToken = tokenService.createTokenFor(config.FRONT_END_NAME);
@@ -1041,6 +1042,172 @@ describe("/statistics/time/slowest route", () => {
           expect(res).to.have.status(200);
           expect(res.body).to.be.not.null;
           expect(res.body.time_minutes).to.be.equals(25);
+          done();
+        });
+    });
+
+    afterEach(async () => {
+      await mockDatabase.destroyInMemoryDataBase();
+    });
+  });
+});
+
+describe("/statistics/queue/status route", () => {
+  it("should return a 403 error due to lack of request token", (done) => {
+    chai
+      .request(application)
+      .get("/statistics/queue/status")
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        done();
+      });
+  });
+
+  it("should return a 401 error for invalid token", (done) => {
+    chai
+      .request(application)
+      .get("/statistics/queue/status")
+      .set("Authorization", "Bearer " + invalidToken)
+      .end((err, res) => {
+        expect(res).to.have.status(401);
+        done();
+      });
+  });
+
+  it("should return 500 for internal error", (done) => {
+    const statisticsServiceMock = {
+      getQueueStatus: async function () {
+        return new Promise((resolve, reject) => {
+          reject("getAverageProcessingTime: Failing on purpose");
+        });
+      },
+    };
+    const statisticsWithStatisticsMockedService = proxyquire("../../routes/admin/statistics", {
+      "../../services/statisticsService": statisticsServiceMock,
+      "../../services/log/logService": mockLogger,
+    });
+
+    const application = proxyquire("../../app", {
+      "./routes/admin/statistics": statisticsWithStatisticsMockedService,
+    });
+
+    chai
+      .request(application)
+      .get("/statistics/queue/status")
+      .set("Authorization", "Bearer " + validToken)
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        done();
+      });
+  });
+
+  describe("with no task", () => {
+    beforeEach(async () => {
+      await mockDatabase.createInMemoryDataBase();
+    });
+
+    it("should get a 0 value for 4 status", (done) => {
+      const application = proxyquire("../../app", {});
+
+      chai
+        .request(application)
+        .get("/statistics/queue/status")
+        .set("Authorization", "Bearer " + validToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.not.null;
+          expect(res.body).to.be.an.array();
+          expect(res.body).to.be.ofSize(4);
+          expect(res.body[0].value).to.be.equals(0);
+          expect(res.body[1].value).to.be.equals(0);
+          expect(res.body[2].value).to.be.equals(0);
+          expect(res.body[3].value).to.be.equals(0);
+          done();
+        });
+    });
+
+    afterEach(async () => {
+      await mockDatabase.destroyInMemoryDataBase();
+    });
+  });
+
+  describe("with 2 task for finished status and 1 for others", () => {
+    beforeEach(async () => {
+      await mockDatabase.createInMemoryDataBase();
+
+      const pendingTask = new Task({
+        id: validTaskId,
+        stateId: constants.TASK_STATE_PENDING,
+        typeId: constants.TYPE_DESIGN,
+        taskData: {
+          designType: 1,
+        },
+        language: "en",
+      });
+      await pendingTask.save();
+
+      const inProgressTask = new Task({
+        id: validTaskId1,
+        stateId: constants.TASK_STATE_IN_PROGRESS,
+        typeId: constants.TYPE_DESIGN,
+        taskData: {
+          designType: 1,
+        },
+        language: "en",
+      });
+      await inProgressTask.save();
+      const cancelledTask = new Task({
+        id: validTaskId2,
+        stateId: constants.TASK_STATE_CANCELLED,
+        typeId: constants.TYPE_DESIGN,
+        taskData: {
+          designType: 1,
+        },
+        language: "en",
+      });
+      await cancelledTask.save();
+
+      const finishedTask = new Task({
+        id: validTaskId3,
+        stateId: constants.TASK_STATE_FINISHED,
+        typeId: constants.TYPE_DESIGN,
+        executionMinutesElapsed: 5,
+        taskData: {
+          designType: 1,
+        },
+        language: "en",
+      });
+      await finishedTask.save();
+
+      const finishedTask2 = new Task({
+        id: validTaskId4,
+        stateId: constants.TASK_STATE_FINISHED,
+        typeId: constants.TYPE_DESIGN,
+        executionMinutesElapsed: 5,
+        taskData: {
+          designType: 1,
+        },
+        language: "en",
+      });
+      await finishedTask2.save();
+    });
+
+    it("should retrieve 1 for each one but 2 for finished", (done) => {
+      const application = proxyquire("../../app", {});
+
+      chai
+        .request(application)
+        .get("/statistics/queue/status")
+        .set("Authorization", "Bearer " + validToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.not.null;
+          expect(res.body).to.be.an.array();
+          expect(res.body).to.be.ofSize(4);
+          expect(res.body[0].value).to.be.equals(1);
+          expect(res.body[1].value).to.be.equals(1);
+          expect(res.body[2].value).to.be.equals(2);
+          expect(res.body[3].value).to.be.equals(1);
           done();
         });
     });

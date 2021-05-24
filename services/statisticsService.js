@@ -12,15 +12,17 @@ async function getProcessingTime(sortCriteria) {
   return tasks.length !== 0 && tasks[0].executionMinutesElapsed !== null ? tasks[0].executionMinutesElapsed : 0;
 }
 
+async function getTaskCount(state) {
+  return Task.countDocuments({
+    stateId: state,
+  });
+}
+
 module.exports = {
   getSuccessRate: async () => {
     let [finishedTaskCount, cancelledTaskCount] = await Promise.all([
-      Task.countDocuments({
-        stateId: constants.TASK_STATE_FINISHED,
-      }),
-      Task.countDocuments({
-        stateId: constants.TASK_STATE_CANCELLED,
-      }),
+      getTaskCount(constants.TASK_STATE_FINISHED),
+      getTaskCount(constants.TASK_STATE_CANCELLED),
     ]);
     const totalCount = finishedTaskCount + cancelledTaskCount;
     if (totalCount > 0) {
@@ -45,5 +47,33 @@ module.exports = {
   getSlowestProcessingTime: async () => {
     const descendingValue = -1;
     return getProcessingTime(descendingValue);
+  },
+
+  getQueueStatus: async () => {
+    let [finished, cancelled, pending, inProgress] = await Promise.all([
+      getTaskCount(constants.TASK_STATE_FINISHED),
+      getTaskCount(constants.TASK_STATE_CANCELLED),
+      getTaskCount(constants.TASK_STATE_PENDING),
+      getTaskCount(constants.TASK_STATE_IN_PROGRESS),
+    ]);
+
+    return [
+      {
+        name: constants.getTaskStatusAsString(constants.TASK_STATE_IN_PROGRESS),
+        value: inProgress,
+      },
+      {
+        name: constants.getTaskStatusAsString(constants.TASK_STATE_PENDING),
+        value: pending,
+      },
+      {
+        name: constants.getTaskStatusAsString(constants.TASK_STATE_FINISHED),
+        value: finished,
+      },
+      {
+        name: constants.getTaskStatusAsString(constants.TASK_STATE_CANCELLED),
+        value: cancelled,
+      },
+    ];
   },
 };

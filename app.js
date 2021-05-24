@@ -91,6 +91,7 @@ app.route("/statistics/rate").get(middleware.ensureAuthenticated, statistics.get
 app.route("/statistics/time/average").get(middleware.ensureAuthenticated, statistics.getAverageProcessingTime);
 app.route("/statistics/time/fastest").get(middleware.ensureAuthenticated, statistics.getFastestProcessingTime);
 app.route("/statistics/time/slowest").get(middleware.ensureAuthenticated, statistics.getSlowestProcessingTime);
+app.route("/statistics/queue/status").get(middleware.ensureAuthenticated, statistics.getQueueStatus);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
