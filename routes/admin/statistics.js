@@ -31,8 +31,19 @@ async function getFastestProcessingTime(req, res) {
   }
 }
 
+async function getSlowestProcessingTime(req, res) {
+  try {
+    const timeInMinutes = await statisticsService.getSlowestProcessingTime();
+    res.json({ time_minutes: timeInMinutes });
+  } catch (error) {
+    logger.error(error);
+    res.status(500).send(error);
+  }
+}
+
 module.exports = {
   getSuccessRate,
   getAverageProcessingTime,
   getFastestProcessingTime,
+  getSlowestProcessingTime,
 };
