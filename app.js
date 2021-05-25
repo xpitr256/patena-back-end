@@ -26,7 +26,7 @@ var design = require("./routes/design");
 var middleware = require("./routes/midddleware");
 const tasks = require("./routes/admin/tasks");
 const statistics = require("./routes/admin/statistics");
-
+const login = require("./routes/admin/login");
 var app = express();
 
 const options = {
@@ -93,6 +93,8 @@ app.route("/statistics/time/fastest").get(middleware.ensureAuthenticated, statis
 app.route("/statistics/time/slowest").get(middleware.ensureAuthenticated, statistics.getSlowestProcessingTime);
 app.route("/statistics/queue/status").get(middleware.ensureAuthenticated, statistics.getQueueStatus);
 app.route("/statistics/queue/composition").get(middleware.ensureAuthenticated, statistics.getQueueDesignTaskComposition);
+
+app.route("/login").post(login.loginUser);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

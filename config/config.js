@@ -9,6 +9,7 @@ module.exports = {
   FRONT_END_BASE_URL: process.env.FRONT_END_BASE_URL || "http://localhost:3000/",
   FRONT_END_NAME: process.env.FRONT_END_NAME || "patena-web-front-end",
   TOKEN_SECRET: process.env.TOKEN_SECRET || "patena-secret-token-value",
+  TOKEN_EXPIRATION_TIME_IN_HS: process.env.TOKEN_EXPIRATION_TIME_IN_HS || 2,
   REDIS_URL: process.env.REDIS_URL || "redis://127.0.0.1:6379",
   WEB_CONCURRENCY: process.env.WEB_CONCURRENCY || 1,
   JOB_CONCURRENCY: process.env.JOB_CONCURRENCY || 5,

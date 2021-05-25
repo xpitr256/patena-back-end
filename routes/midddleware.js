@@ -1,5 +1,6 @@
 const jwt = require("jwt-simple");
 const config = require("./../config/config.js");
+const moment = require("moment");
 
 exports.ensureAuthenticated = (req, res, next) => {
   if (!req.headers.authorization) {
@@ -9,8 +10,12 @@ exports.ensureAuthenticated = (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
   const payload = jwt.decode(token, config.TOKEN_SECRET);
 
-  if (payload.sub !== config.FRONT_END_NAME) {
-    return res.status(401).send({ message: "invalid token" });
+  const requestFromFrontEnd = payload.sub === config.FRONT_END_NAME;
+
+  if (!requestFromFrontEnd) {
+    if (!payload.exp || payload.exp <= moment().unix()) {
+      return res.status(401).send({ message: "invalid token" });
+    }
   }
 
   next();
