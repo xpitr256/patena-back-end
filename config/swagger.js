@@ -248,7 +248,7 @@ module.exports = {
       get: {
         tags: ["CRUD Operations Patena-API"],
         summary: "Get result by order number",
-        description: "You can get you can get the results of analyzing or designing a sequence",
+        description: "You can get you can get the results of designing a sequence",
         operationId: "getResultsFor",
         security: [{ Bearer: [] }],
         parameters: [
@@ -384,6 +384,146 @@ module.exports = {
         },
       },
     },
+    "/login": {
+      post: {
+        tags: ["CRUD Operations Patena-API"],
+        summary: "Login administrator",
+        description: "Allows admin user to control panels",
+        operationId: "postLogin",
+        security: [{ Bearer: [] }],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/RequestLogin",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          200: {
+            description: "Correct Login",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ResponseLogin",
+                },
+              },
+            },
+          },
+          404: {
+            description: "Empty request body",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "Sorry, that user does not appear to exist.",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Not authorized for invalid password",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorWrongPassword",
+                },
+                example: {
+                  message: "Not authorized for invalid password",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error: Internal Server Error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "Error: Internal Server Error",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/tasks": {
+          get: {
+              tags: ["CRUD Operations Patena-API"],
+              summary: "Get detail of a task by id",
+              description: "You can get the detail of a task",
+              operationId: "getTaskFor",
+              security: [{ Bearer: [] }],
+              parameters: [
+                  {
+                      name: "idTask",
+                      in: "query",
+                      schema: {
+                          type: "string",
+                      },
+                      required: true,
+                  },
+              ],
+              responses: {
+                  200: {
+                      description: "Return detail of task",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/ResponseDetailTask",
+                              },
+                          },
+                      },
+                  },
+                  404: {
+                      description: "Error: Bad Request",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "There is no task with id: ...",
+                              },
+                          },
+                      },
+                  },
+                  403: {
+                      description: "Error: Forbidden",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "There is no authorization headers",
+                              },
+                          },
+                      },
+                  },
+                  500: {
+                      description: "Error: Internal Server Error",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "Error: Internal Server Error",
+                              },
+                          },
+                      },
+                  },
+              },
+          },
+      },
   },
   components: {
     schemas: {
@@ -544,6 +684,30 @@ module.exports = {
           },
         },
       },
+      RequestLogin: {
+        type: "object",
+        properties: {
+          name: {
+            description: "Your name",
+            type: "string",
+            example: "John",
+            required: true,
+          },
+          email: {
+            type: "string",
+            description: "Your email",
+            example: "john@example.com",
+            required: true,
+          },
+          password: {
+            type: "string",
+            description: "Your password",
+            example: "Passw0rd1234",
+            minlength: 8,
+            required: true,
+          },
+        },
+      },
 
       //Response: 200
       ResponseContact: {
@@ -553,6 +717,16 @@ module.exports = {
             type: "string",
             description: "Status message",
             example: "Contact form sent ok!",
+          },
+        },
+      },
+      ResponseLogin: {
+        type: "object",
+        properties: {
+          message: {
+            type: "string",
+            description: "",
+            example: "OK Login",
           },
         },
       },
@@ -736,6 +910,31 @@ module.exports = {
           },
         },
       },
+      ResponseDetailTask: {
+        type: "object",
+        description: "Detail of task",
+        properties: {
+          status: {
+            type: "string",
+            description: "Description status",
+            example: 'Finished',
+          },
+          duration: {
+            type: "string",
+            description: "Time expressed in minutes",
+            example: "10",
+          },
+          type: {
+            type: "integer",
+            example: 2,
+          },
+          date:{
+            type: "string",
+            description: "Time expressed in minutes",
+            example: "10/03/2021 10:12 hs",
+          },
+        },
+      },
 
       //Response: 400,500..
       ErrorLinkerLength: {
@@ -755,6 +954,16 @@ module.exports = {
             type: "string",
             description: "the cause of the error",
             example: "There is no authorization headers",
+          },
+        },
+      },
+      ErrorWrongPassword: {
+        type: "object",
+        properties: {
+          message: {
+            type: "string",
+            description: "the cause of the error",
+            example: "Not authorized for invalid password",
           },
         },
       },
