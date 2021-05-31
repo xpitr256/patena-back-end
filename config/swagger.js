@@ -403,14 +403,17 @@ module.exports = {
         },
         responses: {
           200: {
-            description: "Correct Login",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/ResponseLogin",
-                },
+              description: "OK login",
+              content: {
+                  "application/json": {
+                      schema: {
+                          $ref: "#/components/schemas/ResponseLogin",
+                      },
+                      example: {
+                          auth: true, token: "eybasdhasdkaskldaksdkasdkkasd-89sdsadadas"
+                      },
+                  },
               },
-            },
           },
           404: {
             description: "Empty request body",
@@ -433,7 +436,7 @@ module.exports = {
                   $ref: "#/components/schemas/ErrorWrongPassword",
                 },
                 example: {
-                  message: "Not authorized for invalid password",
+                  auth: false, token: null
                 },
               },
             },
@@ -463,12 +466,25 @@ module.exports = {
               security: [{ Bearer: [] }],
               parameters: [
                   {
-                      name: "idTask",
+                      name: "offset",
                       in: "query",
-                      schema: {
-                          type: "string",
-                      },
-                      required: true,
+                      description: "offset",
+                      type: "integer",
+                      required: false,
+                  },
+                  {
+                      name: "limit",
+                      in: "query",
+                      description: "max limit",
+                      type: "integer",
+                      required: false,
+                  },
+                  {
+                      name: "state",
+                      in: "query",
+                      description: "task state",
+                      type: "integer",
+                      required: false,
                   },
               ],
               responses: {
@@ -687,12 +703,6 @@ module.exports = {
       RequestLogin: {
         type: "object",
         properties: {
-          name: {
-            description: "Your name",
-            type: "string",
-            example: "John",
-            required: true,
-          },
           email: {
             type: "string",
             description: "Your email",
@@ -726,7 +736,7 @@ module.exports = {
           message: {
             type: "string",
             description: "",
-            example: "OK Login",
+            example: " auth: true, token: token ",
           },
         },
       },
@@ -925,8 +935,8 @@ module.exports = {
             example: "10",
           },
           type: {
-            type: "integer",
-            example: 2,
+            type: "string",
+            example: "Initial Sequence",
           },
           date:{
             type: "string",
