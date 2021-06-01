@@ -460,9 +460,9 @@ module.exports = {
     "/tasks": {
           get: {
               tags: ["CRUD Operations Patena-API"],
-              summary: "Get detail of a task by id",
-              description: "You can get the detail of a task",
-              operationId: "getTaskFor",
+              summary: "Get detail of a task by status, offset or a limit",
+              description: "You can get the detail of a group of tasks",
+              operationId: "getTasksFor",
               security: [{ Bearer: [] }],
               parameters: [
                   {
@@ -489,7 +489,105 @@ module.exports = {
               ],
               responses: {
                   200: {
-                      description: "Return detail of task",
+                      description: "Return details of group of tasks",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/ResponseDetailTasks",
+                              },
+                            example: [{
+                              status: "Finished",
+                              duration: "10",
+                              type: "Initial Sequence",
+                              date: "10/03/2021 10:12 hs"
+                            } , {
+                              status: "Cancelled",
+                              duration: "7",
+                              type: "No initial data",
+                              date: "10/03/2021 00:12 hs"
+                            } ,  {
+                              status: "In Progress",
+                              duration: "-",
+                              type: "Only flanking",
+                              date: "13/03/2021 04:12 hs"
+                            } ]
+                          },
+                      },
+                  },
+                  400: {
+                      description: "Error: Bad Request",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "Invalid task state: ...",
+                              },
+                          },
+                      },
+                  },
+                  401: {
+                      description: "Error: Bad Request",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "invalid token",
+                              },
+                          },
+                      },
+                  },
+                  403: {
+                      description: "Error: Forbidden",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "There is no authorization headers",
+                              },
+                          },
+                      },
+                  },
+                  500: {
+                      description: "Error: Internal Server Error",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "Error: Internal Server Error",
+                              },
+                          },
+                      },
+                  },
+              },
+          },
+      },
+    "/tasks/:id": {
+          get: {
+              tags: ["CRUD Operations Patena-API"],
+              summary: "Get detail of a task by id",
+              description: "You can get the detail of a task",
+              operationId: "getTaskForId",
+              security: [{ Bearer: [] }],
+              parameters: [
+                  {
+                      name: "IdTask",
+                      in: "query",
+                      description: "unique ID",
+                      type: "string",
+                      required: true,
+                  }
+              ],
+              responses: {
+                  200: {
+                      description: "Return detail of a task",
                       content: {
                           "application/json": {
                               schema: {
@@ -507,6 +605,452 @@ module.exports = {
                               },
                               example: {
                                   message: "There is no task with id: ...",
+                              },
+                          },
+                      },
+                  },
+                  403: {
+                      description: "Error: Forbidden",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "There is no authorization headers",
+                              },
+                          },
+                      },
+                  },
+                  500: {
+                      description: "Error: Internal Server Error",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "Error: Internal Server Error",
+                              },
+                          },
+                      },
+                  },
+              },
+          },
+      },
+    "/tasks/:id/retry": {
+          get: {
+              tags: ["CRUD Operations Patena-API"],
+              summary: "Retry canceled task",
+              description: "You can queue a canceled task",
+              operationId: "retryTaskForId",
+              security: [{ Bearer: [] }],
+              parameters: [
+                  {
+                      name: "IdTask",
+                      in: "query",
+                      description: "unique ID",
+                      type: "string",
+                      required: true,
+                  }
+              ],
+              responses: {
+                  204: {
+                      description: "The task was retried",
+                      content: {
+                          "application/json": {
+                          },
+                      },
+                  },
+                  400: {
+                      description: "Error: Bad Request",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                message: "Invalid task status. The task is not cancelled to be retried"
+                              },
+                          },
+                      },
+                  },
+                  404: {
+                      description: "Error: Bad Request",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "There is no task with id: ...",
+                              },
+                          },
+                      },
+                  },
+                  403: {
+                      description: "Error: Forbidden",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "There is no authorization headers",
+                              },
+                          },
+                      },
+                  },
+                  500: {
+                      description: "Error: Internal Server Error",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "Error: Internal Server Error",
+                              },
+                          },
+                      },
+                  },
+              },
+          },
+      },
+    "/statistics/rate": {
+          get: {
+              tags: ["CRUD Operations Patena-API"],
+              summary: "Rate success tasks",
+              description: "You can get rate success tasks",
+              operationId: "Rate success tasks",
+              security: [{ Bearer: [] }],
+              parameters: [],
+              responses: {
+                  200: {
+                      description: "Return rate success tasks",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/ResponseRateSuccessTasks",
+                              },
+                          },
+                  },
+                  },
+                  401: {
+                      description: "Error: Bad Request",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "invalid token",
+                              },
+                          },
+                      },
+                  },
+                  403: {
+                      description: "Error: Forbidden",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "There is no authorization headers",
+                              },
+                          },
+                      },
+                  },
+                  500: {
+                      description: "Error: Internal Server Error",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "Error: Internal Server Error",
+                              },
+                          },
+                      },
+                  },
+              },
+          },
+      },
+    "/statistics/time/average": {
+          get: {
+              tags: ["CRUD Operations Patena-API"],
+              description: "You can the average processing time of tasks",
+              operationId: "Average processing time of tasks",
+              security: [{ Bearer: [] }],
+              parameters: [],
+              responses: {
+                  200: {
+                      description: "Return the average processing time of tasks",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/ResponseAvgTasks",
+                              },
+                          },
+                      },
+                  },
+                  401: {
+                      description: "Error: Bad Request",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "invalid token",
+                              },
+                          },
+                      },
+                  },
+                  403: {
+                      description: "Error: Forbidden",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "There is no authorization headers",
+                              },
+                          },
+                      },
+                  },
+                  500: {
+                      description: "Error: Internal Server Error",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "Error: Internal Server Error",
+                              },
+                          },
+                      },
+                  },
+              },
+          },
+      },
+    "/statistics/time/fastest": {
+          get: {
+              tags: ["CRUD Operations Patena-API"],
+              summary: "Time fastest tasks",
+              description: "You can get time fastest task",
+              operationId: "Time fastest tasks",
+              security: [{ Bearer: [] }],
+              parameters: [],
+              responses: {
+                  200: {
+                      description: "Returns the time of the fastest task",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/ResponseFastestTask",
+                              },
+                          },
+                      },
+                  },
+                  401: {
+                      description: "Error: Bad Request",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "invalid token",
+                              },
+                          },
+                      },
+                  },
+                  403: {
+                      description: "Error: Forbidden",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "There is no authorization headers",
+                              },
+                          },
+                      },
+                  },
+                  500: {
+                      description: "Error: Internal Server Error",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "Error: Internal Server Error",
+                              },
+                          },
+                      },
+                  },
+              },
+          },
+      },
+    "/statistics/time/slowest": {
+          get: {
+              tags: ["CRUD Operations Patena-API"],
+              summary: "Time slowest tasks",
+              description: "You can get time slowest task",
+              operationId: "Time slowest tasks",
+              security: [{ Bearer: [] }],
+              parameters: [],
+              responses: {
+                  200: {
+                      description: "Returns the time of the slowest task",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/ResponseSlowestTasks",
+                              },
+                          },
+                      },
+                  },
+                  401: {
+                      description: "Error: Bad Request",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "invalid token",
+                              },
+                          },
+                      },
+                  },
+                  403: {
+                      description: "Error: Forbidden",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "There is no authorization headers",
+                              },
+                          },
+                      },
+                  },
+                  500: {
+                      description: "Error: Internal Server Error",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "Error: Internal Server Error",
+                              },
+                          },
+                      },
+                  },
+              },
+          },
+      },
+    "/statistics/queue/status": {
+          get: {
+              tags: ["CRUD Operations Patena-API"],
+              summary: "Status tasks",
+              description: "You can get the number of tasks by status",
+              operationId: "Status",
+              security: [{ Bearer: [] }],
+              parameters: [],
+              responses: {
+                  200: {
+                      description: "Returns the number of tasks by status",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/ResponseQueueStatus",
+                              },
+                              example: [{name:"In Progress" , value:"2"} , {name:"Cancelled" , value:"5"}, {name:"Finished" , value:"35"}, {name:"Pending" , value:"3"}]
+                          },
+                      },
+                  },
+                  401: {
+                      description: "Error: Bad Request",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "invalid token",
+                              },
+                          },
+                      },
+                  },
+                  403: {
+                      description: "Error: Forbidden",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "There is no authorization headers",
+                              },
+                          },
+                      },
+                  },
+                  500: {
+                      description: "Error: Internal Server Error",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "Error: Internal Server Error",
+                              },
+                          },
+                      },
+                  },
+              },
+          },
+      },
+    "/statistics/queue/composition": {
+          get: {
+              tags: ["CRUD Operations Patena-API"],
+              summary: "Composition tasks",
+              description: "You can get the number of tasks by design type",
+              operationId: "Composition",
+              security: [{ Bearer: [] }],
+              parameters: [],
+              responses: {
+                  200: {
+                      description: "Returns the number of tasks by design type",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/ResponseQueueComposition",
+                              },
+                              example: [{name:"No initial data" , value:"9"} , {name:"Initial Sequence" , value:"15"}, {name:"Only flanking" , value:"2"}, {name:"Flanking + initial sequence" , value:"8"}]
+                          },
+                      },
+                  },
+                  401: {
+                      description: "Error: Bad Request",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Error",
+                              },
+                              example: {
+                                  message: "invalid token",
                               },
                           },
                       },
@@ -927,12 +1471,12 @@ module.exports = {
           status: {
             type: "string",
             description: "Description status",
-            example: 'Finished',
+            example: 'Cancelled',
           },
           duration: {
             type: "string",
             description: "Time expressed in minutes",
-            example: "10",
+            example: "12",
           },
           type: {
             type: "string",
@@ -941,10 +1485,106 @@ module.exports = {
           date:{
             type: "string",
             description: "Time expressed in minutes",
-            example: "10/03/2021 10:12 hs",
+            example: "12/03/2021 10:12 hs",
           },
         },
       },
+      ResponseDetailTasks: {
+            type: "object",
+            description: "Detail of task",
+            properties: {
+                status: {
+                    type: "string",
+                    description: "Description status",
+                    example: 'Finished',
+                },
+                duration: {
+                    type: "string",
+                    description: "Time expressed in minutes",
+                    example: "10",
+                },
+                type: {
+                    type: "string",
+                    example: "Initial Sequence",
+                },
+                date:{
+                    type: "string",
+                    description: "Time expressed in minutes",
+                    example: "10/03/2021 10:12 hs",
+                },
+            },
+        },
+      ResponseRateSuccessTasks: {
+            type: "object",
+            properties: {
+                success_rate: {
+                    type: "string",
+                    description: "rate",
+                    example: "67",
+                },
+            },
+        },
+      ResponseAvgTasks: {
+            type: "object",
+            properties: {
+                avg_minutes: {
+                    type: "string",
+                    description: "Time in Minutes",
+                    example: "23",
+                },
+            },
+        },
+      ResponseFastestTask: {
+            type: "object",
+            properties: {
+                time_minutes: {
+                    type: "string",
+                    description: "Time in Minutes",
+                    example: "18",
+                },
+            },
+        },
+      ResponseSlowestTasks: {
+            type: "object",
+            properties: {
+                time_minutes: {
+                    type: "string",
+                    description: "Time in Minutes",
+                    example: "70",
+                },
+            },
+        },
+      ResponseQueueStatus: {
+            type: "array",
+            oneOf: {
+                    name:{
+                        type: "string",
+                        description: "Category",
+
+                    },
+                    value:{
+                        type: "string",
+                        description: "Amount",
+
+                    },
+                  },
+              },
+      ResponseQueueComposition: {
+          type: "array",
+          oneOf: {
+              name:{
+                  type: "string",
+                  description: "Design Type",
+
+              },
+              value:{
+                  type: "string",
+                  description: "Amount",
+
+              },
+          },
+      },
+
 
       //Response: 400,500..
       ErrorLinkerLength: {
