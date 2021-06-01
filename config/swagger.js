@@ -2,40 +2,32 @@ const tokenService = require("../services/tokenService");
 const config = require("./config");
 
 module.exports = {
-  openapi: "3.0.0",
+  swagger: "2.0",
   info: {
-    version: "0.0.1",
-    title: "Patena-API",
-    description: "CRUD Patena-API",
-    termsOfService: "https://patena.herokuapp.com/",
+    version: "1.0.0",
+    title: "Patena API",
+    description: "Patena API available endpoints",
     contact: {
       name: "Ignacio Sanchez",
       email: "nachoquique@gmail.com ",
     },
   },
-  servers: [
-    {
-      url: "http://localhost:3000/",
-      description: "Local server",
-    },
-    {
-      url: "https://api_url_testing",
-      description: "Testing server",
-    },
-    {
-      url: "https://patena-api.herokuapp.com/",
-      description: "Production server",
-    },
-  ],
+  host: "patena-api.herokuapp.com",
+  basePath: "/",
   tags: [
     {
-      name: "CRUD Operations Patena-API",
+      name: "user",
+      description: "The following endpoints provides support for end user application Patena frontend"
+    },
+    {
+      name: "admin",
+      description: "The following endpoints provides support for Patena administration app"
     },
   ],
   paths: {
     "/analyze": {
       post: {
-        tags: ["CRUD Operations Patena-API"],
+        tags: ["user"],
         description: "send messages to those responsible ",
         summary: "Send the amino acid sequence to get its properties",
         operationId: "postAnalyze",
@@ -105,7 +97,7 @@ module.exports = {
     },
     "/linkerLength": {
       get: {
-        tags: ["CRUD Operations Patena-API"],
+        tags: ["user"],
         summary: "Get length",
         description: "get most likely length by specific distance between aminoacids",
         operationId: "getLength",
@@ -175,7 +167,7 @@ module.exports = {
     },
     "/design": {
       post: {
-        tags: ["CRUD Operations Patena-API"],
+        tags: ["user"],
         description: " ",
         summary: "Send the amino acid sequence to get its properties",
         operationId: "postDesign",
@@ -246,9 +238,9 @@ module.exports = {
     },
     "/results": {
       get: {
-        tags: ["CRUD Operations Patena-API"],
+        tags: ["user"],
         summary: "Get result by order number",
-        description: "You can get you can get the results of analyzing or designing a sequence",
+        description: "You can get you can get the results of designing a sequence",
         operationId: "getResultsFor",
         security: [{ Bearer: [] }],
         parameters: [
@@ -316,7 +308,7 @@ module.exports = {
     },
     "/contact": {
       post: {
-        tags: ["CRUD Operations Patena-API"],
+        tags: ["user"],
         summary: "Send messages to those responsible",
         description: "Send message to those responsible ",
         operationId: "postContact",
@@ -384,6 +376,707 @@ module.exports = {
         },
       },
     },
+    "/login": {
+      post: {
+        tags: ["admin"],
+        summary: "Admin user login",
+        description: "Allows admin user to control panels",
+        operationId: "postLogin",
+        security: [{ Bearer: [] }],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/RequestLogin",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          200: {
+            description: "OK login",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ResponseLogin",
+                },
+                example: {
+                  auth: true, token: "eybasdhasdkaskldaksdkasdkkasd-89sdsadadas"
+                },
+              },
+            },
+          },
+          404: {
+            description: "Empty request body",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "Sorry, that user does not appear to exist.",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Not authorized for invalid password",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorWrongPassword",
+                },
+                example: {
+                  auth: false, token: null
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error: Internal Server Error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "Error: Internal Server Error",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/tasks": {
+      get: {
+        tags: ["admin"],
+        summary: "Get list of a task by status",
+        description: "You can get the detail of a group of tasks",
+        operationId: "getTasksFor",
+        security: [{ Bearer: [] }],
+        parameters: [
+          {
+            name: "offset",
+            in: "query",
+            description: "offset",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "limit",
+            in: "query",
+            description: "max limit",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "state",
+            in: "query",
+            description: "task state",
+            type: "integer",
+            required: false,
+          },
+        ],
+        responses: {
+          200: {
+            description: "Return details of group of tasks",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ResponseDetailTasks",
+                },
+                example: [{
+                  status: "Finished",
+                  duration: "10",
+                  type: "Initial Sequence",
+                  date: "10/03/2021 10:12 hs"
+                } , {
+                  status: "Cancelled",
+                  duration: "7",
+                  type: "No initial data",
+                  date: "10/03/2021 00:12 hs"
+                } ,  {
+                  status: "In Progress",
+                  duration: "-",
+                  type: "Only flanking",
+                  date: "13/03/2021 04:12 hs"
+                } ]
+              },
+            },
+          },
+          400: {
+            description: "Error: Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "Invalid task state: ...",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Error: Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "invalid token",
+                },
+              },
+            },
+          },
+          403: {
+            description: "Error: Forbidden",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "There is no authorization headers",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error: Internal Server Error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "Error: Internal Server Error",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/tasks/:id": {
+      get: {
+        tags: ["admin"],
+        summary: "Get an specific task by id",
+        description: "You can get the detail of a task",
+        operationId: "getTaskForId",
+        security: [{ Bearer: [] }],
+        parameters: [
+          {
+            name: "IdTask",
+            in: "query",
+            description: "unique ID",
+            type: "string",
+            required: true,
+          }
+        ],
+        responses: {
+          200: {
+            description: "Return detail of a task",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ResponseDetailTask",
+                },
+              },
+            },
+          },
+          404: {
+            description: "Error: Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "There is no task with id: ...",
+                },
+              },
+            },
+          },
+          403: {
+            description: "Error: Forbidden",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "There is no authorization headers",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error: Internal Server Error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "Error: Internal Server Error",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/tasks/:id/retry": {
+      get: {
+        tags: ["admin"],
+        summary: "Retry a cancelled task",
+        description: "You can queue a canceled task",
+        operationId: "retryTaskForId",
+        security: [{ Bearer: [] }],
+        parameters: [
+          {
+            name: "IdTask",
+            in: "query",
+            description: "unique ID",
+            type: "string",
+            required: true,
+          }
+        ],
+        responses: {
+          204: {
+            description: "The task was retried",
+            content: {
+              "application/json": {
+              },
+            },
+          },
+          400: {
+            description: "Error: Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "Invalid task status. The task is not cancelled to be retried"
+                },
+              },
+            },
+          },
+          404: {
+            description: "Error: Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "There is no task with id: ...",
+                },
+              },
+            },
+          },
+          403: {
+            description: "Error: Forbidden",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "There is no authorization headers",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error: Internal Server Error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "Error: Internal Server Error",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/statistics/rate": {
+      get: {
+        tags: ["admin"],
+        summary: "Get the current success rate",
+        description: "You can get rate success tasks",
+        operationId: "Rate success tasks",
+        security: [{ Bearer: [] }],
+        parameters: [],
+        responses: {
+          200: {
+            description: "Return rate success tasks",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ResponseRateSuccessTasks",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Error: Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "invalid token",
+                },
+              },
+            },
+          },
+          403: {
+            description: "Error: Forbidden",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "There is no authorization headers",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error: Internal Server Error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "Error: Internal Server Error",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/statistics/time/average": {
+      get: {
+        tags: ["admin"],
+        summary: "Get the average processing time of tasks",
+        description: "You can the average processing time of tasks",
+        operationId: "Average processing time of tasks",
+        security: [{ Bearer: [] }],
+        parameters: [],
+        responses: {
+          200: {
+            description: "Return the average processing time of tasks",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ResponseAvgTasks",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Error: Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "invalid token",
+                },
+              },
+            },
+          },
+          403: {
+            description: "Error: Forbidden",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "There is no authorization headers",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error: Internal Server Error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "Error: Internal Server Error",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/statistics/time/fastest": {
+      get: {
+        tags: ["admin"],
+        summary: "Get the fastest completed tasks",
+        description: "You can get time fastest task",
+        operationId: "Time fastest tasks",
+        security: [{ Bearer: [] }],
+        parameters: [],
+        responses: {
+          200: {
+            description: "Returns the time of the fastest task",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ResponseFastestTask",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Error: Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "invalid token",
+                },
+              },
+            },
+          },
+          403: {
+            description: "Error: Forbidden",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "There is no authorization headers",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error: Internal Server Error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "Error: Internal Server Error",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/statistics/time/slowest": {
+      get: {
+        tags: ["admin"],
+        summary: "Get the slowest completed tasks",
+        description: "You can get time slowest task",
+        operationId: "Time slowest tasks",
+        security: [{ Bearer: [] }],
+        parameters: [],
+        responses: {
+          200: {
+            description: "Returns the time of the slowest task",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ResponseSlowestTasks",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Error: Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "invalid token",
+                },
+              },
+            },
+          },
+          403: {
+            description: "Error: Forbidden",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "There is no authorization headers",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error: Internal Server Error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "Error: Internal Server Error",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/statistics/queue/status": {
+      get: {
+        tags: ["admin"],
+        summary: "Get the amount of tasks by status in the queue",
+        description: "You can get the number of tasks by status",
+        operationId: "Status",
+        security: [{ Bearer: [] }],
+        parameters: [],
+        responses: {
+          200: {
+            description: "Returns the number of tasks by status",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ResponseQueueStatus",
+                },
+                example: [{name:"In Progress" , value:"2"} , {name:"Cancelled" , value:"5"}, {name:"Finished" , value:"35"}, {name:"Pending" , value:"3"}]
+              },
+            },
+          },
+          401: {
+            description: "Error: Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "invalid token",
+                },
+              },
+            },
+          },
+          403: {
+            description: "Error: Forbidden",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "There is no authorization headers",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error: Internal Server Error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "Error: Internal Server Error",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/statistics/queue/composition": {
+      get: {
+        tags: ["admin"],
+        summary: "Get the composition of design tasks in the queue",
+        description: "You can get the number of tasks by design type",
+        operationId: "Composition",
+        security: [{ Bearer: [] }],
+        parameters: [],
+        responses: {
+          200: {
+            description: "Returns the number of tasks by design type",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ResponseQueueComposition",
+                },
+                example: [{name:"No initial data" , value:"9"} , {name:"Initial Sequence" , value:"15"}, {name:"Only flanking" , value:"2"}, {name:"Flanking + initial sequence" , value:"8"}]
+              },
+            },
+          },
+          401: {
+            description: "Error: Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "invalid token",
+                },
+              },
+            },
+          },
+          403: {
+            description: "Error: Forbidden",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "There is no authorization headers",
+                },
+              },
+            },
+          },
+          500: {
+            description: "Error: Internal Server Error",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+                example: {
+                  message: "Error: Internal Server Error",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   components: {
     schemas: {
@@ -416,7 +1109,7 @@ module.exports = {
                 type: "string",
                 description: "sequence aminoacid",
                 example:
-                  "MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEGLVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHKMGQFYVMDDKKTVEQVIAEKEKEF",
+                    "MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEGLVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHKMGQFYVMDDKKTVEQVIAEKEKEF",
                 required: true,
               },
             },
@@ -447,7 +1140,7 @@ module.exports = {
           designType: {
             type: "integer",
             description:
-              "The initialSequence is required all types design," + "\n\nflankingSequence1 and flankingSequence2 are required for type design 3 or 4",
+                "The initialSequence is required all types design," + "\n\nflankingSequence1 and flankingSequence2 are required for type design 3 or 4",
             example: 4,
             required: true,
           },
@@ -544,6 +1237,24 @@ module.exports = {
           },
         },
       },
+      RequestLogin: {
+        type: "object",
+        properties: {
+          email: {
+            type: "string",
+            description: "Your email",
+            example: "john@example.com",
+            required: true,
+          },
+          password: {
+            type: "string",
+            description: "Your password",
+            example: "Passw0rd1234",
+            minlength: 8,
+            required: true,
+          },
+        },
+      },
 
       //Response: 200
       ResponseContact: {
@@ -553,6 +1264,16 @@ module.exports = {
             type: "string",
             description: "Status message",
             example: "Contact form sent ok!",
+          },
+        },
+      },
+      ResponseLogin: {
+        type: "object",
+        properties: {
+          message: {
+            type: "string",
+            description: "",
+            example: " auth: true, token: token ",
           },
         },
       },
@@ -736,6 +1457,127 @@ module.exports = {
           },
         },
       },
+      ResponseDetailTask: {
+        type: "object",
+        description: "Detail of task",
+        properties: {
+          status: {
+            type: "string",
+            description: "Description status",
+            example: 'Cancelled',
+          },
+          duration: {
+            type: "string",
+            description: "Time expressed in minutes",
+            example: "12",
+          },
+          type: {
+            type: "string",
+            example: "Initial Sequence",
+          },
+          date:{
+            type: "string",
+            description: "Time expressed in minutes",
+            example: "12/03/2021 10:12 hs",
+          },
+        },
+      },
+      ResponseDetailTasks: {
+        type: "object",
+        description: "Detail of task",
+        properties: {
+          status: {
+            type: "string",
+            description: "Description status",
+            example: 'Finished',
+          },
+          duration: {
+            type: "string",
+            description: "Time expressed in minutes",
+            example: "10",
+          },
+          type: {
+            type: "string",
+            example: "Initial Sequence",
+          },
+          date:{
+            type: "string",
+            description: "Time expressed in minutes",
+            example: "10/03/2021 10:12 hs",
+          },
+        },
+      },
+      ResponseRateSuccessTasks: {
+        type: "object",
+        properties: {
+          success_rate: {
+            type: "string",
+            description: "rate",
+            example: "67",
+          },
+        },
+      },
+      ResponseAvgTasks: {
+        type: "object",
+        properties: {
+          avg_minutes: {
+            type: "string",
+            description: "Time in Minutes",
+            example: "23",
+          },
+        },
+      },
+      ResponseFastestTask: {
+        type: "object",
+        properties: {
+          time_minutes: {
+            type: "string",
+            description: "Time in Minutes",
+            example: "18",
+          },
+        },
+      },
+      ResponseSlowestTasks: {
+        type: "object",
+        properties: {
+          time_minutes: {
+            type: "string",
+            description: "Time in Minutes",
+            example: "70",
+          },
+        },
+      },
+      ResponseQueueStatus: {
+        type: "array",
+        oneOf: {
+          name:{
+            type: "string",
+            description: "Category",
+
+          },
+          value:{
+            type: "string",
+            description: "Amount",
+
+          },
+        },
+      },
+      ResponseQueueComposition: {
+        type: "array",
+        oneOf: {
+          name:{
+            type: "string",
+            description: "Design Type",
+
+          },
+          value:{
+            type: "string",
+            description: "Amount",
+
+          },
+        },
+      },
+
 
       //Response: 400,500..
       ErrorLinkerLength: {
@@ -755,6 +1597,16 @@ module.exports = {
             type: "string",
             description: "the cause of the error",
             example: "There is no authorization headers",
+          },
+        },
+      },
+      ErrorWrongPassword: {
+        type: "object",
+        properties: {
+          message: {
+            type: "string",
+            description: "the cause of the error",
+            example: "Not authorized for invalid password",
           },
         },
       },
@@ -790,10 +1642,10 @@ module.exports = {
           value: {
             type: "string",
             example:
-              "MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG\n" +
-              "LVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHK\n" +
-              "IPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTL\n" +
-              "MGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL",
+                "MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG\n" +
+                "LVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHK\n" +
+                "IPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTL\n" +
+                "MGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL",
           },
         },
       },
