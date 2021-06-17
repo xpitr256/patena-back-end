@@ -1,0 +1,27 @@
+config:
+  target: https://patena-api.herokuapp.com
+  payload:
+    # path relativo a la localización del script de test
+    path: "contact.csv"
+    fields:
+      - "name"
+      - "email"
+      - "message"
+  phases:
+    - duration: 20
+      arrivalRate: 1
+      name: send message contact
+  defaults:
+    headers:
+      x-api-key: "{{ $processEnvironment.VUE_APP_BACK_END_TOKEN }}"
+scenarios:
+  - flow:
+      - post:
+          url: "/contact"
+          json:
+            email: "{{ email }}"
+            name: "{{ name }}"
+            message: "{{ message }}"
+
+
+

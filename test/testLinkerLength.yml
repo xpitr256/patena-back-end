@@ -1,0 +1,22 @@
+config:
+  target: https://patena-api.herokuapp.com
+  payload:
+    # path relativo a la localización del script de test
+    path: "distance.csv"
+    fields:
+      - "distance"
+  phases:
+    - duration: 20
+      arrivalRate: 1
+      name: get Length
+  defaults:
+    headers:
+      x-api-key: "{{ $processEnvironment.VUE_APP_BACK_END_TOKEN }}"
+scenarios:
+  - flow:
+      - get:
+          url: "/linkerLength?distance={{ distance }}"
+
+
+
+
