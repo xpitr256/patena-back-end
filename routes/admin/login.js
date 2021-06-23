@@ -8,12 +8,12 @@ async function loginUser(req, res) {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
-      res.status(404).send({ message: "Sorry, that user does not appear to exist." });
+      res.status(404).send({ message: "Sorry, email or password incorrect." });
       return;
     }
     const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
     if (!passwordIsValid) {
-      res.status(401).send({ auth: false, token: null });
+      res.status(401).send({ auth: false, token: null, message: "Sorry, email or password incorrect" });
     } else {
       const token = tokenService.createExpireToken(user.name, config.TOKEN_EXPIRATION_TIME_IN_HS);
       res.status(200).send({ auth: true, token: token });

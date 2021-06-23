@@ -41,7 +41,7 @@ describe("/login route", () => {
       .send({})
       .end((err, res) => {
         expect(res).to.have.status(404);
-        expect(res.body).to.have.property("message").to.be.equal("Sorry, that user does not appear to exist.");
+        expect(res.body).to.have.property("message").to.be.equal("Sorry, email or password incorrect.");
         done();
       });
   });
@@ -70,6 +70,7 @@ describe("/login route", () => {
           expect(res).to.have.status(401);
           expect(res.body).to.have.property("auth").to.be.equal(false);
           expect(res.body).to.have.property("token").to.be.equal(null);
+          expect(res.body).to.have.property("message").to.be.equal("Sorry, email or password incorrect");
           done();
         });
     });

@@ -17,11 +17,11 @@ module.exports = {
   tags: [
     {
       name: "user",
-      description: "The following endpoints provides support for end user application Patena frontend"
+      description: "The following endpoints provides support for end user application Patena frontend",
     },
     {
       name: "admin",
-      description: "The following endpoints provides support for Patena administration app"
+      description: "The following endpoints provides support for Patena administration app",
     },
   ],
   paths: {
@@ -402,7 +402,8 @@ module.exports = {
                   $ref: "#/components/schemas/ResponseLogin",
                 },
                 example: {
-                  auth: true, token: "eybasdhasdkaskldaksdkasdkkasd-89sdsadadas"
+                  auth: true,
+                  token: "eybasdhasdkaskldaksdkasdkkasd-89sdsadadas",
                 },
               },
             },
@@ -428,7 +429,8 @@ module.exports = {
                   $ref: "#/components/schemas/ErrorWrongPassword",
                 },
                 example: {
-                  auth: false, token: null
+                  auth: false,
+                  token: null,
                 },
               },
             },
@@ -487,22 +489,26 @@ module.exports = {
                 schema: {
                   $ref: "#/components/schemas/ResponseDetailTasks",
                 },
-                example: [{
-                  status: "Finished",
-                  duration: "10",
-                  type: "Initial Sequence",
-                  date: "10/03/2021 10:12 hs"
-                } , {
-                  status: "Cancelled",
-                  duration: "7",
-                  type: "No initial data",
-                  date: "10/03/2021 00:12 hs"
-                } ,  {
-                  status: "In Progress",
-                  duration: "-",
-                  type: "Only flanking",
-                  date: "13/03/2021 04:12 hs"
-                } ]
+                example: [
+                  {
+                    status: "Finished",
+                    duration: "10",
+                    type: "Initial Sequence",
+                    date: "10/03/2021 10:12 hs",
+                  },
+                  {
+                    status: "Cancelled",
+                    duration: "7",
+                    type: "No initial data",
+                    date: "10/03/2021 00:12 hs",
+                  },
+                  {
+                    status: "In Progress",
+                    duration: "-",
+                    type: "Only flanking",
+                    date: "13/03/2021 04:12 hs",
+                  },
+                ],
               },
             },
           },
@@ -571,11 +577,11 @@ module.exports = {
         parameters: [
           {
             name: "IdTask",
-            in: "query",
+            in: "path",
             description: "unique ID",
             type: "string",
             required: true,
-          }
+          },
         ],
         responses: {
           200: {
@@ -631,7 +637,7 @@ module.exports = {
       },
     },
     "/tasks/:id/retry": {
-      get: {
+      put: {
         tags: ["admin"],
         summary: "Retry a cancelled task",
         description: "You can queue a canceled task",
@@ -640,18 +646,17 @@ module.exports = {
         parameters: [
           {
             name: "IdTask",
-            in: "query",
+            in: "path",
             description: "unique ID",
             type: "string",
             required: true,
-          }
+          },
         ],
         responses: {
           204: {
             description: "The task was retried",
             content: {
-              "application/json": {
-              },
+              "application/json": {},
             },
           },
           400: {
@@ -662,7 +667,7 @@ module.exports = {
                   $ref: "#/components/schemas/Error",
                 },
                 example: {
-                  message: "Invalid task status. The task is not cancelled to be retried"
+                  message: "Invalid task status. The task is not cancelled to be retried",
                 },
               },
             },
@@ -969,7 +974,12 @@ module.exports = {
                 schema: {
                   $ref: "#/components/schemas/ResponseQueueStatus",
                 },
-                example: [{name:"In Progress" , value:"2"} , {name:"Cancelled" , value:"5"}, {name:"Finished" , value:"35"}, {name:"Pending" , value:"3"}]
+                example: [
+                  { name: "In Progress", value: "2" },
+                  { name: "Cancelled", value: "5" },
+                  { name: "Finished", value: "35" },
+                  { name: "Pending", value: "3" },
+                ],
               },
             },
           },
@@ -1031,7 +1041,12 @@ module.exports = {
                 schema: {
                   $ref: "#/components/schemas/ResponseQueueComposition",
                 },
-                example: [{name:"No initial data" , value:"9"} , {name:"Initial Sequence" , value:"15"}, {name:"Only flanking" , value:"2"}, {name:"Flanking + initial sequence" , value:"8"}]
+                example: [
+                  { name: "No initial data", value: "9" },
+                  { name: "Initial Sequence", value: "15" },
+                  { name: "Only flanking", value: "2" },
+                  { name: "Flanking + initial sequence", value: "8" },
+                ],
               },
             },
           },
@@ -1109,7 +1124,7 @@ module.exports = {
                 type: "string",
                 description: "sequence aminoacid",
                 example:
-                    "MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEGLVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHKMGQFYVMDDKKTVEQVIAEKEKEF",
+                  "MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEGLVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHKMGQFYVMDDKKTVEQVIAEKEKEF",
                 required: true,
               },
             },
@@ -1140,7 +1155,7 @@ module.exports = {
           designType: {
             type: "integer",
             description:
-                "The initialSequence is required all types design," + "\n\nflankingSequence1 and flankingSequence2 are required for type design 3 or 4",
+              "The initialSequence is required all types design," + "\n\nflankingSequence1 and flankingSequence2 are required for type design 3 or 4",
             example: 4,
             required: true,
           },
@@ -1464,7 +1479,7 @@ module.exports = {
           status: {
             type: "string",
             description: "Description status",
-            example: 'Cancelled',
+            example: "Cancelled",
           },
           duration: {
             type: "string",
@@ -1475,7 +1490,7 @@ module.exports = {
             type: "string",
             example: "Initial Sequence",
           },
-          date:{
+          date: {
             type: "string",
             description: "Time expressed in minutes",
             example: "12/03/2021 10:12 hs",
@@ -1489,7 +1504,7 @@ module.exports = {
           status: {
             type: "string",
             description: "Description status",
-            example: 'Finished',
+            example: "Finished",
           },
           duration: {
             type: "string",
@@ -1500,7 +1515,7 @@ module.exports = {
             type: "string",
             example: "Initial Sequence",
           },
-          date:{
+          date: {
             type: "string",
             description: "Time expressed in minutes",
             example: "10/03/2021 10:12 hs",
@@ -1550,34 +1565,29 @@ module.exports = {
       ResponseQueueStatus: {
         type: "array",
         oneOf: {
-          name:{
+          name: {
             type: "string",
             description: "Category",
-
           },
-          value:{
+          value: {
             type: "string",
             description: "Amount",
-
           },
         },
       },
       ResponseQueueComposition: {
         type: "array",
         oneOf: {
-          name:{
+          name: {
             type: "string",
             description: "Design Type",
-
           },
-          value:{
+          value: {
             type: "string",
             description: "Amount",
-
           },
         },
       },
-
 
       //Response: 400,500..
       ErrorLinkerLength: {
@@ -1642,10 +1652,10 @@ module.exports = {
           value: {
             type: "string",
             example:
-                "MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG\n" +
-                "LVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHK\n" +
-                "IPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTL\n" +
-                "MGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL",
+              "MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG\n" +
+              "LVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHK\n" +
+              "IPQFASRKQLSDAILKEAEEKIKEELKAQGKPEKIWDNIIPGKMNSFIADNSQLDSKLTL\n" +
+              "MGQFYVMDDKKTVEQVIAEKEKEFGGKIKIVEFICFEVGEGLEKKTEDFAAEVAAQL",
           },
         },
       },
