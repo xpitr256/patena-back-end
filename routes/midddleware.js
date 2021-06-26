@@ -6,19 +6,22 @@ exports.ensureAuthenticated = (req, res, next) => {
   if (!req.headers.authorization) {
     return res.status(403).send({ message: "There is no authorization headers" });
   }
-
   const token = req.headers.authorization.split(" ")[1];
-  const payload = jwt.decode(token, config.TOKEN_SECRET);
+  try {
+    const payload = jwt.decode(token, config.TOKEN_SECRET);
 
-  const requestFromFrontEnd = payload.sub === config.FRONT_END_NAME;
+    const requestFromFrontEnd = payload.sub === config.FRONT_END_NAME;
 
-  if (!requestFromFrontEnd) {
-    if (!payload.exp || payload.exp <= moment().unix()) {
-      return res.status(401).send({ message: "invalid token" });
+    if (!requestFromFrontEnd) {
+      if (!payload.exp || payload.exp <= moment().unix()) {
+        return res.status(401).send({ message: "invalid token" });
+      }
     }
+    next();
+  } catch (e) {
+    // Expired token
+    return res.status(401).send({ message: e.message });
   }
-
-  next();
 };
 
 exports.errorHandler = (err, req, res, next) => {
