@@ -2,22 +2,29 @@ config:
   target: https://patena-api.herokuapp.com
   payload:
     # path relativo a la localización del script de test
-    path: "orderNumber.csv"
+    path: "design.csv"
     fields:
-      - "OrderNumber"
+      - "distance"
+      - "email"
+      - "designType"
+      - "language"
       - "Token"
   phases:
     - duration: 20
       arrivalRate: 1
-      name: get Results
+      name: send design
   defaults:
     headers:
       Authorization: 'Bearer {{Token}}'
 scenarios:
   - flow:
-      - get:
-          # TODO get valid token
-          url: "/results?orderNumber={{ OrderNumber }}"
+      - post:
+          url: "/design"
+          json:
+            distance: "{{ distance }}"
+            email: "{{ email }}"
+            designType: "{{ designType }}"
+            language: "{{ language }}"
           headers:
             Authorization: 'Bearer {{Token}}'
 
