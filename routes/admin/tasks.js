@@ -13,7 +13,7 @@ async function getTask(req, res) {
     }
   } catch (error) {
     logger.error(error);
-    res.status(500).send(error);
+    res.status(500).send({ message: error.message });
   }
 }
 
@@ -30,7 +30,7 @@ async function retryTask(req, res) {
     }
   } catch (error) {
     logger.error(error);
-    res.status(500).send(error);
+    res.status(500).send({ message: error.message });
   }
 }
 

@@ -7,7 +7,7 @@ async function getSuccessRate(req, res) {
     res.json({ success_rate: rate });
   } catch (error) {
     logger.error(error);
-    res.status(500).send(error);
+    res.status(500).send({ message: error.message });
   }
 }
 
@@ -17,7 +17,7 @@ async function getAverageProcessingTime(req, res) {
     res.json({ avg_minutes: timeInMinutes });
   } catch (error) {
     logger.error(error);
-    res.status(500).send(error);
+    res.status(500).send({ message: error.message });
   }
 }
 
@@ -27,7 +27,7 @@ async function getFastestProcessingTime(req, res) {
     res.json({ time_minutes: timeInMinutes });
   } catch (error) {
     logger.error(error);
-    res.status(500).send(error);
+    res.status(500).send({ message: error.message });
   }
 }
 
@@ -37,7 +37,7 @@ async function getSlowestProcessingTime(req, res) {
     res.json({ time_minutes: timeInMinutes });
   } catch (error) {
     logger.error(error);
-    res.status(500).send(error);
+    res.status(500).send({ message: error.message });
   }
 }
 
@@ -47,7 +47,7 @@ async function getQueueStatus(req, res) {
     res.json(status);
   } catch (error) {
     logger.error(error);
-    res.status(500).send(error);
+    res.status(500).send({ message: error.message });
   }
 }
 
@@ -57,7 +57,7 @@ async function getQueueDesignTaskComposition(req, res) {
     res.json(status);
   } catch (error) {
     logger.error(error);
-    res.status(500).send(error);
+    res.status(500).send({ message: error.message });
   }
 }
 
