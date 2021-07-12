@@ -8,7 +8,7 @@ config:
       - "email"
       - "message"
   phases:
-    - duration: 20
+    - duration: 2500
       arrivalRate: 1
       name: send message contact
   defaults:

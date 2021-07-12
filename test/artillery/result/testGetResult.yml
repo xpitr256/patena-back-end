@@ -7,8 +7,8 @@ config:
       - "OrderNumber"
       - "Token"
   phases:
-    - duration: 20
-      arrivalRate: 1
+    - duration: 60
+      arrivalRate: 16
       name: get Results
   defaults:
     headers:

@@ -7,7 +7,7 @@ config:
       - "distance"
   phases:
     - duration: 60
-      arrivalRate: 3
+      arrivalRate: 14
       name: get Length
   defaults:
     headers:
