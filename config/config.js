@@ -5,6 +5,7 @@ module.exports = {
     useUnifiedTopology: true,
   },
   CONTACT_MAIL: process.env.CONTACT_MAIL || "nachoquique@gmail.com",
+  SEND_EMAILS: process.env.SEND_EMAILS === "true",
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   FRONT_END_BASE_URL: process.env.FRONT_END_BASE_URL || "http://localhost:3000/",
   FRONT_END_NAME: process.env.FRONT_END_NAME || "patena-web-front-end",

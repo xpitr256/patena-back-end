@@ -1,6 +1,7 @@
 const expect = require("chai").expect;
 const proxyquire = require("proxyquire");
 const constants = require("./../../../services/constants");
+const config = require("../../../config/config");
 
 const DEBUG_MODE = false;
 const genericErrorMessage = "FAILING ON PURPOSE";
@@ -18,6 +19,9 @@ function setApiKey(key) {
 }
 
 describe("Mail Service", async () => {
+  beforeEach(async () => {
+    config.SEND_EMAILS = true
+  });
   describe("sendContactMail", async () => {
     it("should send contact email notification for valid email", async () => {
       let mailSenderMock = {
@@ -121,13 +125,14 @@ describe("Mail Service", async () => {
       let mailSenderMock = {
         setApiKey: setApiKey,
       };
-
+      let emailWasSent = false;
       mailSenderMock.send = function (data, cb) {
         log("mailSenderMock:: send => OK");
         expect(data).to.be.a("Object");
         expect(data.to).to.be.equals(validTestMail);
         expect(data.from).to.be.equals("no-reply@patena.herokuapp.com");
         expect(data.subject).to.be.equals("PATENA - Linker Analysis job finished!");
+        emailWasSent = true;
         cb();
       };
 
@@ -137,6 +142,30 @@ describe("Mail Service", async () => {
 
       const result = await service.sendWorkSuccessMail(validTestMail, "en", constants.TYPE_ANALYSIS, 12345);
       expect(result).to.be.equals(undefined);
+      expect(emailWasSent).to.be.equals(true);
+    });
+
+    it("should NOT send work success email notification if config.SEND_EMAILS is false", async () => {
+      let mailSenderMock = {
+        setApiKey: setApiKey,
+      };
+
+      config.SEND_EMAILS = false;
+      let emailWasSent = false;
+
+      mailSenderMock.send = function (data, cb) {
+        log("mailSenderMock:: send => OK");
+        emailWasSent = true;
+        cb();
+      };
+
+      const service = proxyquire("../../../services/mail/mailService", {
+        "@sendgrid/mail": mailSenderMock,
+      });
+
+      const result = await service.sendWorkSuccessMail(validTestMail, "en", constants.TYPE_ANALYSIS, 12345);
+      expect(result).to.be.equals(undefined);
+      expect(emailWasSent).to.be.equals(false);
     });
 
     it("should fail sending work success email notification for invalid email", async () => {

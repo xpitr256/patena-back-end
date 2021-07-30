@@ -78,93 +78,109 @@ function geContactMailData(language, name, message) {
 module.exports = {
   sendContactMail: async function (email, name, message) {
     return new Promise((resolve, reject) => {
-      const htmlTemplate = fs.readFileSync("./services/mail/templates/contactMessage.html", "utf-8");
-      const data = geContactMailData("en", name, message);
-      const htmlContent = mustache.render(htmlTemplate, data);
+      if (config.SEND_EMAILS) {
+        const htmlTemplate = fs.readFileSync("./services/mail/templates/contactMessage.html", "utf-8");
+        const data = geContactMailData("en", name, message);
+        const htmlContent = mustache.render(htmlTemplate, data);
 
-      const emailBody = {
-        to: config.CONTACT_MAIL,
-        from: email,
-        subject: data.subject,
-        html: htmlContent,
-      };
+        const emailBody = {
+          to: config.CONTACT_MAIL,
+          from: email,
+          subject: data.subject,
+          html: htmlContent,
+        };
 
-      sgMail.send(emailBody, function (err, json) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
+        sgMail.send(emailBody, function (err, json) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      } else {
+        resolve();
+      }
     });
   },
 
   sendWorkInProgressMail: function (email, language, workType, workId) {
     return new Promise((resolve, reject) => {
-      const htmlTemplate = fs.readFileSync("./services/mail/templates/workInProgress.html", "utf-8");
-      const data = getWorkInProgressMailData(language, workType, workId);
-      const htmlContent = mustache.render(htmlTemplate, data);
+      if (config.SEND_EMAILS) {
+        const htmlTemplate = fs.readFileSync("./services/mail/templates/workInProgress.html", "utf-8");
+        const data = getWorkInProgressMailData(language, workType, workId);
+        const htmlContent = mustache.render(htmlTemplate, data);
 
-      const emailBody = {
-        to: email,
-        from: "no-reply@patena.herokuapp.com",
-        subject: data.subject,
-        html: htmlContent,
-      };
+        const emailBody = {
+          to: email,
+          from: "no-reply@patena.herokuapp.com",
+          subject: data.subject,
+          html: htmlContent,
+        };
 
-      sgMail.send(emailBody, function (err, json) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
+        sgMail.send(emailBody, function (err, json) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      } else {
+        resolve();
+      }
     });
   },
 
   sendWorkSuccessMail: function (email, language, workType, workId) {
     return new Promise((resolve, reject) => {
-      const htmlTemplate = fs.readFileSync("./services/mail/templates/workSuccess.html", "utf-8");
-      const data = getWorkSuccessMailData(language, workType, workId);
-      const htmlContent = mustache.render(htmlTemplate, data);
+      if (config.SEND_EMAILS) {
+        const htmlTemplate = fs.readFileSync("./services/mail/templates/workSuccess.html", "utf-8");
+        const data = getWorkSuccessMailData(language, workType, workId);
+        const htmlContent = mustache.render(htmlTemplate, data);
 
-      const emailBody = {
-        to: email,
-        from: "no-reply@patena.herokuapp.com",
-        subject: data.subject,
-        html: htmlContent,
-      };
+        const emailBody = {
+          to: email,
+          from: "no-reply@patena.herokuapp.com",
+          subject: data.subject,
+          html: htmlContent,
+        };
 
-      sgMail.send(emailBody, function (err, json) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
+        sgMail.send(emailBody, function (err, json) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      } else {
+        resolve();
+      }
     });
   },
 
   sendWorkErrorMail: function (email, language, workType, workId) {
     return new Promise((resolve, reject) => {
-      const htmlTemplate = fs.readFileSync("./services/mail/templates/workError.html", "utf-8");
-      const data = getWorkErrorMailData(language, workType, workId);
-      const htmlContent = mustache.render(htmlTemplate, data);
+      if (config.SEND_EMAILS) {
+        const htmlTemplate = fs.readFileSync("./services/mail/templates/workError.html", "utf-8");
+        const data = getWorkErrorMailData(language, workType, workId);
+        const htmlContent = mustache.render(htmlTemplate, data);
 
-      const emailBody = {
-        to: email,
-        from: "no-reply@patena.herokuapp.com",
-        subject: data.subject,
-        html: htmlContent,
-      };
+        const emailBody = {
+          to: email,
+          from: "no-reply@patena.herokuapp.com",
+          subject: data.subject,
+          html: htmlContent,
+        };
 
-      sgMail.send(emailBody, function (err, json) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
+        sgMail.send(emailBody, function (err, json) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      } else {
+        resolve();
+      }
     });
   },
 };
