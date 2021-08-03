@@ -11,7 +11,7 @@ config:
       - "Token"
   phases:
     - duration: 60
-      arrivalRate: 11
+      arrivalRate: 15
       name: send design
   defaults:
     headers:
