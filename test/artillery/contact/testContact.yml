@@ -7,21 +7,24 @@ config:
       - "name"
       - "email"
       - "message"
+      - "Token"
   phases:
-    - duration: 2500
-      arrivalRate: 1
+    - duration: 60
+      arrivalRate: 25
       name: send message contact
   defaults:
     headers:
-      x-api-key: "{{ $processEnvironment.VUE_APP_BACK_END_TOKEN }}"
+      Authorization: 'Bearer {{Token}}'
 scenarios:
   - flow:
       - post:
           url: "/contact"
           json:
-            email: "{{ email }}"
             name: "{{ name }}"
+            email: "{{ email }}"
             message: "{{ message }}"
-
+          headers:
+            Authorization: 'Bearer {{Token}}'
+            Content-Type: 'application/json'
 
 
