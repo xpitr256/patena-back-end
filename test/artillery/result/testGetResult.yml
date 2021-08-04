@@ -8,7 +8,7 @@ config:
       - "Token"
   phases:
     - duration: 60
-      arrivalRate: 16
+      arrivalRate: 18
       name: get Results
   defaults:
     headers:
