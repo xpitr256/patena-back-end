@@ -20,7 +20,7 @@ function setApiKey(key) {
 
 describe("Mail Service", async () => {
   beforeEach(async () => {
-    config.SEND_EMAILS = true
+    config.SEND_EMAILS = true;
   });
   describe("sendContactMail", async () => {
     it("should send contact email notification for valid email", async () => {

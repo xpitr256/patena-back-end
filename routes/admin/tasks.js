@@ -45,8 +45,8 @@ async function getTasks(req, res) {
   }
 
   try {
-    const tasks = await taskService.getTasks(limit, offset, state);
-    res.json(tasks);
+    const response = await taskService.getTasks(limit, offset, state);
+    res.json(response);
   } catch (error) {
     logger.error(error);
     res.status(500).send(error);

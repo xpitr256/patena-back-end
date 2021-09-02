@@ -391,11 +391,12 @@ describe("/tasks route", () => {
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body).to.be.not.null;
-          expect(res.body).to.be.array();
-          expect(res.body).to.be.ofSize(1);
-          expect(res.body[0].status).to.be.equals("Pending");
-          expect(res.body[0].duration).to.be.equals("-");
-          expect(res.body[0].type).to.be.equals("No initial data");
+          expect(res.body.total).to.be.equals(1);
+          expect(res.body.tasks).to.be.array();
+          expect(res.body.tasks).to.be.ofSize(1);
+          expect(res.body.tasks[0].status).to.be.equals("Pending");
+          expect(res.body.tasks[0].duration).to.be.equals("-");
+          expect(res.body.tasks[0].type).to.be.equals("No initial data");
           done();
         });
     });
@@ -464,12 +465,30 @@ describe("/tasks route", () => {
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body).to.be.not.null;
-          expect(res.body).to.be.array();
-          expect(res.body).to.be.ofSize(4);
-          expect(res.body[0].status).to.be.equals("Pending");
-          expect(res.body[1].status).to.be.equals("Pending");
-          expect(res.body[2].status).to.be.equals("In Progress");
-          expect(res.body[3].status).to.be.equals("Finished");
+          expect(res.body.total).to.be.equals(4);
+          expect(res.body.tasks).to.be.array();
+          expect(res.body.tasks).to.be.ofSize(4);
+          expect(res.body.tasks[0].status).to.be.equals("Pending");
+          expect(res.body.tasks[1].status).to.be.equals("Pending");
+          expect(res.body.tasks[2].status).to.be.equals("In Progress");
+          expect(res.body.tasks[3].status).to.be.equals("Finished");
+          done();
+        });
+    });
+
+    it("should get the right total", (done) => {
+      const application = proxyquire("../../app", {});
+
+      chai
+        .request(application)
+        .get("/tasks?limit=2")
+        .set("Authorization", "Bearer " + validToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.not.null;
+          expect(res.body.total).to.be.equals(4);
+          expect(res.body.tasks).to.be.array();
+          expect(res.body.tasks).to.be.ofSize(2);
           done();
         });
     });

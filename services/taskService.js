@@ -89,11 +89,17 @@ module.exports = {
     if (stateId) {
       filterOptions.stateId = stateId;
     }
-    let tasks = Task.find(filterOptions)
-      .sort({ stateId: 1, creationDate: "desc" })
-      .skip(limit * offset)
-      .limit(limit);
-    return tasks.map((result) => result.map(formatAdminTask));
+    let [tasks, taskCount] = await Promise.all([
+      Task.find(filterOptions)
+        .sort({ stateId: 1, creationDate: "desc" })
+        .skip(limit * offset)
+        .limit(limit),
+      Task.countDocuments(filterOptions),
+    ]);
+    return {
+      tasks: tasks.map(formatAdminTask),
+      total: taskCount,
+    };
   },
   getTaskForAdmin: async function (taskId) {
     let task = await this.getTask(taskId);
