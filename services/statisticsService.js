@@ -43,7 +43,7 @@ module.exports = {
     if (response.length === 0) {
       return 0;
     }
-    return response[0].AverageValue === null ? 0 : response[0].AverageValue;
+    return response[0].AverageValue === null ? 0 : Math.round(response[0].AverageValue);
   },
 
   getFastestProcessingTime: async () => {
