@@ -210,8 +210,9 @@ def score(fastafile,matrixscores,peptide_length):
 				# the first 6 residues do not reside in exactly 7 windows
 				if k < peptide_length-1:
 					for r in range(k+1):
-						probability = allprob[r][2]
-						totprob = totprob + probability
+					    if r < len(allprob):
+						    probability = allprob[r][2]
+						    totprob = totprob + probability
 				# the last 6 residues do not reside in exactly 7 windows
 				elif k > len(sequence)-peptide_length:
 					for r in range(len(sequence)-k):

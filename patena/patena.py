@@ -849,6 +849,7 @@ def main():
                         print(str(iteration) + tab + str(mutation_attempts) +tab+  "EVAL1" + tab + "ACCEPT MUTATION")
                     if json_out:
                         mutation_dict = mutation.to_dict()
+                        mutation_dict['score_after_mutation'] = mutatedScore
                         mutation_dict['method'] = 'score_difference'
                         mutations_list.append(mutation_dict)
                     if step_by_step:
@@ -864,6 +865,7 @@ def main():
                             print(str(iteration) + tab + str(mutation_attempts) +tab+  "EVAL1" + tab + "ACCEPT MUTATION - MONTE CARLO DECISION")
                         if json_out:
                             mutation_dict = mutation.to_dict()
+                            mutation_dict['score_after_mutation'] = mutatedScore
                             mutation_dict['method'] = 'MC'
                             mutations_list.append(mutation_dict)
                         break
@@ -975,6 +977,7 @@ def main():
                             # print indent + "...ACCEPT MUTATION"
                         if json_out:
                             mutation_dict = mutation.to_dict()
+                            mutation_dict['score_after_mutation'] = mutatedScore
                             mutation_dict['method'] = 'score_difference'
                             mutations_list.append(mutation_dict)
                         if step_by_step:
@@ -991,6 +994,7 @@ def main():
                             #if true then accept the mutation...no need to keep trying new mutations
                             if json_out:
                                 mutation_dict = mutation.to_dict()
+                                mutation_dict['score_after_mutation'] = mutatedScore
                                 mutation_dict['method'] = 'MC'
                                 mutations_list.append(mutation_dict)
                             break
