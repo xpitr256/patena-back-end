@@ -1,8 +1,5 @@
-const tokenService = require("../services/tokenService");
-const config = require("./config");
-
 module.exports = {
-  swagger: "2.0",
+  swagger: "3.0",
   info: {
     version: "1.0.0",
     title: "Patena API",
