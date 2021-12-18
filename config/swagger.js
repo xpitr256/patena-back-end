@@ -1,5 +1,5 @@
 module.exports = {
-  swagger: "3.0",
+  openapi: "3.0.2",
   info: {
     version: "1.0.0",
     title: "Patena API",

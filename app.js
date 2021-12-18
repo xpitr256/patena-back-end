@@ -30,13 +30,12 @@ const login = require("./routes/admin/login");
 var app = express();
 
 const options = {
-  explorer: true, // habilita el explorar para hacer busquedas
+  explorer: false,
   swaggerOptions: {
     validatorUrl: null,
   },
-  // customCss: '.swagger-ui .topbar { display: none }'// Desactiva el la cabecera que dice swagguer ui
 };
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 let handleCorsHeaders = function (req, res, next) {
   if (req.get("Origin") != null) {
