@@ -34,7 +34,7 @@
     "node-powershell": "^4.0.0",
     "pug": "^3.0.2",
     "python-shell": "^2.0.3",
-    "shelljs": "^0.8.4",
+    "shelljs": "^0.8.5",
     "swagger-ui-express": "^4.1.6",
     "throng": "^5.0.0"
   },
