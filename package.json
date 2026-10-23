@@ -8,6 +8,7 @@
   "scripts": {
     "test": "MONGOMS_VERSION=6.0.14 mocha --recursive --timeout 60000 --exit",
     "test-cv": "MONGOMS_VERSION=6.0.14 nyc --reporter=text --all mocha --recursive --timeout 60000 --exit",
+    "test:python": "cd patena && python3 -m pytest",
     "start": "node ./bin/www",
     "prettier": "prettier --write --print-width 160 '**/*.js'"
   },
