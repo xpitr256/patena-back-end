@@ -10,12 +10,20 @@
 
 
 REQUIREMENTS: 
-* python
+* python >= 3.9
 * perl
-* biopython
+* biopython >= 1.83 (`pip install -r ../requirements.txt`)
 * BLAST: PATENA searches for possible functional elements in the sequences based on sequence homology evidence using a BLAST search against a DB of known protein sequences. blastp should be in PATH and the env variable BLASTDB must be defined as the path to blast DBs dir. The DB of proteins to search against should preferentialy be UniprotKB. The name of the DB is (by default) uniprot_sprot.fasta, although this can be changed using parameter `--db [DB_NAME]`. An alternative option to the local blast is to run web BLAST (`--blastweb`), although this increases considerably the running time.
 
 **NOT TESTED ON WINDOWS**
+
+
+TESTS:
+```
+	pip install -r ../requirements.txt -r ../requirements-dev.txt
+	python -m pytest        # from this directory (or `npm run test:python` from the repo root)
+```
+External tools (BLAST, Tango, ANCHOR, ...) are mocked in the unit tests, so they run anywhere. The CLI tests only use the tools that need no binaries.
 
 
 USAGE:   
