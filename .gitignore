@@ -6,4 +6,10 @@ coverage
 .nyc_output
 *.lcov
 workers/Input
-workers/Output
+workers/Outputpatena/Output
+patena/inputs
+patena/Tools/ANCHOR/anchor
+patena/Tools/iupred/iupredExe
+.coverage
+.pytest_cache
+__pycache__

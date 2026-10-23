@@ -2,7 +2,6 @@ import os
 import sys
 import re
 import subprocess
-from Bio.Blast.Applications import NcbiblastpCommandline
 from Bio.Blast import NCBIXML
 from Bio.Blast import NCBIWWW
 import time
@@ -12,9 +11,11 @@ endl = "\n"
 tab = "\t"
 space=" "
 indent=""
+# file where detailed output is written (set by patena.py when --detailed-output is used)
+detailedOutFile = None
 #get base path
 def get_script_path():
-    return os.path.dirname(os.path.realpath(sys.argv[0]))
+    return os.path.dirname(os.path.realpath(__file__))
 
 base_path = get_script_path() + '/'
 toolsPath = base_path + 'Tools/'    #**************************TODO SET THE PATH TO THE TOOL SET 
@@ -24,7 +25,7 @@ toolsPath = base_path + 'Tools/'    #**************************TODO SET THE PATH
 def run_elm_search(sequence,outputsPath,verbose,detailed_output):
     ##MAKE THE SEARCH AND SAVE RESULTS IN outputELM
     elm_pattern_dict = {}
-    with open(toolsPath + "ELM/elm_patterns_20150301.txt", 'rU') as file_open :
+    with open(toolsPath + "ELM/elm_patterns_20150301.txt", 'r') as file_open :
         patterns = file_open.readlines()
         for line in patterns :
             line = line.split("\t")
@@ -34,7 +35,7 @@ def run_elm_search(sequence,outputsPath,verbose,detailed_output):
     #print "SEARCHING ELMS IN %s\n ..." % filename
     elm_pattern_desc_dict = {}
     if verbose or detailed_output:     #ONLY IF ITS REQUIRED TO PRINT A DETAILED A OUTPUT, READ THE DESCRIPTION OF EACH ELM FROM A DIFFERENT FILE
-         with open(toolsPath + "ELM/elm_patterns_desc_20150301.txt", 'rU') as file_desc_open :
+         with open(toolsPath + "ELM/elm_patterns_desc_20150301.txt", 'r') as file_desc_open :
             patterns_desc = file_desc_open.readlines()
             for line in patterns_desc :
                 line = line.split("\t")
@@ -46,7 +47,7 @@ def run_elm_search(sequence,outputsPath,verbose,detailed_output):
     output_file_name=outputsPath + "outputELM"
     uniprot_list = []
     sequence_dict = {}
-    #with open(filename, 'rU') as file_open :
+    #with open(filename, 'r') as file_open :
   	  #my_seq = file_open.read()
     with open(output_file_name, 'w') as file_write :
         for elm_id in elm_pattern_dict :
@@ -316,7 +317,7 @@ def limboEval(sequence, positionScores,config_params,inputsPath,outputsPath,verb
     #if verbose:
       #print indent + "LIMBO SEARCH:"
     #CALL LIMBO :   score.py + matrix + input + outpout
-    runCommand="python" + space + toolsPath + "Limbo/score.py" + space + toolsPath+"Limbo/mergedmatrix.mat" + space + inputsPath + "sequenceFASTA" + space + outputLimbo
+    runCommand=sys.executable + space + toolsPath + "Limbo/score.py" + space + toolsPath+"Limbo/mergedmatrix.mat" + space + inputsPath + "sequenceFASTA" + space + outputLimbo
     os.system(runCommand)
     outputLimbo=open(outputLimbo,'r')
     limboScores=[]
@@ -608,12 +609,9 @@ def blastIt(sequence, positionScores, database, inputsPath, outputsPath, verbose
             input.write(sequence)
             input.close()
             blastp_path = './patena/Tools/ncbi-blast/bin/blastp'
-            commandLine=NcbiblastpCommandline(cmd=blastp_path, query=inputBlast, db=database, evalue=cutoff, outfmt=5, out=outputBlast)
-            #print commandLine
-            stdout, stderr = commandLine()
-            result_handle = open(outputBlast)
-            blast_records = NCBIXML.parse(result_handle)
-            first = next(blast_records)
+            subprocess.run([blastp_path, '-query', inputBlast, '-db', database, '-evalue', str(cutoff), '-outfmt', '5', '-out', outputBlast], check=True, capture_output=True)
+            with open(outputBlast) as result_handle:
+                first = next(NCBIXML.parse(result_handle))
         if detailed_output:
             detailedOutFile.write('BLAST search against   \n')
             detailedOutFile.write('e-value cutoff: ' + str(cutoff)+ '\n')

@@ -1,20 +1,12 @@
 #!/usr/bin/python
 import argparse
-import urllib.request, urllib.error, urllib.parse
-import io
 import sys
 import os
 import json
 # import re
 import time
 import errno
-from Bio.Blast import NCBIWWW
-from Bio.Blast.Applications import NcbiblastpCommandline
-from Bio import SeqIO
-from Bio import Seq
-from Bio.Blast import NCBIXML
 #from Bio import SearchIO
-from array import array
 import math
 import random
 #import subprocess
@@ -27,10 +19,12 @@ import tool_functions
 #PASTA_PATH=$DIR/Tools/PASTA/pasta_exe
 #PROSITE=$DIR/Tools/Prosite/ps_scan
 
-os.environ["IUPred_PATH"] = "/app/patena/Tools/iupred"
-os.environ["ANCHOR_PATH"] = "/app/patena/Tools/ANCHOR"
-os.environ["PASTA_PATH"] = "/app/patena/Tools/PASTA/pasta_exe"
-os.environ["PROSITE"] = "/app/patena/Tools/Prosite/ps_scan"
+# Tool locations default to the ones next to this script, unless already defined in the environment
+_patena_dir = os.path.dirname(os.path.realpath(__file__))
+os.environ.setdefault("IUPred_PATH", os.path.join(_patena_dir, "Tools", "iupred"))
+os.environ.setdefault("ANCHOR_PATH", os.path.join(_patena_dir, "Tools", "ANCHOR"))
+os.environ.setdefault("PASTA_PATH", os.path.join(_patena_dir, "Tools", "PASTA", "pasta_exe"))
+os.environ.setdefault("PROSITE", os.path.join(_patena_dir, "Tools", "Prosite", "ps_scan"))
 os.environ["HEMO"] = "MVLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDLSHGSAQVKGHGKKVADALTNAVAHVDDMPNALSALSDLHAHKLRVDPVNFKLLSHCLLVTLAAHLPAEFTPAVHASLDKFLASVSTVLTSKYR"
 
 #****************************************
@@ -154,7 +148,7 @@ def firstPartialEvaluation(sequence, config_params,position_scores,execution_set
                     print("STARTING "+ tool_name +" execution")
                 tool_functions.tool_functions_dict[tool_name](sequence, position_scores,config_params, inputsPath,job_out_path,verbose,detailed_output)
                 if detailed_output:
-                    details_out.write('\n\n***********\n\n' )
+                    tool_functions.detailedOutFile.write('\n\n***********\n\n' )
                 times_dict[tool_name]+=(time.time() - timePrev)
         score_result=get_global_score(position_scores)
         ##PRINT SCORE
@@ -201,7 +195,7 @@ def secondPartialEvaluation(sequence, position_scores, verbose, inputsPath, outp
     #if step_by_step:
       #raw_input(indent + "Hit enter to continue with next evaluation")
     if detailed_output:
-        details_out.write('\n\n***********\n\n' )
+        tool_functions.detailedOutFile.write('\n\n***********\n\n' )
     ##PRINT SCORE
     if verbose:
         print(indent + "*************************************")
@@ -394,9 +388,9 @@ def main():
     parser.add_argument('--stepped', dest="step_by_step",action='store_true',help='Ask for user input after each step.')
     parser.add_argument("--detailed-output", action='store', type=argparse.FileType('w'), dest='details_out',help="Directs the output to a name of your choice")
     parser.add_argument("--jobid", action='store', dest='job_id',help="Directs the output to a name of your choice")
-    parser.add_argument('--max-iterations', nargs=1, type=int, default=4000, help='Max amount of iterations')
+    parser.add_argument('--max-iterations', type=int, default=4000, help='Max amount of iterations')
     parser.add_argument('--length',  type=int, default=12, help='Sequence length')
-    parser.add_argument('--beta', nargs=1, type=float, default=0.5, help='Monte Carlo Beta value')
+    parser.add_argument('--beta', type=float, default=0.5, help='Monte Carlo Beta value')
     parser.add_argument('--net-charge', nargs=1, type=int, help='Net charge of the final sequence')
     parser.add_argument('--seq', nargs=1, help='Starting sequence')
     parser.add_argument('--json',dest='json_out',action='store_true',help='Save output to json file')
@@ -470,6 +464,7 @@ def main():
         verbose = True   #MAKES NO SENSE TO GO STEP BY STEP IF CANT SEE A DETAILED OUTPUT
 
     details_out = args.details_out
+    tool_functions.detailedOutFile = details_out
     detailed_output = False
     if details_out:
         detailed_output = True
