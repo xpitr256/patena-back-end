@@ -1,7 +1,7 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const expect = require("chai").expect;
-chai.use(chaiHttp);
+chai.use(chaiHttp.default);
 const application = require("../../app");
 const proxyquire = require("proxyquire");
 const tokenService = require("./../../services/tokenService");
@@ -26,8 +26,8 @@ describe("/POST analyze route", () => {
   const validSequenceValue = "AACCCCCCC";
 
   it("should return a 403 error for no token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/analyze")
       .send({})
       .end((err, res) => {
@@ -38,8 +38,8 @@ describe("/POST analyze route", () => {
   const invalidToken = tokenService.createTokenFor("fake");
 
   it("should return a 401 error for invalid token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/analyze")
       .set("Authorization", "Bearer " + invalidToken)
       .send({})
@@ -52,8 +52,8 @@ describe("/POST analyze route", () => {
   const validToken = tokenService.createTokenFor(config.FRONT_END_NAME);
 
   it("should return a 400 error for no information", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/analyze")
       .set("Authorization", "Bearer " + validToken)
       .send({})
@@ -64,8 +64,8 @@ describe("/POST analyze route", () => {
   });
 
   it("should return a 400 error for invalid mail", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/analyze")
       .set("Authorization", "Bearer " + validToken)
       .send({
@@ -78,8 +78,8 @@ describe("/POST analyze route", () => {
   });
 
   it("should return a 400 error for empty sequence", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/analyze")
       .set("Authorization", "Bearer " + validToken)
 
@@ -94,8 +94,8 @@ describe("/POST analyze route", () => {
   });
 
   it("should return a 400 error for empty sequence value", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/analyze")
       .set("Authorization", "Bearer " + validToken)
       .send({
@@ -112,8 +112,8 @@ describe("/POST analyze route", () => {
   });
 
   it('should return a 400 error for invalid sequence value. (It has "J" a non existent amino acid)', (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/analyze")
       .set("Authorization", "Bearer " + validToken)
       .send({
@@ -154,8 +154,8 @@ describe("/POST analyze route", () => {
         "./routes/analyze": analyzeWithMockedAnalyzeService,
       });
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .post("/analyze")
         .set("Authorization", "Bearer " + validToken)
         .send({
@@ -191,8 +191,8 @@ describe("/POST analyze route", () => {
         "./routes/analyze": analyzeWithFailingMockedAnalyzeService,
       });
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .post("/analyze")
         .set("Authorization", "Bearer " + validToken)
         .send({

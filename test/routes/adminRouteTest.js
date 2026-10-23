@@ -1,7 +1,7 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const expect = require("chai").expect;
-chai.use(chaiHttp);
+chai.use(chaiHttp.default);
 const assertArrays = require("chai-arrays");
 chai.use(assertArrays);
 const application = require("../../app");
@@ -30,8 +30,8 @@ const validToken = tokenService.createTokenFor(config.FRONT_END_NAME);
 
 describe("/tasks/:id route", () => {
   it("should return a 403 error due to lack of request token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/tasks/" + validTaskId)
       .end((err, res) => {
         expect(res).to.have.status(403);
@@ -40,8 +40,8 @@ describe("/tasks/:id route", () => {
   });
 
   it("should return a 401 error for invalid token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/tasks/" + validTaskId)
       .set("Authorization", "Bearer " + invalidToken)
       .end((err, res) => {
@@ -58,8 +58,8 @@ describe("/tasks/:id route", () => {
     await mockDatabase.destroyInMemoryDataBase();
   });
   it("should return a 404 error for invalid task id", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/tasks/1")
       .set("Authorization", "Bearer " + validToken)
       .end((err, res) => {
@@ -86,8 +86,8 @@ describe("/tasks/:id route", () => {
       "./routes/admin/tasks": taskWithMockedResultService,
     });
 
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/tasks/1")
       .set("Authorization", "Bearer " + validToken)
       .end((err, res) => {
@@ -117,8 +117,8 @@ describe("/tasks/:id route", () => {
     it("should get the task", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/tasks/" + validTaskId)
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -139,8 +139,8 @@ describe("/tasks/:id route", () => {
 
 describe("/tasks/:id/retry route", () => {
   it("should return a 403 error due to lack of request token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .put("/tasks/" + validTaskId + "/retry")
       .end((err, res) => {
         expect(res).to.have.status(403);
@@ -149,8 +149,8 @@ describe("/tasks/:id/retry route", () => {
   });
 
   it("should return a 401 error for invalid token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .put("/tasks/" + validTaskId + "/retry")
       .set("Authorization", "Bearer " + invalidToken)
       .end((err, res) => {
@@ -160,8 +160,8 @@ describe("/tasks/:id/retry route", () => {
   });
 
   it("should return a 404 error for no taskId", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .put("/tasks//retry")
       .set("Authorization", "Bearer " + validToken)
       .end((err, res) => {
@@ -178,8 +178,8 @@ describe("/tasks/:id/retry route", () => {
     await mockDatabase.destroyInMemoryDataBase();
   });
   it("should return a 404 error for invalid task id", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .put("/tasks/1/retry")
       .set("Authorization", "Bearer " + validToken)
       .end((err, res) => {
@@ -206,8 +206,8 @@ describe("/tasks/:id/retry route", () => {
       "./routes/admin/tasks": taskWithMockedResultService,
     });
 
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .put("/tasks/1/retry")
       .set("Authorization", "Bearer " + validToken)
       .end((err, res) => {
@@ -235,8 +235,8 @@ describe("/tasks/:id/retry route", () => {
     it("should update the task status", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .put("/tasks/" + validTaskId + "/retry")
         .set("Authorization", "Bearer " + validToken)
         .end(async (err, res) => {
@@ -275,8 +275,8 @@ describe("/tasks/:id/retry route", () => {
     it("should return a bad request status 400 and not update the task status", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .put("/tasks/" + validTaskId + "/retry")
         .set("Authorization", "Bearer " + validToken)
         .end(async (err, res) => {
@@ -299,8 +299,8 @@ describe("/tasks/:id/retry route", () => {
 
 describe("/tasks route", () => {
   it("should return a 403 error due to lack of request token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/tasks")
       .end((err, res) => {
         expect(res).to.have.status(403);
@@ -309,8 +309,8 @@ describe("/tasks route", () => {
   });
 
   it("should return a 401 error for invalid token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/tasks")
       .set("Authorization", "Bearer " + invalidToken)
       .end((err, res) => {
@@ -327,8 +327,8 @@ describe("/tasks route", () => {
     await mockDatabase.destroyInMemoryDataBase();
   });
   it("should return a 400 error for invalid task state", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/tasks?state=invalid")
       .set("Authorization", "Bearer " + validToken)
       .end((err, res) => {
@@ -355,8 +355,8 @@ describe("/tasks route", () => {
       "./routes/admin/tasks": taskWithMockedResultService,
     });
 
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/tasks")
       .set("Authorization", "Bearer " + validToken)
       .end((err, res) => {
@@ -384,8 +384,8 @@ describe("/tasks route", () => {
     it("should get the task", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/tasks")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -458,8 +458,8 @@ describe("/tasks route", () => {
     it("should get the task order by state and creation date from new to oldest one", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/tasks")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -479,8 +479,8 @@ describe("/tasks route", () => {
     it("should get the right total", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/tasks?limit=2")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {

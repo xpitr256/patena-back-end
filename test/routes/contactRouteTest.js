@@ -1,7 +1,7 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const expect = require("chai").expect;
-chai.use(chaiHttp);
+chai.use(chaiHttp.default);
 const application = require("../../app");
 const proxyquire = require("proxyquire");
 
@@ -11,8 +11,8 @@ describe("/POST contact route", () => {
   const validMessage = "Test Message Wit hMore Than Fifty Characters Required";
 
   it("should return a 400 error for empty contact information", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/contact")
       .send({})
       .end((err, res) => {
@@ -22,8 +22,8 @@ describe("/POST contact route", () => {
   });
 
   it("should return a 400 error for invalid mail in contact information", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/contact")
       .send({
         email: "invalid",
@@ -37,8 +37,8 @@ describe("/POST contact route", () => {
   });
 
   it("should return a 400 error for invalid name in contact information", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/contact")
       .send({
         email: validEmail,
@@ -52,8 +52,8 @@ describe("/POST contact route", () => {
   });
 
   it("should return a 400 error for less than 50 characters message in contact information", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/contact")
       .send({
         email: validEmail,
@@ -78,8 +78,8 @@ describe("/POST contact route", () => {
       "./routes/contact": contactWithMockedMailService,
     });
 
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/contact")
       .send({
         email: validEmail,
@@ -108,8 +108,8 @@ describe("/POST contact route", () => {
       "./routes/contact": contactWithMockedMailService,
     });
 
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/contact")
       .send({
         email: validEmail,

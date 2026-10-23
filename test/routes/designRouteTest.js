@@ -1,7 +1,7 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const expect = require("chai").expect;
-chai.use(chaiHttp);
+chai.use(chaiHttp.default);
 const application = require("../../app");
 const proxyquire = require("proxyquire");
 const constants = require("../../services/constants");
@@ -27,8 +27,8 @@ describe("/POST design route", () => {
   const validSequenceValue = "AACCCCCCC";
 
   it("should return a 403 error for no token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/design")
       .send({})
       .end((err, res) => {
@@ -39,8 +39,8 @@ describe("/POST design route", () => {
   const invalidToken = tokenService.createTokenFor("fake");
 
   it("should return a 401 error for invalid token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/design")
       .set("Authorization", "Bearer " + invalidToken)
       .send({})
@@ -53,8 +53,8 @@ describe("/POST design route", () => {
   const validToken = tokenService.createTokenFor(config.FRONT_END_NAME);
 
   it("should return a 400 error for no design information", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/design")
       .set("Authorization", "Bearer " + validToken)
       .send({})
@@ -65,8 +65,8 @@ describe("/POST design route", () => {
   });
 
   it("should return a 400 error for invalid design type", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/design")
       .set("Authorization", "Bearer " + validToken)
       .send({
@@ -79,8 +79,8 @@ describe("/POST design route", () => {
   });
 
   it("should return a 400 error for 0 (non 1-4) design type", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/design")
       .set("Authorization", "Bearer " + validToken)
       .send({
@@ -93,8 +93,8 @@ describe("/POST design route", () => {
   });
 
   it("should return a 400 error for 5 (non 1-4) design type", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/design")
       .set("Authorization", "Bearer " + validToken)
       .send({
@@ -107,8 +107,8 @@ describe("/POST design route", () => {
   });
 
   it("should return a 400 error for invalid mail", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/design")
       .set("Authorization", "Bearer " + validToken)
       .send({
@@ -122,8 +122,8 @@ describe("/POST design route", () => {
   });
 
   it("should return a 400 error for no initial sequence", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/design")
       .set("Authorization", "Bearer " + validToken)
       .send({
@@ -137,8 +137,8 @@ describe("/POST design route", () => {
   });
 
   it("should return a 400 error for empty sequence value", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/design")
       .set("Authorization", "Bearer " + validToken)
       .send({
@@ -156,8 +156,8 @@ describe("/POST design route", () => {
   });
 
   it('should return a 400 error for invalid initial sequence value. (It has "J" a non existent amino acid)', (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/design")
       .set("Authorization", "Bearer " + validToken)
       .send({
@@ -200,8 +200,8 @@ describe("/POST design route", () => {
         "./routes/design": designWithMockedDesignService,
       });
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .post("/design")
         .set("Authorization", "Bearer " + validToken)
         .send({
@@ -238,8 +238,8 @@ describe("/POST design route", () => {
         "./routes/design": designWithFailingMockedDesignService,
       });
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .post("/design")
         .set("Authorization", "Bearer " + validToken)
         .send({

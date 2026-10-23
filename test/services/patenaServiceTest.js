@@ -1,6 +1,6 @@
 const chai = require("chai");
 const expect = chai.expect;
-const chaiAsPromised = require("chai-as-promised");
+const chaiAsPromised = require("chai-as-promised").default;
 chai.use(chaiAsPromised);
 const proxyquire = require("proxyquire");
 const constants = require("./../../services/constants");

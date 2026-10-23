@@ -151,8 +151,8 @@ describe("Task analyzer", () => {
   it("should cancel an overdue task", async () => {
     const translations = translationService.getTranslationsIn("en");
 
-    let yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 2);
+    // Strictly older than the max execution time (the limit is exclusive)
+    let yesterday = new Date(Date.now() - config.MAX_JOB_EXECUTION_TIME_IN_MS_SECONDS - 60 * 1000);
 
     let taskInProgress = {
       stateId: constants.TASK_STATE_IN_PROGRESS,

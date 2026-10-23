@@ -1,7 +1,7 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const expect = require("chai").expect;
-chai.use(chaiHttp);
+chai.use(chaiHttp.default);
 const assertArrays = require("chai-arrays");
 chai.use(assertArrays);
 const application = require("../../app");
@@ -35,8 +35,8 @@ describe("/login route", () => {
   });
 
   it("should return a 404 for empty request body", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .post("/login")
       .send({})
       .end((err, res) => {
@@ -58,8 +58,8 @@ describe("/login route", () => {
     });
 
     it("should return 401 not authorized for invalid password", (done) => {
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .post("/login")
         .send({
           name: testName,
@@ -76,8 +76,8 @@ describe("/login route", () => {
     });
 
     it("should return 200 for valid user login ", (done) => {
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .post("/login")
         .send({
           name: testName,
@@ -109,8 +109,8 @@ describe("/login route", () => {
         "./routes/admin/login": loginWithMockedUser,
       });
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .post("/login")
         .send({
           name: testName,

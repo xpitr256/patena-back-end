@@ -1,7 +1,7 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const expect = require("chai").expect;
-chai.use(chaiHttp);
+chai.use(chaiHttp.default);
 const assertArrays = require("chai-arrays");
 chai.use(assertArrays);
 const application = require("../../app");
@@ -32,8 +32,8 @@ const validToken = tokenService.createTokenFor(config.FRONT_END_NAME);
 
 describe("/statistics/rate route", () => {
   it("should return a 403 error due to lack of request token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/rate")
       .end((err, res) => {
         expect(res).to.have.status(403);
@@ -42,8 +42,8 @@ describe("/statistics/rate route", () => {
   });
 
   it("should return a 401 error for invalid token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/rate")
       .set("Authorization", "Bearer " + invalidToken)
       .end((err, res) => {
@@ -69,8 +69,8 @@ describe("/statistics/rate route", () => {
       "./routes/admin/statistics": statisticsWithStatisticsMockedService,
     });
 
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/rate")
       .set("Authorization", "Bearer " + validToken)
       .end((err, res) => {
@@ -87,8 +87,8 @@ describe("/statistics/rate route", () => {
     it("should get a 0% rate", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/rate")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -123,8 +123,8 @@ describe("/statistics/rate route", () => {
     it("should get a 0% rate", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/rate")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -159,8 +159,8 @@ describe("/statistics/rate route", () => {
     it("should get a 100% rate", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/rate")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -206,8 +206,8 @@ describe("/statistics/rate route", () => {
     it("should get a 50% rate", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/rate")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -264,8 +264,8 @@ describe("/statistics/rate route", () => {
     it("should get a 67% rate", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/rate")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -284,8 +284,8 @@ describe("/statistics/rate route", () => {
 
 describe("/statistics/time/average route", () => {
   it("should return a 403 error due to lack of request token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/time/average")
       .end((err, res) => {
         expect(res).to.have.status(403);
@@ -294,8 +294,8 @@ describe("/statistics/time/average route", () => {
   });
 
   it("should return a 401 error for invalid token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/time/average")
       .set("Authorization", "Bearer " + invalidToken)
       .end((err, res) => {
@@ -321,8 +321,8 @@ describe("/statistics/time/average route", () => {
       "./routes/admin/statistics": statisticsWithStatisticsMockedService,
     });
 
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/time/average")
       .set("Authorization", "Bearer " + validToken)
       .end((err, res) => {
@@ -339,8 +339,8 @@ describe("/statistics/time/average route", () => {
     it("should get a 0 as avg time", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/time/average")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -375,8 +375,8 @@ describe("/statistics/time/average route", () => {
     it("should get a 0 avg time", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/time/average")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -412,8 +412,8 @@ describe("/statistics/time/average route", () => {
     it("should get a 5 avg time", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/time/average")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -461,8 +461,8 @@ describe("/statistics/time/average route", () => {
     it("should get an avg time of 6 minutes ", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/time/average")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -521,8 +521,8 @@ describe("/statistics/time/average route", () => {
     it("should not consider pending task and only calculates avg for 2 finished tasks", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/time/average")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -541,8 +541,8 @@ describe("/statistics/time/average route", () => {
 
 describe("/statistics/time/fastest route", () => {
   it("should return a 403 error due to lack of request token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/time/fastest")
       .end((err, res) => {
         expect(res).to.have.status(403);
@@ -551,8 +551,8 @@ describe("/statistics/time/fastest route", () => {
   });
 
   it("should return a 401 error for invalid token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/time/fastest")
       .set("Authorization", "Bearer " + invalidToken)
       .end((err, res) => {
@@ -578,8 +578,8 @@ describe("/statistics/time/fastest route", () => {
       "./routes/admin/statistics": statisticsWithStatisticsMockedService,
     });
 
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/time/fastest")
       .set("Authorization", "Bearer " + validToken)
       .end((err, res) => {
@@ -596,8 +596,8 @@ describe("/statistics/time/fastest route", () => {
     it("should get a 0 as fastest time", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/time/fastest")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -632,8 +632,8 @@ describe("/statistics/time/fastest route", () => {
     it("should get a 0 fastest time", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/time/fastest")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -669,8 +669,8 @@ describe("/statistics/time/fastest route", () => {
     it("should get a 5 fastest time", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/time/fastest")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -718,8 +718,8 @@ describe("/statistics/time/fastest route", () => {
     it("should get a fastest time of 2 minutes ", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/time/fastest")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -778,8 +778,8 @@ describe("/statistics/time/fastest route", () => {
     it("should avoid pending task and get fastest time between 2 finished tasks", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/time/fastest")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -798,8 +798,8 @@ describe("/statistics/time/fastest route", () => {
 
 describe("/statistics/time/slowest route", () => {
   it("should return a 403 error due to lack of request token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/time/slowest")
       .end((err, res) => {
         expect(res).to.have.status(403);
@@ -808,8 +808,8 @@ describe("/statistics/time/slowest route", () => {
   });
 
   it("should return a 401 error for invalid token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/time/slowest")
       .set("Authorization", "Bearer " + invalidToken)
       .end((err, res) => {
@@ -835,8 +835,8 @@ describe("/statistics/time/slowest route", () => {
       "./routes/admin/statistics": statisticsWithStatisticsMockedService,
     });
 
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/time/slowest")
       .set("Authorization", "Bearer " + validToken)
       .end((err, res) => {
@@ -853,8 +853,8 @@ describe("/statistics/time/slowest route", () => {
     it("should get a 0 as slowest time", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/time/slowest")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -889,8 +889,8 @@ describe("/statistics/time/slowest route", () => {
     it("should get a 0 slowest time", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/time/slowest")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -926,8 +926,8 @@ describe("/statistics/time/slowest route", () => {
     it("should get a 5 slowest time", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/time/slowest")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -975,8 +975,8 @@ describe("/statistics/time/slowest route", () => {
     it("should get a slowest time of 10 minutes ", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/time/slowest")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -1035,8 +1035,8 @@ describe("/statistics/time/slowest route", () => {
     it("should avoid pending task and get slowest time between 2 finished tasks", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/time/slowest")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -1055,8 +1055,8 @@ describe("/statistics/time/slowest route", () => {
 
 describe("/statistics/queue/status route", () => {
   it("should return a 403 error due to lack of request token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/queue/status")
       .end((err, res) => {
         expect(res).to.have.status(403);
@@ -1065,8 +1065,8 @@ describe("/statistics/queue/status route", () => {
   });
 
   it("should return a 401 error for invalid token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/queue/status")
       .set("Authorization", "Bearer " + invalidToken)
       .end((err, res) => {
@@ -1092,8 +1092,8 @@ describe("/statistics/queue/status route", () => {
       "./routes/admin/statistics": statisticsWithStatisticsMockedService,
     });
 
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/queue/status")
       .set("Authorization", "Bearer " + validToken)
       .end((err, res) => {
@@ -1110,8 +1110,8 @@ describe("/statistics/queue/status route", () => {
     it("should get a 0 value for 4 status", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/queue/status")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -1196,8 +1196,8 @@ describe("/statistics/queue/status route", () => {
     it("should retrieve 1 for each one but 2 for finished", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/queue/status")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -1221,8 +1221,8 @@ describe("/statistics/queue/status route", () => {
 
 describe("/statistics/queue/composition route", () => {
   it("should return a 403 error due to lack of request token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/queue/composition")
       .end((err, res) => {
         expect(res).to.have.status(403);
@@ -1231,8 +1231,8 @@ describe("/statistics/queue/composition route", () => {
   });
 
   it("should return a 401 error for invalid token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/queue/composition")
       .set("Authorization", "Bearer " + invalidToken)
       .end((err, res) => {
@@ -1258,8 +1258,8 @@ describe("/statistics/queue/composition route", () => {
       "./routes/admin/statistics": statisticsWithStatisticsMockedService,
     });
 
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/statistics/queue/composition")
       .set("Authorization", "Bearer " + validToken)
       .end((err, res) => {
@@ -1276,8 +1276,8 @@ describe("/statistics/queue/composition route", () => {
     it("should get a 0 value for 4 design types", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/queue/composition")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {
@@ -1372,8 +1372,8 @@ describe("/statistics/queue/composition route", () => {
     it("should retrieve 1 for each one but 2 for finished", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/statistics/queue/composition")
         .set("Authorization", "Bearer " + validToken)
         .end((err, res) => {

@@ -1,11 +1,12 @@
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const database = require("./../../model/database");
 
-const server = new MongoMemoryServer();
+let server;
 
 const createInMemoryDataBase = async () => {
   try {
-    const url = await server.getUri();
+    server = await MongoMemoryServer.create();
+    const url = server.getUri();
     await database.connect(url);
   } catch (err) {
     throw err;

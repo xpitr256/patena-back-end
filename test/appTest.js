@@ -1,13 +1,13 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const expect = require("chai").expect;
-chai.use(chaiHttp);
+chai.use(chaiHttp.default);
 const application = require("../app");
 
 describe("/GET invalid route", () => {
   it("should return a 404 error", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/invalid")
       .end((err, res) => {
         expect(res).to.have.status(404);
@@ -16,8 +16,8 @@ describe("/GET invalid route", () => {
   });
 
   it("should return a 404 error with Origin header too", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/invalid")
       .set("Origin", "from appTest")
       .end((err, res) => {
@@ -27,8 +27,8 @@ describe("/GET invalid route", () => {
   });
 
   it("should return a 404 error with Access-Control-Request-Method header too", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/invalid")
       .set("Origin", "from appTest")
       .set("Access-Control-Request-Method", "GET")
@@ -39,8 +39,8 @@ describe("/GET invalid route", () => {
   });
 
   it("should return a 404 error with Access-Control-Request-Headers header too", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/invalid")
       .set("Origin", "from appTest")
       .set("Access-Control-Request-Headers", "X-Custom-Header")
@@ -51,8 +51,8 @@ describe("/GET invalid route", () => {
   });
 
   it("should return a 200 for OPTIONS method", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .options("/invalid")
       .set("Origin", "from appTest")
       .end((err, res) => {
@@ -64,8 +64,8 @@ describe("/GET invalid route", () => {
 
 describe("/GET index default route", () => {
   it("should return a name and api version", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/")
       .end((err, res) => {
         expect(res).to.have.status(200);

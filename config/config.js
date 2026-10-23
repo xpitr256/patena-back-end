@@ -1,9 +1,6 @@
 module.exports = {
   MONGODB_URI: process.env.MONGO_URI || "mongodb://127.0.0.1:27017/patena",
-  MONGODB_CONFIG: {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  },
+  MONGODB_CONFIG: {},
   CONTACT_MAIL: process.env.CONTACT_MAIL || "nachoquique@gmail.com",
   SEND_EMAILS: process.env.SEND_EMAILS === "true",
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,

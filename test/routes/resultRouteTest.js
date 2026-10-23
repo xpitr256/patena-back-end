@@ -1,7 +1,7 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const expect = require("chai").expect;
-chai.use(chaiHttp);
+chai.use(chaiHttp.default);
 const application = require("../../app");
 const proxyquire = require("proxyquire");
 const constants = require("./../../services/constants");
@@ -23,8 +23,8 @@ describe("/results route", () => {
   const validOrderNumber = "550e8400-e29b-41d4-a716-446655440000";
 
   it("should return a 403 error due to the lack of request token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/results")
       .end((err, res) => {
         expect(res).to.have.status(403);
@@ -35,8 +35,8 @@ describe("/results route", () => {
   const invalidToken = tokenService.createTokenFor("fake");
 
   it("should return a 401 error for invalid token", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/results")
       .set("Authorization", "Bearer " + invalidToken)
       .end((err, res) => {
@@ -48,8 +48,8 @@ describe("/results route", () => {
   const validToken = tokenService.createTokenFor(config.FRONT_END_NAME);
 
   it("should return a 400 error for no order number", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/results")
       .set("Authorization", "Bearer " + validToken)
       .end((err, res) => {
@@ -59,8 +59,8 @@ describe("/results route", () => {
   });
 
   it("should return a 400 error for empty order number", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/results")
       .query({ orderNumber: "" })
       .set("Authorization", "Bearer " + validToken)
@@ -71,8 +71,8 @@ describe("/results route", () => {
   });
 
   it("should return a 400 error for invalid order number", (done) => {
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/results")
       .query({ orderNumber: "invalid" })
       .set("Authorization", "Bearer " + validToken)
@@ -98,8 +98,8 @@ describe("/results route", () => {
       "./routes/results": resultWithMockedResultService,
     });
 
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/results")
       .query({ orderNumber: validOrderNumber })
       .set("Authorization", "Bearer " + validToken)
@@ -125,8 +125,8 @@ describe("/results route", () => {
       "./routes/results": resultWithMockedResultService,
     });
 
-    chai
-      .request(application)
+    chaiHttp.request
+      .execute(application)
       .get("/results")
       .query({ orderNumber: validOrderNumber })
       .set("Authorization", "Bearer " + validToken)
@@ -160,8 +160,8 @@ describe("/results route", () => {
     it("should get the task", (done) => {
       const application = proxyquire("../../app", {});
 
-      chai
-        .request(application)
+      chaiHttp.request
+        .execute(application)
         .get("/results")
         .query({ orderNumber: validOrderNumber })
         .set("Authorization", "Bearer " + validToken)

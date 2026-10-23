@@ -2,7 +2,7 @@ const chai = require("chai");
 const expect = require("chai").expect;
 const proxyquire = require("proxyquire").noCallThru();
 const constants = require("../../services/constants");
-const chaiAsPromised = require("chai-as-promised");
+const chaiAsPromised = require("chai-as-promised").default;
 chai.use(chaiAsPromised);
 
 const MockLogger = require("./../mocks/MockLogger");

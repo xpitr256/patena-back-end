@@ -1,8 +1,7 @@
 language: node_js
 node_js:
-  - "v12.18.2"
+  - "22"
 install:
   - npm install
 script:
   - npm run test-cv
-  - npm run coverage
